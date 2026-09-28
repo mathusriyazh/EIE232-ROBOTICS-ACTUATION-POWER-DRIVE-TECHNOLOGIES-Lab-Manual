@@ -1,0 +1,3611 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Experiment 3 - Isolated Flyback Converter</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#07111f;
+    color:#e8f1ff;
+    line-height:1.5;
+}
+
+header{
+    background:linear-gradient(135deg,#0b1d33,#123c5a);
+    padding:25px;
+    text-align:center;
+    border-bottom:3px solid #00d9ff;
+}
+
+header h1{
+    margin:0;
+    color:#00e5ff;
+    font-size:30px;
+}
+
+header p{
+    margin:8px 0 0;
+    color:#b9d7ef;
+}
+
+.container{
+    width:94%;
+    max-width:1250px;
+    margin:25px auto;
+}
+
+.card{
+    background:#0d1b2a;
+    border:1px solid #1e4563;
+    border-radius:12px;
+    padding:22px;
+    margin-bottom:22px;
+    box-shadow:0 5px 20px rgba(0,0,0,.25);
+}
+
+.card h2{
+    color:#00e5ff;
+    border-bottom:1px solid #24506d;
+    padding-bottom:8px;
+}
+
+.card h3{
+    color:#73e6ff;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:15px;
+}
+
+label{
+    display:block;
+    margin-bottom:5px;
+    color:#b9d7ef;
+    font-weight:bold;
+}
+
+input,textarea,select{
+    width:100%;
+    padding:10px;
+    border-radius:6px;
+    border:1px solid #315d79;
+    background:#071522;
+    color:white;
+}
+
+textarea{
+    min-height:100px;
+    resize:vertical;
+}
+
+.formula{
+    background:#06131f;
+    border-left:4px solid #00e5ff;
+    padding:13px;
+    margin:10px 0;
+    font-family:"Courier New",monospace;
+    color:#d7f8ff;
+    border-radius:5px;
+}
+
+.upload-box{
+    border:2px dashed #2581a8;
+    border-radius:10px;
+    padding:20px;
+    text-align:center;
+    background:#081827;
+    margin-top:12px;
+}
+
+.upload-box input{
+    margin-top:12px;
+}
+
+.preview{
+    max-width:100%;
+    max-height:500px;
+    margin-top:15px;
+    border:1px solid #32657d;
+    border-radius:8px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:15px;
+}
+
+th,td{
+    border:1px solid #31536b;
+    padding:9px;
+    text-align:center;
+}
+
+th{
+    background:#12354d;
+    color:#00e5ff;
+}
+
+td input{
+    min-width:90px;
+}
+
+button{
+    padding:12px 20px;
+    border:none;
+    border-radius:7px;
+    background:#00a9d4;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    margin:5px;
+}
+
+button:hover{
+    background:#00d9ff;
+    color:#00131d;
+}
+
+.btn-green{
+    background:#16845a;
+}
+
+.btn-red{
+    background:#a73535;
+}
+
+.btn-orange{
+    background:#b86b13;
+}
+
+.result{
+    background:#071923;
+    border:1px solid #24667e;
+    padding:18px;
+    border-radius:8px;
+    white-space:pre-line;
+}
+
+.score{
+    font-size:24px;
+    color:#00ffae;
+    font-weight:bold;
+}
+
+.warning{
+    background:#35270b;
+    border-left:4px solid #ffc107;
+    padding:12px;
+    color:#ffe39a;
+    margin:12px 0;
+}
+
+.info{
+    background:#082437;
+    border-left:4px solid #00a9d4;
+    padding:12px;
+    margin:12px 0;
+}
+
+.small{
+    font-size:13px;
+    color:#91afc3;
+}
+
+canvas{
+    background:#06131f;
+    border:1px solid #315d79;
+    border-radius:8px;
+    width:100%;
+    height:300px;
+    margin-top:15px;
+}
+
+@media print{
+
+    body{
+        background:white;
+        color:black;
+    }
+
+    .card{
+        background:white;
+        color:black;
+        border:1px solid #aaa;
+        box-shadow:none;
+    }
+
+    button{
+        display:none;
+    }
+
+    input,textarea{
+        color:black;
+        background:white;
+    }
+
+    header{
+        background:white;
+        color:black;
+        border-bottom:2px solid black;
+    }
+
+    header h1,
+    .card h2,
+    .card h3{
+        color:black;
+    }
+
+    canvas{
+        border:1px solid #777;
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>VIRTUAL POWER ELECTRONICS & DRIVES LABORATORY</h1>
+
+<p>
+Experiment 3 – Simulation of Isolated DC-DC Flyback Converter
+with Variable Load Profile
+</p>
+
+</header>
+
+<div class="container">
+
+<!-- STUDENT DETAILS -->
+
+<div class="card">
+
+<h2>1. Student Details</h2>
+
+<div class="grid">
+
+<div>
+<label>Name</label>
+<input id="studentName">
+</div>
+
+<div>
+<label>Register Number</label>
+<input id="regNo">
+</div>
+
+<div>
+<label>Department</label>
+<input id="department">
+</div>
+
+<div>
+<label>Year / Semester</label>
+<input id="year">
+</div>
+
+<div>
+<label>Date</label>
+<input type="date" id="date">
+</div>
+
+<div>
+<label>Batch</label>
+<input id="batch">
+</div>
+
+</div>
+
+</div>
+
+<!-- AIM -->
+
+<div class="card">
+
+<h2>2. Aim</h2>
+
+<p>
+To simulate an isolated DC-DC Flyback Converter using MATLAB/Simulink
+and study its output voltage, output current, output power and efficiency
+under a variable load profile.
+</p>
+
+</div>
+
+<!-- OBJECTIVES -->
+
+<div class="card">
+
+<h2>3. Learning Objectives</h2>
+
+<ul>
+
+<li>Understand the operating principle of an isolated Flyback Converter.</li>
+
+<li>Understand transformer isolation in DC-DC converters.</li>
+
+<li>Study energy storage and transfer using the flyback transformer.</li>
+
+<li>Understand MOSFET switching and diode rectification.</li>
+
+<li>Implement a Flyback Converter using MATLAB/Simulink.</li>
+
+<li>Study converter response under variable load conditions.</li>
+
+<li>Measure output voltage, current and power.</li>
+
+<li>Calculate converter efficiency.</li>
+
+<li>Observe transient response during load changes.</li>
+
+</ul>
+
+</div>
+
+<!-- SOFTWARE -->
+
+<div class="card">
+
+<h2>4. Software / Simulink Blocks Required</h2>
+
+<ul>
+
+<li>MATLAB</li>
+
+<li>Simulink</li>
+
+<li>Simscape Electrical</li>
+
+<li>DC Voltage Source</li>
+
+<li>Flyback Transformer / Coupled Inductor</li>
+
+<li>MOSFET / IGBT</li>
+
+<li>Diode</li>
+
+<li>Output Capacitor</li>
+
+<li>Resistive Load</li>
+
+<li>PWM Generator</li>
+
+<li>Voltage Measurement</li>
+
+<li>Current Measurement</li>
+
+<li>Scope</li>
+
+<li>powergui</li>
+
+</ul>
+
+</div>
+
+<!-- THEORY -->
+
+<div class="card">
+
+<h2>5. Theory</h2>
+
+<p>
+A Flyback Converter is an isolated DC-DC converter derived from the
+buck-boost converter. Electrical isolation between the input and output
+is obtained using a high-frequency transformer or coupled inductor.
+</p>
+
+<p>
+The Flyback Converter stores energy in the magnetizing inductance during
+the switch ON interval. When the switch is turned OFF, the stored energy
+is transferred to the secondary side through the transformer and diode.
+</p>
+
+<h3>Basic Operating Principle</h3>
+
+<div class="info">
+
+<strong>Switch ON:</strong>
+
+The primary switch conducts and the input voltage is applied to the
+primary winding. Magnetizing current increases and energy is stored in
+the magnetizing inductance.
+
+<br><br>
+
+<strong>Switch OFF:</strong>
+
+The primary switch is turned OFF. The polarity of the transformer
+windings reverses and the secondary diode conducts. Stored magnetic
+energy is transferred to the output capacitor and load.
+
+</div>
+
+<h3>Ideal Flyback Voltage Relationship</h3>
+
+<p>
+For an ideal Flyback Converter operating in continuous conduction mode,
+the magnitude of the output voltage can be approximated by:
+</p>
+
+<div class="formula">
+
+|V<sub>o</sub>| =
+(N<sub>s</sub>/N<sub>p</sub>)
+×
+D/(1-D)
+×
+V<sub>in</sub>
+
+</div>
+
+<p>
+where:
+</p>
+
+<ul>
+
+<li>N<sub>p</sub> = Primary turns</li>
+
+<li>N<sub>s</sub> = Secondary turns</li>
+
+<li>D = Duty ratio</li>
+
+<li>V<sub>in</sub> = Input voltage</li>
+
+</ul>
+
+<div class="formula">
+
+Turns Ratio n = N<sub>s</sub>/N<sub>p</sub>
+
+</div>
+
+<div class="formula">
+
+V<sub>o</sub> =
+n × D/(1-D) × V<sub>in</sub>
+
+</div>
+
+<div class="formula">
+
+I<sub>o</sub> = V<sub>o</sub>/R
+
+</div>
+
+<div class="formula">
+
+P<sub>o</sub> = V<sub>o</sub> × I<sub>o</sub>
+
+</div>
+
+<div class="formula">
+
+P<sub>in</sub> = V<sub>in</sub> × I<sub>in</sub>
+
+</div>
+
+<div class="formula">
+
+η =
+(P<sub>o</sub>/P<sub>in</sub>) × 100
+
+</div>
+
+<div class="warning">
+
+<strong>Note:</strong>
+
+The above equation is an idealized relationship. The actual MATLAB/Simulink
+output may differ because of winding resistance, leakage inductance,
+switching losses, diode forward voltage, transformer losses, capacitor
+ESR and other non-ideal effects.
+
+</div>
+
+</div>
+
+<!-- SIMULINK MODEL -->
+
+<div class="card">
+
+<h2>6. Simulink Model Submission</h2>
+
+<p>
+Construct the Flyback Converter model in MATLAB/Simulink and upload the
+Simulink circuit/model screenshot.
+</p>
+
+<div class="upload-box">
+
+<strong>
+Upload Flyback Converter Simulink Diagram
+</strong>
+
+<input
+type="file"
+id="diagramUpload"
+accept="image/*">
+
+<img
+id="diagramPreview"
+class="preview"
+style="display:none">
+
+</div>
+
+<h3>Expected Converter Structure</h3>
+
+<p>
+
+DC Source → Primary Winding → Switching Device
+
+<br>
+
+Transformer / Coupled Inductor → Secondary Diode →
+Output Capacitor → Variable Load
+
+</p>
+
+</div>
+
+<!-- PARAMETERS -->
+
+<div class="card">
+
+<h2>7. Converter Parameters</h2>
+
+<div class="grid">
+
+<div>
+<label>Input Voltage V<sub>in</sub> (V)</label>
+<input
+type="number"
+id="vin"
+value="24"
+step="0.1">
+</div>
+
+<div>
+<label>Switching Frequency f<sub>s</sub> (Hz)</label>
+<input
+type="number"
+id="fs"
+value="50000">
+</div>
+
+<div>
+<label>Duty Ratio D</label>
+<input
+type="number"
+id="duty"
+value="0.40"
+min="0.01"
+max="0.90"
+step="0.01">
+</div>
+
+<div>
+<label>Primary Turns N<sub>p</sub></label>
+<input
+type="number"
+id="np"
+value="20">
+</div>
+
+<div>
+<label>Secondary Turns N<sub>s</sub></label>
+<input
+type="number"
+id="ns"
+value="40">
+</div>
+
+<div>
+<label>Magnetizing Inductance L<sub>m</sub> (H)</label>
+<input
+type="number"
+id="lm"
+value="0.001"
+step="0.0001">
+</div>
+
+<div>
+<label>Output Capacitance C (F)</label>
+<input
+type="number"
+id="cap"
+value="0.0001"
+step="0.00001">
+</div>
+
+</div>
+
+<br>
+
+<button onclick="calculateTheoretical()">
+Calculate Theoretical Output
+</button>
+
+<div id="theoryResult" class="result">
+
+Enter converter parameters and calculate the theoretical output.
+
+</div>
+
+</div>
+
+<!-- PROCEDURE -->
+
+<div class="card">
+
+<h2>8. Procedure</h2>
+
+<ol>
+
+<li>Open MATLAB and Simulink.</li>
+
+<li>Create a new Simulink model.</li>
+
+<li>Place a DC voltage source at the input.</li>
+
+<li>Use a high-frequency transformer or coupled inductor as the
+isolating magnetic component.</li>
+
+<li>Connect a MOSFET/IGBT as the primary-side switching device.</li>
+
+<li>Connect a diode on the secondary side.</li>
+
+<li>Connect an output capacitor across the load.</li>
+
+<li>Connect the resistive load at the output.</li>
+
+<li>Generate PWM pulses for the primary-side switch.</li>
+
+<li>Set the required switching frequency and duty ratio.</li>
+
+<li>Measure primary current, secondary current and output voltage.</li>
+
+<li>Connect the measurements to Scope blocks.</li>
+
+<li>Run the simulation.</li>
+
+<li>Apply the variable load profile.</li>
+
+<li>Record output voltage, current, power and efficiency.</li>
+
+<li>Observe the transient response when the load changes.</li>
+
+</ol>
+
+</div>
+
+<!-- VARIABLE LOAD -->
+
+<div class="card">
+
+<h2>9. Variable Load Profile</h2>
+
+<p>
+Use different load resistances during different time intervals.
+Calculate the theoretical output quantities for each interval.
+</p>
+
+<table id="loadTable">
+
+<thead>
+
+<tr>
+
+<th>Interval</th>
+
+<th>Start Time (s)</th>
+
+<th>End Time (s)</th>
+
+<th>Load R (Ω)</th>
+
+<th>Theoretical V<sub>o</sub> (V)</th>
+
+<th>Theoretical I<sub>o</sub> (A)</th>
+
+<th>Theoretical P<sub>o</sub> (W)</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>1</td>
+
+<td>
+<input class="start" value="0">
+</td>
+
+<td>
+<input class="end" value="0.1">
+</td>
+
+<td>
+<input class="loadR" value="20">
+</td>
+
+<td class="tvo">-</td>
+
+<td class="tio">-</td>
+
+<td class="tpo">-</td>
+
+</tr>
+
+<tr>
+
+<td>2</td>
+
+<td>
+<input class="start" value="0.1">
+</td>
+
+<td>
+<input class="end" value="0.2">
+</td>
+
+<td>
+<input class="loadR" value="10">
+</td>
+
+<td class="tvo">-</td>
+
+<td class="tio">-</td>
+
+<td class="tpo">-</td>
+
+</tr>
+
+<tr>
+
+<td>3</td>
+
+<td>
+<input class="start" value="0.2">
+</td>
+
+<td>
+<input class="end" value="0.3">
+</td>
+
+<td>
+<input class="loadR" value="30">
+</td>
+
+<td class="tvo">-</td>
+
+<td class="tio">-</td>
+
+<td class="tpo">-</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+<br>
+
+<button onclick="calculateLoadProfile()">
+Calculate Load Profile
+</button>
+
+<button
+class="btn-green"
+onclick="addLoadRow()">
+
+* Add Load Interval
+
+</button>
+
+</div>
+
+<!-- OBSERVATION TABLE -->
+
+<div class="card">
+
+<h2>10. Observation Table</h2>
+
+<table id="observationTable">
+
+<thead>
+
+<tr>
+
+<th>Interval</th>
+
+<th>Load R (Ω)</th>
+
+<th>Measured V<sub>o</sub> (V)</th>
+
+<th>Measured I<sub>o</sub> (A)</th>
+
+<th>Measured P<sub>o</sub> (W)</th>
+
+<th>Input V (V)</th>
+
+<th>Input I (A)</th>
+
+<th>Efficiency (%)</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>1</td>
+
+<td>
+<input class="obsR">
+</td>
+
+<td>
+<input class="obsV">
+</td>
+
+<td>
+<input class="obsI">
+</td>
+
+<td class="obsP">-</td>
+
+<td>
+<input class="obsVin">
+</td>
+
+<td>
+<input class="obsIin">
+</td>
+
+<td class="obsEta">-</td>
+
+</tr>
+
+<tr>
+
+<td>2</td>
+
+<td>
+<input class="obsR">
+</td>
+
+<td>
+<input class="obsV">
+</td>
+
+<td>
+<input class="obsI">
+</td>
+
+<td class="obsP">-</td>
+
+<td>
+<input class="obsVin">
+</td>
+
+<td>
+<input class="obsIin">
+</td>
+
+<td class="obsEta">-</td>
+
+</tr>
+
+<tr>
+
+<td>3</td>
+
+<td>
+<input class="obsR">
+</td>
+
+<td>
+<input class="obsV">
+</td>
+
+<td>
+<input class="obsI">
+</td>
+
+<td class="obsP">-</td>
+
+<td>
+<input class="obsVin">
+</td>
+
+<td>
+<input class="obsIin">
+</td>
+
+<td class="obsEta">-</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+<br>
+
+<button onclick="calculateObservation()">
+
+Calculate Observation
+
+</button>
+
+</div>
+
+<!-- WAVEFORMS -->
+
+<div class="card">
+
+<h2>11. Waveform Submission</h2>
+
+<p>
+Upload the waveforms obtained from MATLAB/Simulink.
+</p>
+
+<ul>
+
+<li>PWM switching waveform</li>
+
+<li>Primary winding current</li>
+
+<li>Secondary diode current</li>
+
+<li>Magnetizing current</li>
+
+<li>Output voltage</li>
+
+<li>Output current</li>
+
+<li>Transient response during load change</li>
+
+</ul>
+
+<div class="upload-box">
+
+<strong>
+Upload Simulink Scope Screenshot
+</strong>
+
+<input
+type="file"
+id="waveUpload"
+accept="image/*">
+
+<img
+id="wavePreview"
+class="preview"
+style="display:none">
+
+</div>
+
+</div>
+
+<!-- LOAD TRANSIENT GRAPH -->
+
+<div class="card">
+
+<h2>12. Load Transient Response</h2>
+
+<p>
+Upload the graph showing the output response when the load resistance
+is changed.
+</p>
+
+<div class="upload-box">
+
+<strong>
+Upload Load Transient Graph
+</strong>
+
+<input
+type="file"
+id="graphUpload"
+accept="image/*">
+
+<img
+id="graphPreview"
+class="preview"
+style="display:none">
+
+</div>
+
+</div>
+
+<!-- NUMERICAL CALCULATION -->
+
+<div class="card">
+
+<h2>13. Sample Calculation</h2>
+
+<p>
+Consider:
+</p>
+
+<ul>
+
+<li>V<sub>in</sub> = 24 V</li>
+
+<li>N<sub>p</sub> = 20</li>
+
+<li>N<sub>s</sub> = 40</li>
+
+<li>D = 0.4</li>
+
+</ul>
+
+<div class="formula">
+
+n = N<sub>s</sub>/N<sub>p</sub>
+
+= 40/20
+
+= 2
+
+</div>
+
+<div class="formula">
+
+# V<sub>o</sub>
+
+n × D/(1-D) × V<sub>in</sub>
+
+</div>
+
+<div class="formula">
+
+# V<sub>o</sub>
+
+2 × 0.4/0.6 × 24
+
+</div>
+
+<div class="formula">
+
+V<sub>o</sub>
+≈ 32 V
+
+</div>
+
+<p>
+For a 20 Ω load:
+</p>
+
+<div class="formula">
+
+# I<sub>o</sub>
+
+V<sub>o</sub>/R
+
+=
+32/20
+
+=
+1.6 A
+
+</div>
+
+<div class="formula">
+
+# P<sub>o</sub>
+
+32 × 1.6
+
+=
+51.2 W
+
+</div>
+
+</div>
+
+<!-- STUDENT ANALYSIS -->
+
+<div class="card">
+
+<h2>14. Student Analysis</h2>
+
+<label>
+1. Explain how electrical isolation is obtained in the Flyback Converter.
+</label>
+
+<textarea
+id="analysis1"
+placeholder="Enter your answer...">
+</textarea>
+
+<label>
+2. Explain the energy storage and transfer mechanism.
+</label>
+
+<textarea
+id="analysis2"
+placeholder="Enter your answer...">
+</textarea>
+
+<label>
+3. Explain the effect of changing the load resistance.
+</label>
+
+<textarea
+id="analysis3"
+placeholder="Enter your answer...">
+</textarea>
+
+<label>
+4. Compare theoretical and simulated output voltage.
+</label>
+
+<textarea
+id="analysis4"
+placeholder="Enter your answer...">
+</textarea>
+
+</div>
+
+<!-- RESULT -->
+
+<div class="card">
+
+<h2>15. Result</h2>
+
+<div
+class="result"
+id="resultText">
+
+The Flyback Converter simulation was performed using MATLAB/Simulink.
+The output voltage, output current, output power and efficiency were
+studied under different load conditions.
+
+</div>
+
+<button onclick="generateResult()">
+
+Generate Result
+
+</button>
+
+</div>
+
+<!-- POST LAB -->
+
+<div class="card">
+
+<h2>16. Post-Lab Questions</h2>
+
+<ol>
+
+<li>
+What is the operating principle of a Flyback Converter?
+</li>
+
+<li>
+Why is a transformer used in a Flyback Converter?
+</li>
+
+<li>
+What is the function of the magnetizing inductance?
+</li>
+
+<li>
+What happens when the primary switch is turned ON?
+</li>
+
+<li>
+What happens when the primary switch is turned OFF?
+</li>
+
+<li>
+Derive the ideal Flyback voltage conversion relationship.
+</li>
+
+<li>
+How does the transformer turns ratio affect output voltage?
+</li>
+
+<li>
+What is the function of the secondary-side diode?
+</li>
+
+<li>
+What are the major sources of loss in a practical Flyback Converter?
+</li>
+
+<li>
+What is the difference between a Flyback Converter and a Forward Converter?
+</li>
+
+</ol>
+
+<textarea
+id="questionsAnswer"
+placeholder="Enter your answers here...">
+</textarea>
+
+</div>
+
+<!-- EVALUATION -->
+
+<div class="card">
+
+<h2>17. Faculty Evaluation</h2>
+
+<table>
+
+<tr>
+
+<th>Evaluation Component</th>
+
+<th>Maximum Marks</th>
+
+<th>Obtained</th>
+
+</tr>
+
+<tr>
+
+<td>Simulink Model</td>
+
+<td>2</td>
+
+<td>
+<input
+type="number"
+class="mark"
+min="0"
+max="2">
+</td>
+
+</tr>
+
+<tr>
+
+<td>Simulation Procedure</td>
+
+<td>2</td>
+
+<td>
+<input
+type="number"
+class="mark"
+min="0"
+max="2">
+</td>
+
+</tr>
+
+<tr>
+
+<td>Observation Table</td>
+
+<td>2</td>
+
+<td>
+<input
+type="number"
+class="mark"
+min="0"
+max="2">
+</td>
+
+</tr>
+
+<tr>
+
+<td>Calculations & Analysis</td>
+
+<td>2</td>
+
+<td>
+<input
+type="number"
+class="mark"
+min="0"
+max="2">
+</td>
+
+</tr>
+
+<tr>
+
+<td>Result & Viva</td>
+
+<td>2</td>
+
+<td>
+<input
+type="number"
+class="mark"
+min="0"
+max="2">
+</td>
+
+</tr>
+
+<tr>
+
+<td colspan="2">
+
+<strong>Total</strong>
+
+</td>
+
+<td
+class="score"
+id="totalScore">
+
+0 / 10
+
+</td>
+
+</tr>
+
+</table>
+
+<button onclick="calculateScore()">
+
+Calculate Score
+
+</button>
+
+</div>
+
+<!-- CONTROL BUTTONS -->
+
+<div class="card">
+
+<button onclick="saveData()">
+Save Experiment
+</button>
+
+<button
+class="btn-green"
+onclick="saveJSON()">
+Save JSON
+</button>
+
+<button
+onclick="document.getElementById('jsonFileInput').click()">
+Load JSON
+</button>
+
+<input
+type="file"
+id="jsonFileInput"
+accept=".json,application/json"
+style="display:none"
+onchange="loadJSON(event)"
+>
+
+<button
+class="btn-orange"
+onclick="evaluateExperiment()">
+Evaluate Experiment
+</button>
+
+<button
+class="btn-green"
+onclick="window.print()">
+Print / Save PDF
+</button>
+
+<button
+class="btn-red"
+onclick="clearData()">
+Clear Data
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+
+/* =========================================
+   THEORETICAL CALCULATION
+========================================= */
+
+function calculateTheoretical(){
+
+    let Vin =
+        parseFloat(
+            document.getElementById("vin").value
+        );
+
+    let D =
+        parseFloat(
+            document.getElementById("duty").value
+        );
+
+    let Np =
+        parseFloat(
+            document.getElementById("np").value
+        );
+
+    let Ns =
+        parseFloat(
+            document.getElementById("ns").value
+        );
+
+
+    if(
+        isNaN(Vin) ||
+        isNaN(D) ||
+        isNaN(Np) ||
+        isNaN(Ns)
+    ){
+
+        alert(
+            "Enter valid converter parameters."
+        );
+
+        return;
+
+    }
+
+
+    if(D <= 0 || D >= 1){
+
+        alert(
+            "Duty ratio must be between 0 and 1."
+        );
+
+        return;
+
+    }
+
+
+    if(Np <= 0 || Ns <= 0){
+
+        alert(
+            "Turns must be greater than zero."
+        );
+
+        return;
+
+    }
+
+
+    let n = Ns / Np;
+
+    let Vo =
+        n * (D/(1-D)) * Vin;
+
+
+    let gain =
+        Vo / Vin;
+
+
+    document.getElementById(
+        "theoryResult"
+    ).innerHTML =
+
+        "<strong>Theoretical Flyback Output</strong><br><br>" +
+
+        "Input Voltage = " +
+        Vin.toFixed(3) +
+        " V<br>" +
+
+        "Duty Ratio = " +
+        D.toFixed(3) +
+        "<br>" +
+
+        "Primary Turns = " +
+        Np +
+        "<br>" +
+
+        "Secondary Turns = " +
+        Ns +
+        "<br>" +
+
+        "Turns Ratio Ns/Np = " +
+        n.toFixed(3) +
+        "<br>" +
+
+        "Theoretical Output Voltage = " +
+        Vo.toFixed(3) +
+        " V<br>" +
+
+        "Voltage Gain = " +
+        gain.toFixed(3);
+
+}
+
+
+/* =========================================
+   LOAD PROFILE
+========================================= */
+
+function calculateLoadProfile(){
+
+    let Vin =
+        parseFloat(
+            document.getElementById("vin").value
+        );
+
+    let D =
+        parseFloat(
+            document.getElementById("duty").value
+        );
+
+    let Np =
+        parseFloat(
+            document.getElementById("np").value
+        );
+
+    let Ns =
+        parseFloat(
+            document.getElementById("ns").value
+        );
+
+
+    if(
+        isNaN(Vin) ||
+        isNaN(D) ||
+        isNaN(Np) ||
+        isNaN(Ns)
+    ){
+
+        alert(
+            "Enter valid converter parameters."
+        );
+
+        return;
+
+    }
+
+
+    let n = Ns/Np;
+
+    let Vo =
+        n *
+        (D/(1-D)) *
+        Vin;
+
+
+    document
+    .querySelectorAll(
+        "#loadTable tbody tr"
+    )
+    .forEach(
+
+        function(row){
+
+            let R =
+                parseFloat(
+                    row.querySelector(
+                        ".loadR"
+                    ).value
+                );
+
+
+            if(
+                !isNaN(R) &&
+                R > 0
+            ){
+
+                let Io =
+                    Vo/R;
+
+                let Po =
+                    Vo*Io;
+
+
+                row.querySelector(
+                    ".tvo"
+                ).innerText =
+                    Vo.toFixed(3);
+
+
+                row.querySelector(
+                    ".tio"
+                ).innerText =
+                    Io.toFixed(3);
+
+
+                row.querySelector(
+                    ".tpo"
+                ).innerText =
+                    Po.toFixed(3);
+
+            }
+
+        }
+
+    );
+
+}
+
+
+/* =========================================
+   ADD LOAD ROW
+========================================= */
+
+function addLoadRow(){
+
+    let tbody =
+        document.querySelector(
+            "#loadTable tbody"
+        );
+
+
+    let n =
+        tbody.rows.length + 1;
+
+
+    let row =
+        tbody.insertRow();
+
+
+    row.innerHTML = `
+
+        <td>${n}</td>
+
+        <td>
+            <input
+                class="start"
+                value="0.3">
+        </td>
+
+        <td>
+            <input
+                class="end"
+                value="0.4">
+        </td>
+
+        <td>
+            <input
+                class="loadR"
+                value="20">
+        </td>
+
+        <td class="tvo">-</td>
+
+        <td class="tio">-</td>
+
+        <td class="tpo">-</td>
+
+    `;
+
+}
+
+
+/* =========================================
+   OBSERVATION CALCULATION
+========================================= */
+
+function calculateObservation(){
+
+    document
+    .querySelectorAll(
+        "#observationTable tbody tr"
+    )
+    .forEach(
+
+        function(row){
+
+            let V =
+                parseFloat(
+                    row.querySelector(
+                        ".obsV"
+                    ).value
+                );
+
+
+            let I =
+                parseFloat(
+                    row.querySelector(
+                        ".obsI"
+                    ).value
+                );
+
+
+            let Vin =
+                parseFloat(
+                    row.querySelector(
+                        ".obsVin"
+                    ).value
+                );
+
+
+            let Iin =
+                parseFloat(
+                    row.querySelector(
+                        ".obsIin"
+                    ).value
+                );
+
+
+            if(
+                !isNaN(V) &&
+                !isNaN(I)
+            ){
+
+                let P =
+                    V*I;
+
+
+                row.querySelector(
+                    ".obsP"
+                ).innerText =
+                    P.toFixed(3);
+
+            }
+
+
+            if(
+                !isNaN(V) &&
+                !isNaN(I) &&
+                !isNaN(Vin) &&
+                !isNaN(Iin) &&
+                Vin > 0 &&
+                Iin > 0
+            ){
+
+                let Pin =
+                    Vin*Iin;
+
+
+                let Pout =
+                    V*I;
+
+
+                let eta =
+                    (Pout/Pin)*100;
+
+
+                row.querySelector(
+                    ".obsEta"
+                ).innerText =
+                    eta.toFixed(2) +
+                    " %";
+
+            }
+
+        }
+
+    );
+
+}
+
+
+/* =========================================
+   RESULT
+========================================= */
+
+function generateResult(){
+
+    let Vin =
+        parseFloat(
+            document.getElementById("vin").value
+        );
+
+    let D =
+        parseFloat(
+            document.getElementById("duty").value
+        );
+
+    let Np =
+        parseFloat(
+            document.getElementById("np").value
+        );
+
+    let Ns =
+        parseFloat(
+            document.getElementById("ns").value
+        );
+
+
+    let Vo =
+        (Ns/Np) *
+        (D/(1-D)) *
+        Vin;
+
+
+    let text =
+
+        "The isolated Flyback Converter was successfully simulated " +
+
+        "using MATLAB/Simulink. The converter provided electrical " +
+
+        "isolation between the input and output through the high-frequency " +
+
+        "transformer/coupled inductor. The output voltage was controlled " +
+
+        "by the switching duty ratio and transformer turns ratio. " +
+
+        "The output voltage, output current, output power and efficiency " +
+
+        "were observed for different load conditions. " +
+
+        "The transient response during load variation was also studied.";
+
+
+    text +=
+
+        "\n\nTheoretical output voltage for the entered parameters: " +
+
+        Vo.toFixed(3) +
+
+        " V.";
+
+
+    document.getElementById(
+        "resultText"
+    ).innerText = text;
+
+}
+
+
+/* =========================================
+   SCORE
+========================================= */
+
+function calculateScore(){
+
+    let total = 0;
+
+
+    document
+    .querySelectorAll(".mark")
+    .forEach(
+
+        function(input){
+
+            let value =
+                parseFloat(
+                    input.value
+                );
+
+
+            if(!isNaN(value)){
+
+                total += value;
+
+            }
+
+        }
+
+    );
+
+
+    document.getElementById(
+        "totalScore"
+    ).innerText =
+
+        total.toFixed(1) +
+        " / 10";
+
+}
+
+
+/* =========================================
+   IMAGE PREVIEW
+========================================= */
+
+function previewImage(
+    input,
+    imageId
+){
+
+    let file =
+        input.files[0];
+
+
+    if(!file)
+        return;
+
+
+    let reader =
+        new FileReader();
+
+
+    reader.onload =
+        function(e){
+
+            let img =
+                document.getElementById(
+                    imageId
+                );
+
+
+            img.src =
+                e.target.result;
+
+
+            img.style.display =
+                "block";
+
+        };
+
+
+    reader.readAsDataURL(file);
+
+}
+
+
+document
+.getElementById(
+    "diagramUpload"
+)
+.addEventListener(
+    "change",
+    function(){
+
+        previewImage(
+            this,
+            "diagramPreview"
+        );
+
+    }
+);
+
+
+document
+.getElementById(
+    "waveUpload"
+)
+.addEventListener(
+    "change",
+    function(){
+
+        previewImage(
+            this,
+            "wavePreview"
+        );
+
+    }
+);
+
+
+document
+.getElementById(
+    "graphUpload"
+)
+.addEventListener(
+    "change",
+    function(){
+
+        previewImage(
+            this,
+            "graphPreview"
+        );
+
+    }
+);
+
+
+/* =========================================
+   SAVE DATA
+========================================= */
+
+function saveData(){
+
+    let data = {};
+
+
+    document
+    .querySelectorAll(
+        "input,textarea,select"
+    )
+    .forEach(
+
+        function(el,index){
+
+            if(
+                el.type === "file"
+            )
+                return;
+
+
+            data[
+                "field_" + index
+            ] = el.value;
+
+        }
+
+    );
+
+
+    localStorage.setItem(
+        "flybackExperiment3",
+        JSON.stringify(data)
+    );
+
+
+    alert(
+        "Experiment data saved in this browser."
+    );
+
+}
+
+
+/* =========================================
+   CLEAR DATA
+========================================= */
+
+function clearData(){
+
+    if(
+        confirm(
+            "Clear all experiment data?"
+        )
+    ){
+
+        localStorage.removeItem(
+            "flybackExperiment3"
+        );
+
+        location.reload();
+
+    }
+
+}
+/* =========================================================
+   EXPERIMENT 3 - FLYBACK CONVERTER
+   SAVE COMPLETE RECORD AS JSON
+   ========================================================= */
+
+function saveJSON(){
+
+    let data = {
+
+        experiment:
+            "Experiment 3 - Isolated DC-DC Flyback Converter",
+
+        experimentNumber:
+            "3",
+
+        version:
+            "1.0",
+
+        savedAt:
+            new Date().toISOString(),
+
+
+        /* =========================================
+           STUDENT DETAILS
+        ========================================= */
+
+        studentDetails: {
+
+            studentName:
+                document.getElementById("studentName").value,
+
+            registerNumber:
+                document.getElementById("regNo").value,
+
+            department:
+                document.getElementById("department").value,
+
+            yearSemester:
+                document.getElementById("year").value,
+
+            date:
+                document.getElementById("date").value,
+
+            batch:
+                document.getElementById("batch").value
+
+        },
+
+
+        /* =========================================
+           CONVERTER PARAMETERS
+        ========================================= */
+
+        converterParameters: {
+
+            inputVoltage:
+                document.getElementById("vin").value,
+
+            switchingFrequency:
+                document.getElementById("fs").value,
+
+            dutyRatio:
+                document.getElementById("duty").value,
+
+            primaryTurns:
+                document.getElementById("np").value,
+
+            secondaryTurns:
+                document.getElementById("ns").value,
+
+            magnetizingInductance:
+                document.getElementById("lm").value,
+
+            outputCapacitance:
+                document.getElementById("cap").value
+
+        },
+
+
+        /* =========================================
+           THEORETICAL RESULT
+        ========================================= */
+
+        theoreticalResult:
+            document.getElementById("theoryResult").innerHTML,
+
+
+        /* =========================================
+           LOAD PROFILE
+        ========================================= */
+
+        loadProfile:
+            getLoadProfileData(),
+
+
+        /* =========================================
+           OBSERVATION TABLE
+        ========================================= */
+
+        observations:
+            getObservationData(),
+
+
+        /* =========================================
+           STUDENT ANALYSIS
+        ========================================= */
+
+        studentAnalysis: {
+
+            analysis1:
+                document.getElementById("analysis1").value,
+
+            analysis2:
+                document.getElementById("analysis2").value,
+
+            analysis3:
+                document.getElementById("analysis3").value,
+
+            analysis4:
+                document.getElementById("analysis4").value
+
+        },
+
+
+        /* =========================================
+           RESULT
+        ========================================= */
+
+        result:
+            document.getElementById("resultText").innerText,
+
+
+        /* =========================================
+           POST-LAB ANSWERS
+        ========================================= */
+
+        postLabAnswers:
+            document.getElementById("questionsAnswer").value,
+
+
+        /* =========================================
+           FACULTY EVALUATION
+        ========================================= */
+
+        facultyEvaluation:
+            getEvaluationData(),
+
+
+        /* =========================================
+           IMAGE DATA
+        ========================================= */
+
+        images: {
+
+            simulinkDiagram:
+                getImageData("diagramPreview"),
+
+            waveform:
+                getImageData("wavePreview"),
+
+            loadTransientGraph:
+                getImageData("graphPreview")
+
+        }
+
+    };
+
+
+    /* =========================================
+       LOCAL STORAGE BACKUP
+    ========================================= */
+
+    localStorage.setItem(
+        "flybackExperiment3_JSON",
+        JSON.stringify(data)
+    );
+
+
+    /* =========================================
+       CREATE JSON FILE
+    ========================================= */
+
+    let jsonString =
+        JSON.stringify(data, null, 4);
+
+
+    let blob =
+        new Blob(
+            [jsonString],
+            {
+                type:"application/json"
+            }
+        );
+
+
+    let url =
+        URL.createObjectURL(blob);
+
+
+    /* =========================================
+       FILE NAME
+    ========================================= */
+
+    let registerNo =
+        document
+        .getElementById("regNo")
+        .value
+        .trim();
+
+
+    if(registerNo === ""){
+        registerNo = "Student";
+    }
+
+
+    registerNo =
+        registerNo.replace(
+            /[^a-zA-Z0-9_-]/g,
+            "_"
+        );
+
+
+    let fileName =
+        "Experiment3_FlybackConverter_" +
+        registerNo +
+        ".json";
+
+
+    /* =========================================
+       DOWNLOAD
+    ========================================= */
+
+    let link =
+        document.createElement("a");
+
+
+    link.href = url;
+
+    link.download = fileName;
+
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    document.body.removeChild(link);
+
+
+    URL.revokeObjectURL(url);
+
+
+    alert(
+        "Experiment 3 JSON saved successfully.\n\n" +
+        "File: " +
+        fileName
+    );
+
+}
+
+
+/* =========================================================
+   GET LOAD PROFILE DATA
+   ========================================================= */
+
+function getLoadProfileData(){
+
+    let rows =
+        document.querySelectorAll(
+            "#loadTable tbody tr"
+        );
+
+
+    let data = [];
+
+
+    rows.forEach(function(row,index){
+
+        let start =
+            row.querySelector(".start");
+
+        let end =
+            row.querySelector(".end");
+
+        let loadR =
+            row.querySelector(".loadR");
+
+        let tvo =
+            row.querySelector(".tvo");
+
+        let tio =
+            row.querySelector(".tio");
+
+        let tpo =
+            row.querySelector(".tpo");
+
+
+        data.push({
+
+            interval:
+                index + 1,
+
+            startTime:
+                start ? start.value : "",
+
+            endTime:
+                end ? end.value : "",
+
+            loadResistance:
+                loadR ? loadR.value : "",
+
+            theoreticalVoltage:
+                tvo ? tvo.innerText : "-",
+
+            theoreticalCurrent:
+                tio ? tio.innerText : "-",
+
+            theoreticalPower:
+                tpo ? tpo.innerText : "-"
+
+        });
+
+    });
+
+
+    return data;
+
+}
+
+
+/* =========================================================
+   GET OBSERVATION DATA
+   ========================================================= */
+
+function getObservationData(){
+
+    let rows =
+        document.querySelectorAll(
+            "#observationTable tbody tr"
+        );
+
+
+    let data = [];
+
+
+    rows.forEach(function(row,index){
+
+        let obsR =
+            row.querySelector(".obsR");
+
+        let obsV =
+            row.querySelector(".obsV");
+
+        let obsI =
+            row.querySelector(".obsI");
+
+        let obsP =
+            row.querySelector(".obsP");
+
+        let obsVin =
+            row.querySelector(".obsVin");
+
+        let obsIin =
+            row.querySelector(".obsIin");
+
+        let obsEta =
+            row.querySelector(".obsEta");
+
+
+        data.push({
+
+            interval:
+                index + 1,
+
+            loadResistance:
+                obsR ? obsR.value : "",
+
+            measuredVoltage:
+                obsV ? obsV.value : "",
+
+            measuredCurrent:
+                obsI ? obsI.value : "",
+
+            measuredPower:
+                obsP ? obsP.innerText : "-",
+
+            inputVoltage:
+                obsVin ? obsVin.value : "",
+
+            inputCurrent:
+                obsIin ? obsIin.value : "",
+
+            efficiency:
+                obsEta ? obsEta.innerText : "-"
+
+        });
+
+    });
+
+
+    return data;
+
+}
+
+
+/* =========================================================
+   GET FACULTY EVALUATION
+   ========================================================= */
+
+function getEvaluationData(){
+
+    let marks = [];
+
+
+    document
+    .querySelectorAll(".mark")
+    .forEach(function(input,index){
+
+        marks.push({
+
+            component:
+                index + 1,
+
+            mark:
+                input.value
+
+        });
+
+    });
+
+
+    return {
+
+        marks:marks,
+
+        total:
+            document.getElementById(
+                "totalScore"
+            ).innerText
+
+    };
+
+}
+
+
+/* =========================================================
+   GET IMAGE AS BASE64
+   ========================================================= */
+
+function getImageData(imageId){
+
+    let img =
+        document.getElementById(imageId);
+
+
+    if(!img){
+        return "";
+    }
+
+
+    if(
+        !img.src ||
+        img.src === window.location.href
+    ){
+
+        return "";
+
+    }
+
+
+    return img.src;
+
+}
+
+
+/* =========================================================
+   LOAD JSON
+   ========================================================= */
+
+function loadJSON(event){
+
+    let file =
+        event.target.files[0];
+
+
+    if(!file){
+        return;
+    }
+
+
+    /* =========================================
+       CHECK FILE TYPE
+    ========================================= */
+
+    if(
+        !file.name
+        .toLowerCase()
+        .endsWith(".json")
+    ){
+
+        alert(
+            "Please select a valid JSON file."
+        );
+
+        event.target.value = "";
+
+        return;
+
+    }
+
+
+    let reader =
+        new FileReader();
+
+
+    reader.onload =
+    function(e){
+
+        try{
+
+            let data =
+                JSON.parse(
+                    e.target.result
+                );
+
+
+            /* =========================================
+               CHECK EXPERIMENT
+            ========================================= */
+
+            if(
+                !data.experiment ||
+                !data.experiment.includes(
+                    "Experiment 3"
+                )
+            ){
+
+                alert(
+                    "This JSON file is not an Experiment 3 Flyback Converter record."
+                );
+
+                return;
+
+            }
+
+
+            /* =========================================
+               STUDENT DETAILS
+            ========================================= */
+
+            if(data.studentDetails){
+
+                setJSONValue(
+                    "studentName",
+                    data.studentDetails.studentName
+                );
+
+                setJSONValue(
+                    "regNo",
+                    data.studentDetails.registerNumber
+                );
+
+                setJSONValue(
+                    "department",
+                    data.studentDetails.department
+                );
+
+                setJSONValue(
+                    "year",
+                    data.studentDetails.yearSemester
+                );
+
+                setJSONValue(
+                    "date",
+                    data.studentDetails.date
+                );
+
+                setJSONValue(
+                    "batch",
+                    data.studentDetails.batch
+                );
+
+            }
+
+
+            /* =========================================
+               CONVERTER PARAMETERS
+            ========================================= */
+
+            if(data.converterParameters){
+
+                setJSONValue(
+                    "vin",
+                    data.converterParameters.inputVoltage
+                );
+
+                setJSONValue(
+                    "fs",
+                    data.converterParameters.switchingFrequency
+                );
+
+                setJSONValue(
+                    "duty",
+                    data.converterParameters.dutyRatio
+                );
+
+                setJSONValue(
+                    "np",
+                    data.converterParameters.primaryTurns
+                );
+
+                setJSONValue(
+                    "ns",
+                    data.converterParameters.secondaryTurns
+                );
+
+                setJSONValue(
+                    "lm",
+                    data.converterParameters.magnetizingInductance
+                );
+
+                setJSONValue(
+                    "cap",
+                    data.converterParameters.outputCapacitance
+                );
+
+            }
+
+
+            /* =========================================
+               LOAD PROFILE
+            ========================================= */
+
+            if(
+                Array.isArray(
+                    data.loadProfile
+                )
+            ){
+
+                loadLoadProfile(
+                    data.loadProfile
+                );
+
+            }
+
+
+            /* =========================================
+               OBSERVATION
+            ========================================= */
+
+            if(
+                Array.isArray(
+                    data.observations
+                )
+            ){
+
+                loadObservationData(
+                    data.observations
+                );
+
+            }
+
+
+            /* =========================================
+               STUDENT ANALYSIS
+            ========================================= */
+
+            if(data.studentAnalysis){
+
+                setJSONValue(
+                    "analysis1",
+                    data.studentAnalysis.analysis1
+                );
+
+                setJSONValue(
+                    "analysis2",
+                    data.studentAnalysis.analysis2
+                );
+
+                setJSONValue(
+                    "analysis3",
+                    data.studentAnalysis.analysis3
+                );
+
+                setJSONValue(
+                    "analysis4",
+                    data.studentAnalysis.analysis4
+                );
+
+            }
+
+
+            /* =========================================
+               RESULT
+            ========================================= */
+
+            if(data.result !== undefined){
+
+                document.getElementById(
+                    "resultText"
+                ).innerText =
+                    data.result;
+
+            }
+
+
+            /* =========================================
+               POST-LAB ANSWERS
+            ========================================= */
+
+            if(
+                data.postLabAnswers !== undefined
+            ){
+
+                setJSONValue(
+                    "questionsAnswer",
+                    data.postLabAnswers
+                );
+
+            }
+
+
+            /* =========================================
+               FACULTY MARKS
+            ========================================= */
+
+            if(data.facultyEvaluation){
+
+                let marks =
+                    data.facultyEvaluation.marks;
+
+
+                if(Array.isArray(marks)){
+
+                    let inputs =
+                        document.querySelectorAll(
+                            ".mark"
+                        );
+
+
+                    marks.forEach(
+                        function(item,index){
+
+                            if(inputs[index]){
+
+                                inputs[index].value =
+                                    item.mark || "";
+
+                            }
+
+                        }
+                    );
+
+                }
+
+
+                if(
+                    data.facultyEvaluation.total
+                ){
+
+                    document.getElementById(
+                        "totalScore"
+                    ).innerText =
+                        data.facultyEvaluation.total;
+
+                }
+
+            }
+
+
+            /* =========================================
+               RESTORE IMAGES
+            ========================================= */
+
+            if(data.images){
+
+                restoreImage(
+                    "diagramPreview",
+                    data.images.simulinkDiagram
+                );
+
+                restoreImage(
+                    "wavePreview",
+                    data.images.waveform
+                );
+
+                restoreImage(
+                    "graphPreview",
+                    data.images.loadTransientGraph
+                );
+
+            }
+
+
+            /* =========================================
+               RECALCULATE
+            ========================================= */
+
+            calculateTheoretical();
+
+            calculateLoadProfile();
+
+            calculateObservation();
+
+            calculateScore();
+
+
+            /* =========================================
+               LOCAL STORAGE
+            ========================================= */
+
+            localStorage.setItem(
+                "flybackExperiment3_JSON",
+                JSON.stringify(data)
+            );
+
+
+            alert(
+                "Experiment 3 JSON loaded successfully."
+            );
+
+        }
+        catch(error){
+
+            console.error(error);
+
+            alert(
+                "Unable to load JSON file.\n\n" +
+                "Please select a valid Experiment 3 JSON file."
+            );
+
+        }
+        finally{
+
+            event.target.value = "";
+
+        }
+
+    };
+
+
+    reader.readAsText(file);
+
+}
+
+
+/* =========================================================
+   SAFE VALUE SETTER
+   ========================================================= */
+
+function setJSONValue(id,value){
+
+    let element =
+        document.getElementById(id);
+
+
+    if(!element){
+        return;
+    }
+
+
+    if(
+        value === undefined ||
+        value === null
+    ){
+
+        element.value = "";
+
+    }
+    else{
+
+        element.value = value;
+
+    }
+
+}
+
+
+/* =========================================================
+   LOAD LOAD PROFILE
+   ========================================================= */
+
+function loadLoadProfile(data){
+
+    let tbody =
+        document.querySelector(
+            "#loadTable tbody"
+        );
+
+
+    if(!tbody){
+        return;
+    }
+
+
+    /* ADD EXTRA ROWS */
+
+    while(
+        tbody.rows.length < data.length
+    ){
+
+        addLoadRow();
+
+    }
+
+
+    let rows =
+        tbody.querySelectorAll("tr");
+
+
+    data.forEach(
+        function(item,index){
+
+            let row =
+                rows[index];
+
+
+            if(!row){
+                return;
+            }
+
+
+            let start =
+                row.querySelector(".start");
+
+            let end =
+                row.querySelector(".end");
+
+            let loadR =
+                row.querySelector(".loadR");
+
+
+            if(start){
+
+                start.value =
+                    item.startTime || "";
+
+            }
+
+
+            if(end){
+
+                end.value =
+                    item.endTime || "";
+
+            }
+
+
+            if(loadR){
+
+                loadR.value =
+                    item.loadResistance || "";
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   LOAD OBSERVATION TABLE
+   ========================================================= */
+
+function loadObservationData(data){
+
+    let tbody =
+        document.querySelector(
+            "#observationTable tbody"
+        );
+
+
+    if(!tbody){
+        return;
+    }
+
+
+    let rows =
+        tbody.querySelectorAll("tr");
+
+
+    data.forEach(
+        function(item,index){
+
+            let row =
+                rows[index];
+
+
+            if(!row){
+                return;
+            }
+
+
+            let obsR =
+                row.querySelector(".obsR");
+
+            let obsV =
+                row.querySelector(".obsV");
+
+            let obsI =
+                row.querySelector(".obsI");
+
+            let obsVin =
+                row.querySelector(".obsVin");
+
+            let obsIin =
+                row.querySelector(".obsIin");
+
+
+            if(obsR){
+
+                obsR.value =
+                    item.loadResistance || "";
+
+            }
+
+
+            if(obsV){
+
+                obsV.value =
+                    item.measuredVoltage || "";
+
+            }
+
+
+            if(obsI){
+
+                obsI.value =
+                    item.measuredCurrent || "";
+
+            }
+
+
+            if(obsVin){
+
+                obsVin.value =
+                    item.inputVoltage || "";
+
+            }
+
+
+            if(obsIin){
+
+                obsIin.value =
+                    item.inputCurrent || "";
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   RESTORE IMAGE PREVIEW
+   ========================================================= */
+
+function restoreImage(
+    imageId,
+    imageData
+){
+
+    if(
+        !imageData ||
+        imageData === ""
+    ){
+
+        return;
+
+    }
+
+
+    let img =
+        document.getElementById(
+            imageId
+        );
+
+
+    if(!img){
+        return;
+    }
+
+
+    img.src =
+        imageData;
+
+
+    img.style.display =
+        "block";
+
+}
+
+
+/* =========================================================
+   AUTOMATIC EXPERIMENT EVALUATION
+   ========================================================= */
+
+function evaluateExperiment(){
+
+    let score = 0;
+
+    let feedback = [];
+
+
+    /* =========================================
+       1. STUDENT DETAILS - 1 MARK
+    ========================================= */
+
+    let studentFields = [
+
+        "studentName",
+        "regNo",
+        "department",
+        "year",
+        "date",
+        "batch"
+
+    ];
+
+
+    let studentComplete =
+        studentFields.every(
+            function(id){
+
+                return document
+                    .getElementById(id)
+                    .value
+                    .trim() !== "";
+
+            }
+        );
+
+
+    if(studentComplete){
+
+        score += 1;
+
+        feedback.push(
+            "✓ Student details completed."
+
+        );
+
+    }
+    else{
+
+        feedback.push(
+            "✗ Complete all student details."
+
+        );
+
+    }
+
+
+    /* =========================================
+       2. SIMULINK DIAGRAM - 2 MARKS
+    ========================================= */
+
+    let diagram =
+        document.getElementById(
+            "diagramPreview"
+        );
+
+
+    if(
+        diagram &&
+        diagram.src &&
+        diagram.style.display !== "none"
+    ){
+
+        score += 2;
+
+        feedback.push(
+            "✓ Simulink model screenshot uploaded."
+
+        );
+
+    }
+    else{
+
+        feedback.push(
+            "✗ Upload the Flyback Converter Simulink diagram."
+
+        );
+
+    }
+
+
+    /* =========================================
+       3. OBSERVATION TABLE - 2 MARKS
+    ========================================= */
+
+    let observationRows =
+        document.querySelectorAll(
+            "#observationTable tbody tr"
+        );
+
+
+    let observationComplete = true;
+
+
+    observationRows.forEach(
+        function(row){
+
+            let values = [
+
+                row.querySelector(".obsR").value,
+
+                row.querySelector(".obsV").value,
+
+                row.querySelector(".obsI").value,
+
+                row.querySelector(".obsVin").value,
+
+                row.querySelector(".obsIin").value
+
+            ];
+
+
+            values.forEach(
+                function(value){
+
+                    if(
+                        value.trim() === ""
+                    ){
+
+                        observationComplete = false;
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+
+    if(observationComplete){
+
+        score += 2;
+
+        feedback.push(
+            "✓ Observation table completed."
+
+        );
+
+    }
+    else{
+
+        feedback.push(
+            "✗ Complete all observation table entries."
+
+        );
+
+    }
+
+
+    /* =========================================
+       4. ANALYSIS - 2 MARKS
+    ========================================= */
+
+    let analysisFields = [
+
+        "analysis1",
+        "analysis2",
+        "analysis3",
+        "analysis4"
+
+    ];
+
+
+    let analysisComplete =
+        analysisFields.every(
+            function(id){
+
+                return document
+                    .getElementById(id)
+                    .value
+                    .trim()
+                    .length >= 20;
+
+            }
+        );
+
+
+    if(analysisComplete){
+
+        score += 2;
+
+        feedback.push(
+            "✓ Student analysis completed."
+
+        );
+
+    }
+    else{
+
+        feedback.push(
+            "✗ Complete all four analysis questions with sufficient explanation."
+
+        );
+
+    }
+
+
+    /* =========================================
+       5. POST-LAB - 1 MARK
+    ========================================= */
+
+    let answers =
+        document
+        .getElementById(
+            "questionsAnswer"
+        )
+        .value
+        .trim();
+
+
+    if(
+        answers.length >= 50
+    ){
+
+        score += 1;
+
+        feedback.push(
+            "✓ Post-lab answers entered."
+
+        );
+
+    }
+    else{
+
+        feedback.push(
+            "✗ Complete the post-lab answers."
+
+        );
+
+    }
+
+
+    /* =========================================
+       6. WAVEFORM - 1 MARK
+    ========================================= */
+
+    let waveform =
+        document.getElementById(
+            "wavePreview"
+        );
+
+
+    if(
+        waveform &&
+        waveform.src &&
+        waveform.style.display !== "none"
+    ){
+
+        score += 1;
+
+        feedback.push(
+            "✓ Simulink waveform uploaded."
+
+        );
+
+    }
+    else{
+
+        feedback.push(
+            "✗ Upload the Simulink waveform."
+
+        );
+
+    }
+
+
+    /* =========================================
+       7. LOAD TRANSIENT GRAPH - 1 MARK
+    ========================================= */
+
+    let graph =
+        document.getElementById(
+            "graphPreview"
+        );
+
+
+    if(
+        graph &&
+        graph.src &&
+        graph.style.display !== "none"
+    ){
+
+        score += 1;
+
+        feedback.push(
+            "✓ Load transient graph uploaded."
+
+        );
+
+    }
+    else{
+
+        feedback.push(
+            "✗ Upload the load transient graph."
+
+        );
+
+    }
+
+
+    /* =========================================
+       TOTAL SCORE
+    ========================================= */
+
+    document.getElementById(
+        "totalScore"
+    ).innerText =
+        score.toFixed(1) +
+        " / 10";
+
+
+    /* =========================================
+       SHOW EVALUATION
+    ========================================= */
+
+    let resultBox =
+        document.getElementById(
+            "resultText"
+        );
+
+
+    resultBox.innerText =
+
+        "EXPERIMENT EVALUATION\n\n" +
+
+        "Score: " +
+        score.toFixed(1) +
+        " / 10\n\n" +
+
+        feedback.join("\n");
+
+
+    /* =========================================
+       SAVE EVALUATION
+    ========================================= */
+
+    localStorage.setItem(
+        "flybackExperiment3Evaluation",
+        JSON.stringify({
+
+            score:score,
+
+            feedback:feedback,
+
+            evaluatedAt:
+                new Date().toISOString()
+
+        })
+    );
+
+
+    alert(
+        "Experiment 3 evaluation completed.\n\n" +
+        "Score: " +
+        score.toFixed(1) +
+        " / 10"
+    );
+
+}
+
+/* =========================================
+   LOAD SAVED DATA
+========================================= */
+
+window.addEventListener(
+    "load",
+    function(){
+
+        let saved =
+            localStorage.getItem(
+                "flybackExperiment3"
+            );
+
+
+        if(!saved)
+            return;
+
+
+        try{
+
+            let data =
+                JSON.parse(saved);
+
+
+            document
+            .querySelectorAll(
+                "input,textarea,select"
+            )
+            .forEach(
+
+                function(el,index){
+
+                    if(
+                        el.type === "file"
+                    )
+                        return;
+
+
+                    if(
+                        data[
+                            "field_" + index
+                        ] !== undefined
+                    ){
+
+                        el.value =
+                            data[
+                                "field_" + index
+                            ];
+
+                    }
+
+                }
+
+            );
+
+        }
+        catch(e){
+
+            console.log(
+                "Saved data could not be loaded."
+            );
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>

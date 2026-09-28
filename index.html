@@ -1,0 +1,3511 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>
+EIE232 – Robotics Actuation & Power Drive Technologies
+</title>
+
+<!-- PDF LIBRARY -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+
+<style>
+
+/* =====================================================
+   GLOBAL
+===================================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: #e5e5e5;
+    color: #111;
+    font-family: "Times New Roman", Georgia, serif;
+}
+
+/* =====================================================
+   MAIN MANUAL
+===================================================== */
+
+.manual {
+    width: 1100px;
+    max-width: 100%;
+    margin: 25px auto;
+    background: #fff;
+    box-shadow: 0 0 20px rgba(0,0,0,.25);
+}
+
+/* =====================================================
+   PAGE
+===================================================== */
+
+.page {
+    width: 100%;
+    min-height: 1450px;
+    padding: 55px 65px;
+    position: relative;
+    background: #fff;
+    page-break-after: always;
+}
+
+/* =====================================================
+   COVER PAGE
+===================================================== */
+
+.cover {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.cover-logo {
+    width: 100%;
+    max-width: 900px;
+    margin-top: 35px;
+    margin-bottom: 85px;
+}
+
+.cover-logo img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.school {
+    font-size: 27px;
+    font-weight: bold;
+    color: #173b73;
+    margin-bottom: 25px;
+}
+
+.course-code {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 35px;
+}
+
+.course-title {
+    font-size: 38px;
+    font-weight: bold;
+    line-height: 1.25;
+    color: #173b73;
+    text-transform: uppercase;
+}
+
+.programme {
+    font-size: 27px;
+    font-weight: bold;
+    margin-top: 35px;
+}
+
+.cover-line {
+    width: 80%;
+    height: 3px;
+    background: #263f7b;
+    margin: 45px auto 25px;
+}
+
+.virtual-lab {
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: #263f7b;
+}
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid #263f7b;
+    padding-bottom: 10px;
+    margin-bottom: 30px;
+}
+
+.page-header img {
+    width: 190px;
+    height: auto;
+}
+
+.page-header-title {
+    text-align: right;
+    color: #263f7b;
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 1.4;
+}
+
+/* =====================================================
+   COURSE INFORMATION
+===================================================== */
+
+.course-information {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.course-information h1 {
+    color: #173b73;
+    font-size: 30px;
+    line-height: 1.3;
+    margin: 10px 0 25px;
+}
+
+.info-table {
+    width: 75%;
+    margin: auto;
+    border-collapse: collapse;
+    font-size: 20px;
+}
+
+.info-table td {
+    border: 1px solid #777;
+    padding: 11px;
+}
+
+.info-table td:first-child {
+    width: 35%;
+    font-weight: bold;
+    background: #edf1f8;
+}
+
+/* =====================================================
+   EXPERIMENT LIST
+===================================================== */
+
+.list-title {
+    text-align: center;
+    font-size: 28px;
+    color: #173b73;
+    margin: 20px 0;
+}
+
+.experiment-list {
+    padding-left: 35px;
+    font-size: 17px;
+    line-height: 1.45;
+    margin-top: 10px;
+}
+
+.experiment-list li {
+    margin-bottom: 6px;
+}
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+.page-footer {
+    position: absolute;
+    left: 65px;
+    right: 65px;
+    bottom: 25px;
+    border-top: 1px solid #aaa;
+    padding-top: 8px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #555;
+}
+
+/* =====================================================
+   CONTROL PANEL
+===================================================== */
+
+.control-area {
+    width: 1100px;
+    max-width: 100%;
+    margin: 20px auto;
+    background: #fff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0,0,0,.15);
+    font-family: Arial, sans-serif;
+}
+
+.control-area h2 {
+    color: #173b73;
+    margin-top: 0;
+    border-bottom: 2px solid #173b73;
+    padding-bottom: 10px;
+}
+
+.control-area h3 {
+    color: #173b73;
+}
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+
+button {
+    border: none;
+    border-radius: 6px;
+    padding: 12px 18px;
+    margin: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #fff;
+    font-size: 14px;
+}
+
+button:hover {
+    filter: brightness(1.12);
+}
+
+button:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+.btn-blue {
+    background: #173b73;
+}
+
+.btn-green {
+    background: #16835b;
+}
+
+.btn-orange {
+    background: #b47716;
+}
+
+.btn-red {
+    background: #a92e3b;
+}
+
+.btn-grey {
+    background: #555;
+}
+
+/* =====================================================
+   EXPERIMENT BUTTONS
+===================================================== */
+
+.experiment-buttons {
+    display: grid;
+    grid-template-columns: repeat(5,1fr);
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.experiment-buttons a {
+    display: block;
+    padding: 12px 8px;
+    background: #173b73;
+    color: #fff;
+    text-decoration: none;
+    text-align: center;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.experiment-buttons a:hover {
+    background: #315a9b;
+}
+
+/* =====================================================
+   SAVE / LOAD JSON PANEL
+===================================================== */
+
+.progress-save-panel {
+
+    margin: 25px 0;
+
+    padding: 20px;
+
+    background: #eef3fa;
+
+    border-left: 6px solid #173b73;
+
+    border-radius: 8px;
+
+    font-family: Arial, sans-serif;
+
+}
+
+.progress-save-panel h3 {
+
+    margin-top: 0;
+
+    color: #173b73;
+
+}
+
+.progress-save-panel p {
+
+    color: #444;
+
+    line-height: 1.5;
+
+}
+
+.btn-save-json {
+
+    background: #16835b;
+
+    color: white;
+
+    border: none;
+
+    padding: 12px 18px;
+
+    border-radius: 6px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    margin: 5px;
+
+}
+
+.btn-load-json {
+
+    background: #173b73;
+
+    color: white;
+
+    border: none;
+
+    padding: 12px 18px;
+
+    border-radius: 6px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    margin: 5px;
+
+}
+
+.btn-save-json:hover,
+.btn-load-json:hover {
+
+    filter: brightness(1.15);
+
+}
+
+.json-status {
+
+    margin-top: 12px;
+
+    padding: 10px;
+
+    background: white;
+
+    border-radius: 5px;
+
+    color: #555;
+
+    font-size: 14px;
+
+}
+
+.json-status.success {
+
+    color: #16835b;
+
+    font-weight: bold;
+
+    background: #eaf7f1;
+
+}
+
+.json-status.error {
+
+    color: #a92e3b;
+
+    font-weight: bold;
+
+    background: #fff0f1;
+
+}
+
+/* =====================================================
+   PDF DROP AREA
+===================================================== */
+
+.drop-area {
+    border: 3px dashed #6c7a91;
+    border-radius: 10px;
+    padding: 30px;
+    text-align: center;
+    background: #f5f7fa;
+    margin-top: 15px;
+    cursor: pointer;
+    transition: .2s;
+    user-select: none;
+}
+
+.drop-area:hover {
+    background: #eaf0f8;
+    border-color: #173b73;
+}
+
+.drop-area.dragover {
+    background: #dfeaf8;
+    border-color: #16835b;
+}
+
+.drop-area input {
+    display: none;
+}
+
+.drop-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #173b73;
+    margin-bottom: 8px;
+}
+
+.drop-subtitle {
+    color: #555;
+    font-size: 14px;
+}
+
+/* =====================================================
+   SELECTED PDF TABLE
+===================================================== */
+
+.pdf-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.pdf-table th {
+    background: #173b73;
+    color: white;
+    padding: 10px;
+    text-align: left;
+}
+
+.pdf-table td {
+    border: 1px solid #ccc;
+    padding: 9px;
+}
+
+.pdf-table tr:nth-child(even) {
+    background: #f5f5f5;
+}
+
+.pdf-order {
+    font-weight: bold;
+    color: #173b73;
+}
+
+.pdf-ok {
+    color: #16835b;
+    font-weight: bold;
+}
+
+.pdf-missing {
+    color: #a92e3b;
+    font-weight: bold;
+}
+
+/* =====================================================
+   OPTION BOX
+===================================================== */
+
+.option-box {
+    margin-top: 20px;
+    padding: 15px;
+    background: #eef3fa;
+    border-left: 5px solid #173b73;
+    border-radius: 5px;
+}
+
+.option-box label {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.option-box input {
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+/* =====================================================
+   STATUS
+===================================================== */
+
+.status {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f1f3f5;
+    border-left: 5px solid #173b73;
+    border-radius: 5px;
+    line-height: 1.6;
+}
+
+.status.success {
+    border-left-color: #16835b;
+    background: #eaf7f1;
+}
+
+.status.warning {
+    border-left-color: #b47716;
+    background: #fff7e5;
+}
+
+.status.error {
+    border-left-color: #a92e3b;
+    background: #fff0f1;
+}
+
+
+
+
+/* =====================================================
+   PROGRESS
+===================================================== */
+
+.progress-bar-container {
+    width: 100%;
+    height: 25px;
+    background: #ddd;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-top: 15px;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: #16835b;
+    transition: .3s;
+    text-align: center;
+    color: #fff;
+    font-size: 13px;
+    line-height: 25px;
+    font-weight: bold;
+}
+
+/* =====================================================
+   COMPLETION BOX
+===================================================== */
+
+.completion-box {
+    display: grid;
+    grid-template-columns: repeat(5,1fr);
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.completion-item {
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    background: #eee;
+    font-size: 12px;
+}
+
+.completion-item.done {
+    background: #16835b;
+    color: #fff;
+}
+
+.completion-item.pending {
+    background: #f4dede;
+    color: #8c2222;
+}
+
+/* =====================================================
+   PRINT
+===================================================== */
+
+@media print {
+
+    body {
+        background: white;
+    }
+
+    .control-area {
+        display: none !important;
+    }
+
+    .manual {
+        margin: 0;
+        width: 100%;
+        box-shadow: none;
+    }
+
+    .page {
+        min-height: 100vh;
+        page-break-after: always;
+    }
+}
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media(max-width:700px) {
+
+    .manual {
+        margin: 0;
+    }
+
+    .page {
+        padding: 30px 25px;
+        min-height: 1100px;
+    }
+
+    .cover-logo {
+        margin-bottom: 50px;
+    }
+
+    .school {
+        font-size: 20px;
+    }
+
+    .course-title {
+        font-size: 27px;
+    }
+
+    .programme {
+        font-size: 20px;
+    }
+
+    .info-table {
+        width: 100%;
+        font-size: 16px;
+    }
+
+    .experiment-list {
+        font-size: 14px;
+        padding-left: 25px;
+    }
+
+    .experiment-buttons {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    .completion-box {
+        grid-template-columns: repeat(2,1fr);
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- =====================================================
+     CONTROL AREA
+===================================================== -->
+
+<div class="control-area">
+
+<h2>
+    EIE232 Virtual Laboratory
+</h2>
+
+<p>
+    Complete each experiment using its respective HTML file.
+    After completing an experiment, use
+    <strong>Save Experiment as PDF</strong>
+    from that experiment page.
+</p>
+
+<p>
+    When all required experiment PDFs are ready,
+    select them below and generate one combined laboratory record.
+</p>
+
+<!-- =====================================================
+     SAVE / LOAD EXPERIMENT PROGRESS
+===================================================== -->
+
+<div class="progress-save-panel">
+
+    <h3>Student Experiment Progress</h3>
+
+    <p>
+        Save your current experiment data as a JSON file.
+        You can load this file later and continue the experiment.
+    </p>
+
+    <button
+        type="button"
+        class="btn-save-json"
+        onclick="saveExperimentProgress()">
+
+        💾 Save Progress (.JSON)
+
+    </button>
+
+    <button
+        type="button"
+        class="btn-load-json"
+        onclick="document.getElementById('loadProgressInput').click()">
+
+        📂 Load Progress (.JSON)
+
+    </button>
+
+    <input
+        type="file"
+        id="loadProgressInput"
+        accept=".json,application/json"
+        style="display:none"
+        onchange="loadExperimentProgress(event)"
+    >
+
+    <div
+        id="jsonStatus"
+        class="json-status">
+
+        No progress file loaded.
+
+    </div>
+
+</div>
+
+<!-- =====================================================
+     PRINT MANUAL
+===================================================== -->
+
+<h3>
+    1. Manual Cover & Experiment List
+</h3>
+
+<button class="btn-blue"
+        onclick="window.print()">
+
+    🖨 Print / Save 2-Page Manual
+
+</button>
+
+<hr>
+
+<button onclick="saveExperimentAsPDF()">
+    📄 Save Experiment as PDF
+</button>
+
+
+
+</div>
+
+<!-- =====================================================
+     OPEN EXPERIMENTS
+===================================================== -->
+
+<h3>
+    2. Open Experiments
+</h3>
+
+<div class="experiment-buttons">
+
+    <a href="Experiment 1.html" target="_blank">Experiment 1</a>
+    <a href="Experiment 2.html" target="_blank">Experiment 2a</a>
+    <a href="Experiment 2B.html" target="_blank">Experiment 2b</a>
+    <a href="Experiment 3.html" target="_blank">Experiment 3</a>
+    <a href="Experiment 4.html" target="_blank">Experiment 4</a>
+    <a href="Experiment 5.html" target="_blank">Experiment 5</a>
+    <a href="Experiment 6.html" target="_blank">Experiment 6</a>
+    <a href="Experiment 7.html" target="_blank">Experiment 7</a>
+    <a href="Experiment 8.html" target="_blank">Experiment 8</a>
+    <a href="Experiment 9.html" target="_blank">Experiment 9</a>
+    <a href="Experiment 10.html" target="_blank">Experiment 10</a>
+
+</div>
+
+<hr>
+
+<!-- =====================================================
+     PDF MERGING
+===================================================== -->
+
+<h3>
+    3. Merge Completed Experiment PDFs
+</h3>
+
+<p>
+    Select the PDF files generated from
+    <strong>Experiment 1 to Experiment 10</strong>.
+    You can select all files together.
+</p>
+
+<!-- =====================================================
+     IMPORTANT: CLICKABLE DROP AREA
+===================================================== -->
+
+<div class="drop-area" id="dropArea">
+
+    <div class="drop-title">
+        📄 Select or Drop Experiment PDFs
+    </div>
+
+    <div class="drop-subtitle">
+        <strong>Click here to select PDF files</strong>
+        or drag and drop Experiment 1–10 PDF files
+    </div>
+
+    <input
+        type="file"
+        id="pdfInput"
+        accept=".pdf,application/pdf"
+        multiple
+    >
+
+</div>
+
+<!-- =====================================================
+     COVER OPTION
+===================================================== -->
+
+<div class="option-box">
+
+<label>
+
+    <input type="checkbox"
+           id="includeCover"
+           checked>
+
+    Include the 2-page EIE232 cover and
+    experiment list at the beginning of
+    the final combined PDF
+
+</label>
+
+</div>
+
+<!-- =====================================================
+     SELECTED PDF TABLE
+===================================================== -->
+
+<table class="pdf-table" id="pdfTable">
+
+<thead>
+
+<tr>
+
+    <th>Order</th>
+    <th>Experiment</th>
+    <th>Selected PDF</th>
+    <th>Status</th>
+
+</tr>
+
+</thead>
+
+<tbody id="pdfTableBody"></tbody>
+
+</table>
+
+<!-- =====================================================
+     COMPLETION
+===================================================== -->
+
+<h3>
+    Experiment PDF Status
+</h3>
+
+<div class="completion-box"
+     id="completionBox">
+</div>
+
+<!-- =====================================================
+     PROGRESS
+===================================================== -->
+
+<div class="progress-bar-container">
+
+<div class="progress-bar"
+     id="progressBar">
+
+    0 / 10 PDFs
+
+</div>
+
+</div>
+
+<!-- =====================================================
+     BUTTONS
+===================================================== -->
+
+<div style="
+    text-align:center;
+    margin-top:20px;
+">
+
+<button class="btn-green"
+        id="mergeButton"
+        onclick="mergeAllPDFs()"
+        disabled>
+
+    📚 MERGE ALL EXPERIMENT PDFs
+
+</button>
+
+<button class="btn-orange"
+        onclick="clearSelectedPDFs()">
+
+    🗑 Clear Selected PDFs
+
+</button>
+
+<button class="btn-grey"
+        onclick="refreshPDFStatus()">
+
+    🔄 Refresh Status
+
+</button>
+
+</div>
+
+<!-- =====================================================
+     STATUS
+===================================================== -->
+
+<div class="status"
+     id="statusBox">
+
+    No experiment PDFs selected yet.
+
+</div>
+
+</div>
+
+
+<!-- =====================================================
+     TWO PAGE MANUAL
+===================================================== -->
+
+<div class="manual">
+
+<!-- =====================================================
+     PAGE 1
+===================================================== -->
+
+<section class="page cover"
+         id="coverPage">
+
+<div class="cover-logo">
+
+<img src="sastra-logo.png"
+     alt="SASTRA Deemed to be University">
+
+</div>
+
+<div class="school">
+
+School of Electrical & Electronics Engineering
+
+</div>
+
+<div class="course-code">
+
+EIE232
+
+</div>
+
+<div class="course-title">
+
+ROBOTICS ACTUATION &<br>
+POWER DRIVE TECHNOLOGIES
+
+</div>
+
+<div class="programme">
+
+V SEM B. Tech Robotics & AI
+
+</div>
+
+<div class="cover-line"></div>
+
+<div class="virtual-lab">
+
+VIRTUAL LABORATORY MANUAL
+
+</div>
+
+<div class="page-footer">
+
+<span>
+EIE232 – Robotics Actuation & Power Drive Technologies
+</span>
+
+<span>
+Page 1
+</span>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     PAGE 2
+===================================================== -->
+
+<section class="page"
+         id="experimentListPage">
+
+<div class="page-header">
+
+<img src="sastra-logo.png"
+     alt="SASTRA">
+
+<div class="page-header-title">
+
+SCHOOL OF ELECTRICAL &<br>
+ELECTRONICS ENGINEERING<br>
+EIE232
+
+</div>
+
+</div>
+
+<div class="course-information">
+
+<h1>
+
+ROBOTICS ACTUATION &<br>
+POWER DRIVE TECHNOLOGIES
+
+</h1>
+
+<table class="info-table">
+
+<tr>
+
+<td>Course Code</td>
+
+<td><strong>EIE232</strong></td>
+
+</tr>
+
+<tr>
+
+<td>Semester</td>
+
+<td><strong>I</strong></td>
+
+</tr>
+
+</table>
+
+</div>
+
+<div class="list-title">
+
+List of Experiments
+
+<br>
+
+<span style="font-size:18px">
+(Any 8 Experiments)
+</span>
+
+</div>
+
+<ol class="experiment-list">
+
+<li>
+Study of V–I characteristics, switching times,
+and switching losses of a MOSFET and an IGBT.
+</li>
+
+<li>
+Simulation of Buck converter & Buck Boost
+converter with variable load profile.
+</li>
+
+<li>
+Simulation of Isolated DC-DC converter with
+variable load profile.
+</li>
+
+<li>
+Simulation of Bidirectional Converter for
+Battery Charging.
+</li>
+
+<li>
+PWM control of H Bridge DC motor Drive.
+</li>
+
+<li>
+Speed control of BLDC motor Drive.
+</li>
+
+<li>
+Position and Speed control of DC Servo
+Motor Drive.
+</li>
+
+<li>
+Position control of Stepper Motor Drive.
+</li>
+
+<li>
+Speed control of Squirrel cage induction
+motor drive.
+</li>
+
+<li>
+Closed loop control of Buck & Buck Boost
+Converter using PIL.
+</li>
+
+<li>
+Evaluation of Heat sink effectiveness during
+switching of MOSFET.
+</li>
+
+<li>
+Measurement of DC ripple and EMI interference
+of Buck Converter.
+</li>
+
+<li>
+Stress Test and Reliability Assessment of
+Robotic Power Module.
+</li>
+
+<li>
+Vision-Based Motor Drive Control.
+</li>
+
+</ol>
+
+<div class="page-footer">
+
+<span>
+SASTRA Deemed to be University
+</span>
+
+<span>
+Page 2
+</span>
+
+</div>
+
+</section>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   GLOBAL VARIABLES
+========================================================= */
+
+let selectedPDFs = [];
+
+
+/* =========================================================
+   EXPERIMENT NAMES
+========================================================= */
+
+const experimentNames = [
+
+    "Experiment 1",
+    "Experiment 2a",
+    "Experiment 2b",
+    "Experiment 3",
+    "Experiment 4",
+    "Experiment 5",
+    "Experiment 6",
+    "Experiment 7",
+    "Experiment 8",
+    "Experiment 9",
+    "Experiment 10"
+
+];
+
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const pdfInput =
+    document.getElementById("pdfInput");
+
+const dropArea =
+    document.getElementById("dropArea");
+
+const pdfTableBody =
+    document.getElementById("pdfTableBody");
+
+const completionBox =
+    document.getElementById("completionBox");
+
+const progressBar =
+    document.getElementById("progressBar");
+
+const statusBox =
+    document.getElementById("statusBox");
+
+const mergeButton =
+    document.getElementById("mergeButton");
+
+
+/* =========================================================
+   IMPORTANT FIX #1
+   CLICK DROP AREA TO OPEN FILE SELECTOR
+========================================================= */
+
+dropArea.addEventListener("click", function(event) {
+
+    /*
+     * Prevent unnecessary recursion if the input itself
+     * receives the click.
+     */
+
+    if (event.target !== pdfInput) {
+
+        pdfInput.click();
+
+    }
+
+});
+
+
+/* =========================================================
+   FILE INPUT
+========================================================= */
+
+pdfInput.addEventListener("change", function(event) {
+
+    const files =
+        Array.from(event.target.files);
+
+    if (files.length > 0) {
+
+        addPDFs(files);
+
+    }
+
+    /*
+     * Reset the input.
+     *
+     * This allows the user to select the same file again
+     * after clearing the list.
+     */
+
+    pdfInput.value = "";
+
+});
+
+
+/* =========================================================
+   DRAG OVER
+========================================================= */
+
+dropArea.addEventListener("dragover", function(event) {
+
+    event.preventDefault();
+
+    event.stopPropagation();
+
+    dropArea.classList.add("dragover");
+
+});
+
+
+/* =========================================================
+   DRAG LEAVE
+========================================================= */
+
+dropArea.addEventListener("dragleave", function(event) {
+
+    event.preventDefault();
+
+    dropArea.classList.remove("dragover");
+
+});
+
+
+/* =========================================================
+   DROP
+========================================================= */
+
+dropArea.addEventListener("drop", function(event) {
+
+    event.preventDefault();
+
+    event.stopPropagation();
+
+    dropArea.classList.remove("dragover");
+
+    const files =
+        Array.from(event.dataTransfer.files)
+        .filter(function(file) {
+
+            return (
+                file.type === "application/pdf" ||
+                file.name.toLowerCase().endsWith(".pdf")
+            );
+
+        });
+
+    if (files.length === 0) {
+
+        statusBox.className = "status error";
+
+        statusBox.innerHTML =
+            "<strong>✗ No PDF files found.</strong><br>" +
+            "Please select PDF files only.";
+
+        return;
+
+    }
+
+    addPDFs(files);
+
+});
+
+
+/* =========================================================
+   ADD PDF FILES
+========================================================= */
+
+function addPDFs(files) {
+
+    let added = 0;
+
+    files.forEach(function(file) {
+
+        /*
+         * Check PDF
+         */
+
+        const isPDF =
+            file.type === "application/pdf" ||
+            file.name.toLowerCase().endsWith(".pdf");
+
+        if (!isPDF) {
+            return;
+        }
+
+
+        /*
+         * Prevent duplicate file names
+         */
+
+        const alreadyExists =
+            selectedPDFs.some(function(item) {
+
+                return item.name.toLowerCase() ===
+                       file.name.toLowerCase();
+
+            });
+
+
+        if (!alreadyExists) {
+
+            selectedPDFs.push(file);
+
+            added++;
+
+        }
+
+    });
+
+
+    /*
+     * Sort Experiment 1 → Experiment 10
+     */
+
+    sortPDFs();
+
+    refreshPDFStatus();
+
+
+    /*
+     * Show result
+     */
+
+    if (added > 0) {
+
+        statusBox.className = "status success";
+
+        statusBox.innerHTML =
+            "<strong>✓ " +
+            added +
+            " PDF file(s) added.</strong><br>" +
+            "Selected PDFs have been organized automatically.";
+
+    }
+
+}
+
+
+/* =========================================================
+   IMPORTANT FIX #2
+   CORRECT EXPERIMENT NUMBER DETECTION
+========================================================= */
+
+function getExperimentNumber(filename) {
+
+    const name =
+        filename.toLowerCase();
+
+
+    /*
+     * Supports:
+     *
+     * Experiment 1.pdf
+     * Experiment_1.pdf
+     * Experiment-1.pdf
+     * Experiment1.pdf
+     *
+     * Exp 1.pdf
+     * Exp_1.pdf
+     * Exp-1.pdf
+     * Exp1.pdf
+     */
+
+    let match =
+        name.match(/experiment[\s_-]*(10|[1-9])(?:\D|$)/i);
+
+
+    if (!match) {
+
+        match =
+            name.match(/exp[\s_-]*(10|[1-9])(?:\D|$)/i);
+
+    }
+
+
+    if (match) {
+
+        return Number(match[1]);
+
+    }
+
+
+    /*
+     * If the file does not contain a recognizable
+     * experiment number, place it at the end.
+     */
+
+    return 999;
+
+}
+
+
+/* =========================================================
+   SORT PDFS
+========================================================= */
+
+function sortPDFs() {
+
+    selectedPDFs.sort(function(a, b) {
+
+        const numA =
+            getExperimentNumber(a.name);
+
+        const numB =
+            getExperimentNumber(b.name);
+
+
+        if (numA !== numB) {
+
+            return numA - numB;
+
+        }
+
+
+        /*
+         * Same experiment number:
+         * sort alphabetically.
+         */
+
+        return a.name.localeCompare(b.name);
+
+    });
+
+}
+
+
+/* =========================================================
+   REFRESH STATUS
+========================================================= */
+
+function refreshPDFStatus() {
+
+    sortPDFs();
+
+    pdfTableBody.innerHTML = "";
+
+    completionBox.innerHTML = "";
+
+    let completed = 0;
+
+
+    for (let i = 1; i <= 10; i++) {
+
+        const file =
+            selectedPDFs.find(function(item) {
+
+                return getExperimentNumber(item.name) === i;
+
+            });
+
+
+        /*
+         * TABLE ROW
+         */
+
+        const row =
+            document.createElement("tr");
+
+
+        const orderCell =
+            document.createElement("td");
+
+        orderCell.className = "pdf-order";
+
+        orderCell.textContent = i;
+
+
+        const expCell =
+            document.createElement("td");
+
+        expCell.textContent =
+            experimentNames[i - 1];
+
+
+        const fileCell =
+            document.createElement("td");
+
+
+        const statusCell =
+            document.createElement("td");
+
+
+        if (file) {
+
+            fileCell.textContent =
+                file.name;
+
+
+            statusCell.innerHTML =
+                '<span class="pdf-ok">' +
+                '✓ PDF Ready' +
+                '</span>';
+
+
+            completed++;
+
+        }
+
+        else {
+
+            fileCell.textContent =
+                "Not selected";
+
+
+            statusCell.innerHTML =
+                '<span class="pdf-missing">' +
+                '○ PDF Missing' +
+                '</span>';
+
+        }
+
+
+        row.appendChild(orderCell);
+
+        row.appendChild(expCell);
+
+        row.appendChild(fileCell);
+
+        row.appendChild(statusCell);
+
+
+        pdfTableBody.appendChild(row);
+
+
+        /*
+         * COMPLETION BOX
+         */
+
+        const box =
+            document.createElement("div");
+
+
+        box.className =
+            "completion-item " +
+            (file ? "done" : "pending");
+
+
+        box.innerHTML =
+            file
+            ? "✓ Exp " + i
+            : "○ Exp " + i;
+
+
+        completionBox.appendChild(box);
+
+    }
+
+
+    /*
+     * PROGRESS
+     */
+
+    const percentage =
+        completed * 10;
+
+
+    progressBar.style.width =
+        percentage + "%";
+
+
+    progressBar.textContent =
+        completed + " / 10 PDFs";
+
+
+    /*
+     * ENABLE MERGE
+     */
+
+    mergeButton.disabled =
+        completed === 0;
+
+
+    /*
+     * STATUS
+     */
+
+    if (completed === 10) {
+
+        statusBox.className =
+            "status success";
+
+
+        statusBox.innerHTML =
+            "<strong>✓ All 10 experiment PDFs are ready.</strong><br>" +
+            "You can now generate the complete EIE232 laboratory record.";
+
+    }
+
+    else if (completed > 0) {
+
+        statusBox.className =
+            "status warning";
+
+
+        statusBox.innerHTML =
+            "<strong>" +
+            completed +
+            " of 10 experiment PDFs selected.</strong><br>" +
+            "Missing experiments will not be included unless their PDFs are selected.";
+
+    }
+
+    else {
+
+        statusBox.className =
+            "status";
+
+
+        statusBox.innerHTML =
+            "No experiment PDFs selected yet.";
+
+    }
+
+}
+
+
+/* =========================================================
+   CLEAR SELECTED PDFS
+========================================================= */
+
+function clearSelectedPDFs() {
+
+    selectedPDFs = [];
+
+    pdfInput.value = "";
+
+    refreshPDFStatus();
+
+}
+
+
+/* =========================================================
+   CREATE COVER PDF
+========================================================= */
+
+async function createCoverPDF() {
+
+    const PDFDocument =
+        PDFLib.PDFDocument;
+
+    const rgb =
+        PDFLib.rgb;
+
+    const StandardFonts =
+        PDFLib.StandardFonts;
+
+
+    const pdf =
+        await PDFDocument.create();
+
+
+    const pageWidth = 595.28;
+
+    const pageHeight = 841.89;
+
+
+    /*
+     * =====================================================
+     * PAGE 1
+     * =====================================================
+     */
+
+    let page =
+        pdf.addPage([
+            pageWidth,
+            pageHeight
+        ]);
+
+
+    /*
+     * LOGO
+     */
+
+    try {
+
+        const response =
+            await fetch("sastra-logo.png");
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Logo file could not be loaded."
+            );
+
+        }
+
+
+        const imageBytes =
+            await response.arrayBuffer();
+
+
+        const image =
+            await pdf.embedPng(imageBytes);
+
+
+        const imageScale =
+            Math.min(
+                500 / image.width,
+                180 / image.height
+            );
+
+
+        const imageWidth =
+            image.width * imageScale;
+
+
+        const imageHeight =
+            image.height * imageScale;
+
+
+        page.drawImage(image, {
+
+            x:
+                (pageWidth - imageWidth) / 2,
+
+            y:
+                pageHeight - 220,
+
+            width:
+                imageWidth,
+
+            height:
+                imageHeight
+
+        });
+
+    }
+
+    catch (error) {
+
+        console.warn(
+            "Logo could not be embedded:",
+            error
+        );
+
+    }
+
+
+    const boldFont =
+        await pdf.embedFont(
+            StandardFonts.HelveticaBold
+        );
+
+
+    const normalFont =
+        await pdf.embedFont(
+            StandardFonts.Helvetica
+        );
+
+
+    function centerText(
+        text,
+        y,
+        size,
+        font,
+        color
+    ) {
+
+        const width =
+            font.widthOfTextAtSize(
+                text,
+                size
+            );
+
+
+        page.drawText(text, {
+
+            x:
+                (pageWidth - width) / 2,
+
+            y: y,
+
+            size: size,
+
+            font: font,
+
+            color: color
+
+        });
+
+    }
+
+
+    const blue =
+        rgb(.09, .23, .45);
+
+    const black =
+        rgb(.1, .1, .1);
+
+
+    centerText(
+        "School of Electrical & Electronics Engineering",
+        470,
+        18,
+        boldFont,
+        blue
+    );
+
+
+    centerText(
+        "EIE232",
+        430,
+        17,
+        boldFont,
+        black
+    );
+
+
+    centerText(
+        "ROBOTICS ACTUATION &",
+        370,
+        24,
+        boldFont,
+        blue
+    );
+
+
+    centerText(
+        "POWER DRIVE TECHNOLOGIES",
+        335,
+        24,
+        boldFont,
+        blue
+    );
+
+
+    centerText(
+        "V SEM B. Tech Robotics & AI",
+        275,
+        18,
+        boldFont,
+        black
+    );
+
+
+    page.drawLine({
+
+        start: {
+            x: 70,
+            y: 230
+        },
+
+        end: {
+            x: 525,
+            y: 230
+        },
+
+        thickness: 2,
+
+        color: blue
+
+    });
+
+
+    centerText(
+        "VIRTUAL LABORATORY MANUAL",
+        190,
+        18,
+        boldFont,
+        blue
+    );
+
+
+    page.drawText(
+        "Page 1",
+        {
+            x: 500,
+            y: 30,
+            size: 9,
+            font: normalFont,
+            color: rgb(.3,.3,.3)
+        }
+    );
+
+
+    /*
+     * =====================================================
+     * PAGE 2
+     * =====================================================
+     */
+
+    page =
+        pdf.addPage([
+            pageWidth,
+            pageHeight
+        ]);
+
+
+    page.drawText(
+        "ROBOTICS ACTUATION &",
+        {
+            x: 155,
+            y: 770,
+            size: 20,
+            font: boldFont,
+            color: blue
+        }
+    );
+
+
+    page.drawText(
+        "POWER DRIVE TECHNOLOGIES",
+        {
+            x: 130,
+            y: 742,
+            size: 20,
+            font: boldFont,
+            color: blue
+        }
+    );
+
+
+    page.drawText(
+        "Course Code: EIE232",
+        {
+            x: 70,
+            y: 700,
+            size: 14,
+            font: boldFont
+        }
+    );
+
+
+    page.drawText(
+        "Semester: I",
+        {
+            x: 70,
+            y: 675,
+            size: 14,
+            font: boldFont
+        }
+    );
+
+
+    page.drawText(
+        "List of Experiments (Any 8 Experiments)",
+        {
+            x: 140,
+            y: 630,
+            size: 17,
+            font: boldFont,
+            color: blue
+        }
+    );
+
+
+    const experiments = [
+
+        "Study of V–I characteristics, switching times, and switching losses of a MOSFET and an IGBT.",
+
+        "Simulation of Buck converter & Buck Boost converter with variable load profile.",
+
+        "Simulation of Isolated DC-DC converter with variable load profile.",
+
+        "Simulation of Bidirectional Converter for Battery Charging.",
+
+        "PWM control of H Bridge DC motor Drive.",
+
+        "Speed control of BLDC motor Drive.",
+
+        "Position and Speed control of DC Servo Motor Drive.",
+
+        "Position control of Stepper Motor Drive.",
+
+        "Speed control of Squirrel cage induction motor drive.",
+
+        "Closed loop control of Buck & Buck Boost Converter using PIL.",
+
+        "Evaluation of Heat sink effectiveness during switching of MOSFET.",
+
+        "Measurement of DC ripple and EMI interference of Buck Converter.",
+
+        "Stress Test and Reliability Assessment of Robotic Power Module.",
+
+        "Vision-Based Motor Drive Control."
+
+    ];
+
+
+    let y = 595;
+
+    const lineHeight = 35;
+
+
+    experiments.forEach(function(text, index) {
+
+        page.drawText(
+            (index + 1) + ".",
+            {
+                x: 55,
+                y: y,
+                size: 9,
+                font: boldFont
+            }
+        );
+
+
+        const words =
+            text.split(" ");
+
+
+        let line = "";
+
+        const maxWidth = 465;
+
+        const lines = [];
+
+
+        words.forEach(function(word) {
+
+            const test =
+                line === ""
+                ? word
+                : line + " " + word;
+
+
+            if (
+                normalFont.widthOfTextAtSize(
+                    test,
+                    8.5
+                ) > maxWidth
+            ) {
+
+                lines.push(line);
+
+                line = word;
+
+            }
+            else {
+
+                line = test;
+
+            }
+
+        });
+
+
+        if (line) {
+
+            lines.push(line);
+
+        }
+
+
+        lines.forEach(
+            function(lineText, lineIndex) {
+
+                page.drawText(
+                    lineText,
+                    {
+                        x: 75,
+
+                        y:
+                            y -
+                            lineIndex * 11,
+
+                        size: 8.5,
+
+                        font: normalFont
+                    }
+                );
+
+            }
+        );
+
+
+        y -= Math.max(
+            lineHeight,
+            lines.length * 12 + 5
+        );
+
+    });
+
+
+    page.drawText(
+        "Page 2",
+        {
+            x: 500,
+            y: 30,
+            size: 9,
+            font: normalFont,
+            color: rgb(.3,.3,.3)
+        }
+    );
+
+
+    return await pdf.save();
+
+}
+
+
+/* =========================================================
+   MERGE ALL PDFS
+========================================================= */
+
+async function mergeAllPDFs() {
+
+    /*
+     * Check PDF library
+     */
+
+    if (!window.PDFLib) {
+
+        alert(
+            "PDF library could not be loaded.\n\n" +
+            "Please check your internet connection and reload the page."
+        );
+
+        return;
+
+    }
+
+
+    /*
+     * Find Experiment 1–10
+     */
+
+    const orderedFiles = [];
+
+
+    for (let i = 1; i <= 10; i++) {
+
+        const file =
+            selectedPDFs.find(function(item) {
+
+                return getExperimentNumber(item.name) === i;
+
+            });
+
+
+        if (file) {
+
+            orderedFiles.push({
+
+                number: i,
+
+                file: file
+
+            });
+
+        }
+
+    }
+
+
+    if (orderedFiles.length === 0) {
+
+        alert(
+            "Please select at least one experiment PDF."
+        );
+
+        return;
+
+    }
+
+
+    /*
+     * Missing PDFs
+     */
+
+    if (orderedFiles.length < 10) {
+
+        const missing = [];
+
+
+        for (let i = 1; i <= 10; i++) {
+
+            const exists =
+                orderedFiles.some(function(item) {
+
+                    return item.number === i;
+
+                });
+
+
+            if (!exists) {
+
+                missing.push(i);
+
+            }
+
+        }
+
+
+        const proceed =
+            confirm(
+
+                "The following experiment PDFs are missing:\n\n" +
+
+                missing
+                    .map(function(n) {
+                        return "Experiment " + n;
+                    })
+                    .join("\n") +
+
+                "\n\nOnly the selected PDFs will be merged.\n\n" +
+
+                "Continue?"
+
+            );
+
+
+        if (!proceed) {
+
+            return;
+
+        }
+
+    }
+
+
+    try {
+
+        mergeButton.disabled = true;
+
+
+        statusBox.className = "status";
+
+
+        statusBox.innerHTML =
+            "<strong>Preparing final laboratory record...</strong>";
+
+
+        /*
+         * CREATE FINAL PDF
+         */
+
+        const finalPDF =
+            await PDFLib.PDFDocument.create();
+
+
+        /*
+         * =================================================
+         * COVER
+         * =================================================
+         */
+
+        const includeCover =
+            document.getElementById(
+                "includeCover"
+            ).checked;
+
+
+        if (includeCover) {
+
+            statusBox.innerHTML =
+                "<strong>" +
+                "Adding cover and experiment list..." +
+                "</strong>";
+
+
+            const coverBytes =
+                await createCoverPDF();
+
+
+            const coverPDF =
+                await PDFLib.PDFDocument.load(
+                    coverBytes
+                );
+
+
+            const coverPages =
+                await finalPDF.copyPages(
+                    coverPDF,
+                    coverPDF.getPageIndices()
+                );
+
+
+            coverPages.forEach(function(page) {
+
+                finalPDF.addPage(page);
+
+            });
+
+        }
+
+
+        /*
+         * =================================================
+         * ADD EXPERIMENT PDFS
+         * =================================================
+         */
+
+        for (
+            let index = 0;
+            index < orderedFiles.length;
+            index++
+        ) {
+
+            const item =
+                orderedFiles[index];
+
+
+            statusBox.innerHTML =
+                "<strong>" +
+                "Adding Experiment " +
+                item.number +
+                " of 10..." +
+                "</strong><br>" +
+                item.file.name;
+
+
+            const bytes =
+                await item.file.arrayBuffer();
+
+
+            const experimentPDF =
+                await PDFLib.PDFDocument.load(
+                    bytes
+                );
+
+
+            const pages =
+                await finalPDF.copyPages(
+                    experimentPDF,
+                    experimentPDF.getPageIndices()
+                );
+
+
+            pages.forEach(function(page) {
+
+                finalPDF.addPage(page);
+
+            });
+
+
+            /*
+             * Allow browser UI to update
+             */
+
+            await new Promise(function(resolve) {
+
+                setTimeout(resolve, 30);
+
+            });
+
+        }
+
+
+        /*
+         * =================================================
+         * SAVE FINAL PDF
+         * =================================================
+         */
+
+        statusBox.innerHTML =
+            "<strong>Creating final PDF...</strong>";
+
+
+        const finalBytes =
+            await finalPDF.save();
+
+
+        const blob =
+            new Blob(
+                [finalBytes],
+                {
+                    type: "application/pdf"
+                }
+            );
+
+
+        const url =
+            URL.createObjectURL(blob);
+
+
+        const link =
+            document.createElement("a");
+
+
+        link.href = url;
+
+
+        link.download =
+            "EIE232_Robotics_Actuation_Power_Drive_Technologies_Complete_Laboratory_Record.pdf";
+
+
+        document.body.appendChild(link);
+
+
+        link.click();
+
+
+        document.body.removeChild(link);
+
+
+        setTimeout(function() {
+
+            URL.revokeObjectURL(url);
+
+        }, 1000);
+
+
+        /*
+         * SUCCESS
+         */
+
+        statusBox.className =
+            "status success";
+
+
+        statusBox.innerHTML =
+            "<strong>" +
+            "✓ COMPLETE LABORATORY RECORD GENERATED" +
+            "</strong><br><br>" +
+
+            "The final PDF contains:<br>" +
+
+            (includeCover
+                ? "• EIE232 Cover Page<br>" +
+                  "• Experiment List<br>"
+                : "") +
+
+            orderedFiles
+                .map(function(item) {
+
+                    return "• Experiment " +
+                           item.number +
+                           " PDF<br>";
+
+                })
+                .join("") +
+
+            "<br>" +
+
+            "<strong>File name:</strong><br>" +
+
+            "EIE232_Robotics_Actuation_Power_Drive_Technologies_Complete_Laboratory_Record.pdf";
+
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+
+        statusBox.className =
+            "status error";
+
+
+        statusBox.innerHTML =
+            "<strong>✗ PDF MERGING ERROR</strong><br><br>" +
+            error.message;
+
+
+        alert(
+            "Unable to merge the PDF files.\n\n" +
+            error.message
+        );
+
+    }
+
+
+    mergeButton.disabled = false;
+
+}
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+refreshPDFStatus();
+/* =========================================================
+   EXPERIMENT PROGRESS - JSON SAVE / LOAD
+========================================================= */
+
+
+/*
+ * ---------------------------------------------------------
+ * GET EXPERIMENT NUMBER
+ * ---------------------------------------------------------
+ */
+
+function getCurrentExperimentNumber() {
+
+    const title =
+        document.title || "";
+
+    const pageText =
+        document.body.innerText || "";
+
+    const url =
+        window.location.pathname;
+
+
+    let match =
+        url.match(
+            /experiment[\s_-]*(10|[1-9])/i
+        );
+
+
+    if (!match) {
+
+        match =
+            title.match(
+                /experiment[\s_-]*(10|[1-9])/i
+            );
+
+    }
+
+
+    if (!match) {
+
+        match =
+            pageText.match(
+                /experiment[\s_-]*(10|[1-9])/i
+            );
+
+    }
+
+
+    if (match) {
+
+        return Number(match[1]);
+
+    }
+
+
+    return 0;
+
+}
+
+
+/*
+ * ---------------------------------------------------------
+ * COLLECT ALL FORM DATA
+ * ---------------------------------------------------------
+ */
+
+function collectExperimentData() {
+
+    const data = {};
+
+    /*
+     * Save all input elements
+     */
+
+    const inputs =
+        document.querySelectorAll(
+            "input"
+        );
+
+
+    inputs.forEach(function(input, index) {
+
+        /*
+         * Ignore file inputs.
+         */
+
+        if (
+            input.type === "file"
+        ) {
+
+            return;
+
+        }
+
+
+        /*
+         * Ignore buttons.
+         */
+
+        if (
+            input.type === "button" ||
+            input.type === "submit" ||
+            input.type === "reset"
+        ) {
+
+            return;
+
+        }
+
+
+        /*
+         * Use ID when available.
+         */
+
+        const key =
+            input.id ||
+            input.name ||
+            "input_" + index;
+
+
+        if (input.type === "checkbox") {
+
+            data[key] = {
+                type: "checkbox",
+                value: input.checked
+            };
+
+        }
+
+        else if (input.type === "radio") {
+
+            /*
+             * Radio buttons are handled below.
+             */
+
+        }
+
+        else {
+
+            data[key] = {
+                type: input.type,
+                value: input.value
+            };
+
+        }
+
+    });
+
+
+    /*
+     * -----------------------------------------------------
+     * RADIO BUTTONS
+     * -----------------------------------------------------
+     */
+
+    const radioGroups = {};
+
+    document
+        .querySelectorAll(
+            'input[type="radio"]'
+        )
+        .forEach(function(radio) {
+
+            const key =
+                radio.name ||
+                radio.id;
+
+
+            if (!radioGroups[key]) {
+
+                radioGroups[key] = [];
+
+            }
+
+
+            radioGroups[key].push(radio);
+
+        });
+
+
+    Object.keys(radioGroups).forEach(function(key) {
+
+        const selected =
+            radioGroups[key].find(
+                function(radio) {
+                    return radio.checked;
+                }
+            );
+
+
+        data[key] = {
+
+            type: "radio",
+
+            value:
+                selected
+                ? selected.value
+                : null
+
+        };
+
+    });
+
+
+    /*
+     * -----------------------------------------------------
+     * SELECT ELEMENTS
+     * -----------------------------------------------------
+     */
+
+    document
+        .querySelectorAll("select")
+        .forEach(function(select, index) {
+
+            const key =
+                select.id ||
+                select.name ||
+                "select_" + index;
+
+
+            data[key] = {
+
+                type: "select",
+
+                value: select.value
+
+            };
+
+        });
+
+
+    /*
+     * -----------------------------------------------------
+     * TEXTAREA
+     * -----------------------------------------------------
+     */
+
+    document
+        .querySelectorAll("textarea")
+        .forEach(function(textarea, index) {
+
+            const key =
+                textarea.id ||
+                textarea.name ||
+                "textarea_" + index;
+
+
+            data[key] = {
+
+                type: "textarea",
+
+                value: textarea.value
+
+            };
+
+        });
+
+
+    /*
+     * -----------------------------------------------------
+     * CONTENTEDITABLE ELEMENTS
+     * -----------------------------------------------------
+     */
+
+    document
+        .querySelectorAll(
+            '[contenteditable="true"]'
+        )
+        .forEach(function(element, index) {
+
+            const key =
+                element.id ||
+                "contenteditable_" + index;
+
+
+            data[key] = {
+
+                type: "contenteditable",
+
+                value: element.innerHTML
+
+            };
+
+        });
+
+
+    return data;
+
+}
+
+
+/*
+ * ---------------------------------------------------------
+ * SAVE PROGRESS AS JSON
+ * ---------------------------------------------------------
+ */
+
+function saveExperimentProgress() {
+
+    try {
+
+        const experimentNumber =
+            getCurrentExperimentNumber();
+
+
+        const experimentData =
+            collectExperimentData();
+
+
+        /*
+         * Create complete JSON object
+         */
+
+        const saveObject = {
+
+            application:
+                "EIE232 Virtual Laboratory",
+
+            course:
+                "EIE232 – Robotics Actuation & Power Drive Technologies",
+
+            experiment:
+                experimentNumber
+                ? "Experiment " + experimentNumber
+                : "Unknown Experiment",
+
+            experimentNumber:
+                experimentNumber,
+
+            savedDate:
+                new Date().toISOString(),
+
+            pageURL:
+                window.location.href,
+
+            data:
+                experimentData
+
+        };
+
+
+        /*
+         * Convert to JSON
+         */
+
+        const json =
+            JSON.stringify(
+                saveObject,
+                null,
+                4
+            );
+
+
+        /*
+         * Create file
+         */
+
+        const blob =
+            new Blob(
+                [json],
+                {
+                    type:
+                        "application/json"
+                }
+            );
+
+
+        /*
+         * Create download link
+         */
+
+        const url =
+            URL.createObjectURL(
+                blob
+            );
+
+
+        const link =
+            document.createElement("a");
+
+
+        link.href = url;
+
+
+        /*
+         * Filename
+         */
+
+        const filename =
+            experimentNumber
+            ? "EIE232_Experiment_" +
+              experimentNumber +
+              "_Progress.json"
+            : "EIE232_Experiment_Progress.json";
+
+
+        link.download = filename;
+
+
+        document.body.appendChild(link);
+
+
+        link.click();
+
+
+        document.body.removeChild(link);
+
+
+        /*
+         * Release URL
+         */
+
+        setTimeout(function() {
+
+            URL.revokeObjectURL(url);
+
+        }, 1000);
+
+
+        /*
+         * Status
+         */
+
+        const status =
+            document.getElementById(
+                "jsonStatus"
+            );
+
+
+        if (status) {
+
+            status.className =
+                "json-status success";
+
+
+            status.innerHTML =
+                "✓ Progress saved successfully.<br>" +
+                "<strong>" +
+                filename +
+                "</strong>";
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+
+        const status =
+            document.getElementById(
+                "jsonStatus"
+            );
+
+
+        if (status) {
+
+            status.className =
+                "json-status error";
+
+
+            status.textContent =
+                "✗ Unable to save progress: " +
+                error.message;
+
+        }
+
+    }
+
+}
+
+
+/*
+ * ---------------------------------------------------------
+ * LOAD PROGRESS JSON
+ * ---------------------------------------------------------
+ */
+
+function loadExperimentProgress(event) {
+
+    const file =
+        event.target.files[0];
+
+
+    if (!file) {
+
+        return;
+
+    }
+
+
+    /*
+     * Make sure it is JSON
+     */
+
+    if (
+        !file.name
+            .toLowerCase()
+            .endsWith(".json")
+    ) {
+
+        alert(
+            "Please select a JSON progress file."
+        );
+
+        return;
+
+    }
+
+
+    const reader =
+        new FileReader();
+
+
+    reader.onload =
+        function(e) {
+
+            try {
+
+                const saveObject =
+                    JSON.parse(
+                        e.target.result
+                    );
+
+
+                /*
+                 * Validate file
+                 */
+
+                if (
+                    !saveObject.data
+                ) {
+
+                    throw new Error(
+                        "Invalid EIE232 progress file."
+                    );
+
+                }
+
+
+                /*
+                 * Check experiment number
+                 */
+
+                const currentExperiment =
+                    getCurrentExperimentNumber();
+
+
+                if (
+                    saveObject.experimentNumber &&
+                    currentExperiment &&
+                    saveObject.experimentNumber !==
+                    currentExperiment
+                ) {
+
+                    const proceed =
+                        confirm(
+
+                            "This progress file belongs to " +
+
+                            "Experiment " +
+                            saveObject.experimentNumber +
+
+                            ".\n\n" +
+
+                            "You are currently on " +
+
+                            "Experiment " +
+                            currentExperiment +
+
+                            ".\n\n" +
+
+                            "Do you want to load it anyway?"
+
+                        );
+
+
+                    if (!proceed) {
+
+                        return;
+
+                    }
+
+                }
+
+
+                /*
+                 * Restore data
+                 */
+
+                restoreExperimentData(
+                    saveObject.data
+                );
+
+
+                /*
+                 * Status
+                 */
+
+                const status =
+                    document.getElementById(
+                        "jsonStatus"
+                    );
+
+
+                if (status) {
+
+                    status.className =
+                        "json-status success";
+
+
+                    status.innerHTML =
+                        "✓ Progress loaded successfully.<br>" +
+
+                        "<strong>" +
+                        file.name +
+                        "</strong><br>" +
+
+                        (
+                            saveObject.savedDate
+                            ?
+                            "Saved on: " +
+                            new Date(
+                                saveObject.savedDate
+                            ).toLocaleString()
+                            :
+                            ""
+                        );
+
+                }
+
+
+                /*
+                 * Trigger change/input events
+                 * so existing experiment calculations
+                 * can update.
+                 */
+
+                document
+                    .querySelectorAll(
+                        "input, select, textarea"
+                    )
+                    .forEach(function(element) {
+
+                        element.dispatchEvent(
+                            new Event(
+                                "input",
+                                {
+                                    bubbles: true
+                                }
+                            )
+                        );
+
+
+                        element.dispatchEvent(
+                            new Event(
+                                "change",
+                                {
+                                    bubbles: true
+                                }
+                            )
+                        );
+
+                    });
+
+
+            }
+
+            catch (error) {
+
+                console.error(error);
+
+
+                const status =
+                    document.getElementById(
+                        "jsonStatus"
+                    );
+
+
+                if (status) {
+
+                    status.className =
+                        "json-status error";
+
+
+                    status.textContent =
+                        "✗ Invalid progress file: " +
+                        error.message;
+
+                }
+
+                else {
+
+                    alert(
+                        "Invalid progress file.\n\n" +
+                        error.message
+                    );
+
+                }
+
+            }
+
+        };
+
+
+    reader.onerror =
+        function() {
+
+            alert(
+                "Unable to read the JSON file."
+            );
+
+        };
+
+
+    reader.readAsText(file);
+
+
+    /*
+     * Allow the same file to be loaded again
+     */
+
+    event.target.value = "";
+
+}
+
+
+/*
+ * ---------------------------------------------------------
+ * RESTORE DATA
+ * ---------------------------------------------------------
+ */
+
+function restoreExperimentData(data) {
+
+    Object.keys(data).forEach(function(key) {
+
+        const saved =
+            data[key];
+
+
+        /*
+         * Find element by ID first
+         */
+
+        let element =
+            document.getElementById(key);
+
+
+        /*
+         * If not found, try name
+         */
+
+        if (!element) {
+
+            element =
+                document.querySelector(
+                    '[name="' +
+                    CSS.escape(key) +
+                    '"]'
+                );
+
+        }
+
+
+        /*
+         * Contenteditable
+         */
+
+        if (
+            saved.type === "contenteditable"
+        ) {
+
+            if (element) {
+
+                element.innerHTML =
+                    saved.value;
+
+            }
+
+            return;
+
+        }
+
+
+        /*
+         * Radio group
+         */
+
+        if (
+            saved.type === "radio"
+        ) {
+
+            const radios =
+                document.querySelectorAll(
+                    'input[type="radio"][name="' +
+                    CSS.escape(key) +
+                    '"]'
+                );
+
+
+            radios.forEach(
+                function(radio) {
+
+                    radio.checked =
+                        radio.value ===
+                        saved.value;
+
+                }
+            );
+
+
+            return;
+
+        }
+
+
+        /*
+         * Normal element
+         */
+
+        if (!element) {
+
+            return;
+
+        }
+
+
+        if (
+            saved.type === "checkbox"
+        ) {
+
+            element.checked =
+                Boolean(saved.value);
+
+        }
+
+        else {
+
+            element.value =
+                saved.value;
+
+        }
+
+    });
+
+}
+
+
+/* =========================================================
+   OPTIONAL: AUTO-SAVE TO BROWSER
+========================================================= */
+
+/*
+ * This is different from JSON.
+ *
+ * It automatically stores the current data in the
+ * browser every 30 seconds.
+ *
+ * The student does NOT need to click Save Progress
+ * for this local backup.
+ *
+ * The JSON button should still be used when the student
+ * wants a portable file.
+ */
+
+setInterval(function() {
+
+    try {
+
+        const data =
+            collectExperimentData();
+
+
+        const experimentNumber =
+            getCurrentExperimentNumber();
+
+
+        localStorage.setItem(
+
+            "EIE232_Experiment_" +
+            experimentNumber +
+            "_AutoBackup",
+
+            JSON.stringify({
+
+                experimentNumber:
+                    experimentNumber,
+
+                savedDate:
+                    new Date().toISOString(),
+
+                data:
+                    data
+
+            })
+
+        );
+
+    }
+
+    catch (error) {
+
+        console.warn(
+            "Auto-save failed:",
+            error
+        );
+
+    }
+
+}, 30000);
+
+
+</script>
+
+</body>
+
+</html>

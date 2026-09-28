@@ -1,0 +1,3804 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Experiment 7 - Position and Speed Control of DC Servo Motor Drive</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#071018;
+    color:#e8f1f8;
+    line-height:1.5;
+}
+
+header{
+    background:linear-gradient(135deg,#0d2535,#123c52);
+    padding:25px;
+    text-align:center;
+    border-bottom:2px solid #19c5ff;
+}
+
+header h1{
+    margin:0;
+    font-size:28px;
+    color:#19c5ff;
+}
+
+header p{
+    margin:7px 0 0;
+    color:#b8d8e8;
+}
+
+.container{
+    max-width:1250px;
+    margin:auto;
+    padding:20px;
+}
+
+.card{
+    background:#0d1b26;
+    border:1px solid #214052;
+    border-radius:12px;
+    padding:20px;
+    margin-bottom:20px;
+    box-shadow:0 4px 18px rgba(0,0,0,.25);
+}
+
+.card h2{
+    margin-top:0;
+    color:#19c5ff;
+    border-bottom:1px solid #234656;
+    padding-bottom:8px;
+}
+
+.card h3{
+    color:#79dcff;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:14px;
+}
+
+label{
+    display:block;
+    font-weight:bold;
+    color:#b9d8e7;
+    margin-bottom:5px;
+}
+
+input,select,textarea{
+    width:100%;
+    padding:10px;
+    background:#07141d;
+    color:#fff;
+    border:1px solid #315466;
+    border-radius:7px;
+}
+
+textarea{
+    min-height:100px;
+    resize:vertical;
+}
+
+button{
+    background:#19c5ff;
+    color:#031018;
+    border:0;
+    padding:11px 18px;
+    border-radius:7px;
+    cursor:pointer;
+    font-weight:bold;
+    margin:5px;
+}
+
+button:hover{
+    opacity:.85;
+}
+
+button.secondary{
+    background:#304858;
+    color:#fff;
+}
+
+button.danger{
+    background:#d9534f;
+    color:#fff;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:12px;
+}
+
+th,td{
+    border:1px solid #315466;
+    padding:9px;
+    text-align:center;
+}
+
+th{
+    background:#123344;
+    color:#7ee2ff;
+}
+
+td input,td select{
+    min-width:80px;
+}
+
+.formula{
+    background:#07141d;
+    border-left:4px solid #19c5ff;
+    padding:12px;
+    margin:8px 0;
+    font-family:"Courier New",monospace;
+}
+
+.note{
+    background:#172b36;
+    border-left:4px solid #ffc107;
+    padding:12px;
+    margin:12px 0;
+}
+
+.success{
+    background:#102e24;
+    border-left:4px solid #21d07a;
+    padding:12px;
+    margin-top:12px;
+}
+
+.warning{
+    background:#302719;
+    border-left:4px solid #ffb300;
+    padding:12px;
+    margin-top:12px;
+}
+
+.upload-box{
+    border:2px dashed #315466;
+    padding:18px;
+    text-align:center;
+    border-radius:10px;
+    margin-top:10px;
+}
+
+.preview{
+    max-width:100%;
+    max-height:400px;
+    margin-top:12px;
+    border:1px solid #315466;
+    border-radius:8px;
+}
+
+.score{
+    font-size:28px;
+    color:#21d07a;
+    font-weight:bold;
+}
+
+.badge{
+    display:inline-block;
+    padding:5px 10px;
+    border-radius:20px;
+    background:#123c52;
+    color:#7ee2ff;
+    margin:3px;
+}
+
+.small{
+    font-size:13px;
+    color:#9db5c3;
+}
+
+.tabs{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-bottom:15px;
+}
+
+.tabbtn{
+    background:#17384a;
+    color:#ccefff;
+}
+
+.tabbtn.active{
+    background:#19c5ff;
+    color:#031018;
+}
+
+.tabcontent{
+    display:none;
+}
+
+.tabcontent.active{
+    display:block;
+}
+
+@media(max-width:700px){
+    header h1{font-size:21px}
+    .container{padding:10px}
+    .card{padding:14px}
+}
+
+@media print{
+    body{
+        background:white;
+        color:black;
+    }
+
+    .card{
+        background:white;
+        color:black;
+        border:1px solid #aaa;
+        box-shadow:none;
+    }
+
+    button,.no-print{
+        display:none!important;
+    }
+
+    input,textarea,select{
+        color:black;
+        background:white;
+        border:1px solid #777;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>VIRTUAL POWER ELECTRONICS & DRIVES LABORATORY</h1>
+<p>Experiment 7 – Position and Speed Control of DC Servo Motor Drive</p>
+</header>
+
+<div class="container">
+
+<!-- STUDENT DETAILS -->
+<div class="card">
+<h2>1. Student Details</h2>
+
+<div class="grid">
+
+<div>
+<label>Name</label>
+<input id="studentName" placeholder="Enter student name">
+</div>
+
+<div>
+<label>Register Number</label>
+<input id="regNo" placeholder="Enter register number">
+</div>
+
+<div>
+<label>Class / Section</label>
+<input id="classSection" placeholder="Class / Section">
+</div>
+
+<div>
+<label>Date</label>
+<input type="date" id="expDate">
+</div>
+
+</div>
+</div>
+
+
+<!-- AIM -->
+<div class="card">
+<h2>2. Aim</h2>
+
+<p>
+To simulate and study the <b>speed and position control of a DC servo
+motor drive</b> using feedback control and to analyze the response of
+the motor for different speed and position references.
+</p>
+</div>
+
+
+<!-- OBJECTIVES -->
+<div class="card">
+<h2>3. Learning Objectives</h2>
+
+<ul>
+<li>Understand the construction and operation of a DC servo motor.</li>
+<li>Understand closed-loop speed control.</li>
+<li>Understand closed-loop position control.</li>
+<li>Study encoder/position feedback.</li>
+<li>Implement P, PI and PID control concepts.</li>
+<li>Study speed error and position error.</li>
+<li>Analyze rise time, settling time, overshoot and steady-state error.</li>
+<li>Understand cascaded position-speed-current control used in servo drives.</li>
+</ul>
+</div>
+
+
+<!-- APPARATUS -->
+<div class="card">
+<h2>4. Software / Simulink Blocks Required</h2>
+
+<div>
+<span class="badge">MATLAB</span>
+<span class="badge">Simulink</span>
+<span class="badge">Simscape Electrical</span>
+<span class="badge">DC Servo Motor</span>
+<span class="badge">Encoder</span>
+<span class="badge">PID Controller</span>
+<span class="badge">PWM</span>
+<span class="badge">H-Bridge</span>
+<span class="badge">Scope</span>
+</div>
+
+<h3>Recommended Simulink Blocks</h3>
+
+<ul>
+<li>DC Voltage Source</li>
+<li>H-Bridge / Controlled PWM Voltage</li>
+<li>DC Motor</li>
+<li>Mechanical Load</li>
+<li>Speed Sensor</li>
+<li>Rotational Position Sensor / Encoder</li>
+<li>Sum / Error Block</li>
+<li>Gain</li>
+<li>PI / PID Controller</li>
+<li>PWM Generator</li>
+<li>Scope</li>
+<li>powergui</li>
+</ul>
+</div>
+
+
+<!-- THEORY -->
+<div class="card">
+<h2>5. Theory</h2>
+
+<p>
+A DC servo motor is a motor used in a closed-loop control system where
+the motor speed and/or position is continuously measured and compared
+with the desired reference.
+</p>
+
+<p>
+The difference between reference and measured feedback is called the
+error. A controller processes this error and generates the motor drive
+command.
+</p>
+
+<h3>Basic Servo Control Loop</h3>
+
+<div class="formula">
+Reference → Comparator → Controller → PWM / H-Bridge → DC Servo Motor
+→ Encoder / Sensor → Feedback
+</div>
+
+<h3>DC Motor Equations</h3>
+
+<div class="formula">
+Va = Ra Ia + La(dIa/dt) + Eb
+</div>
+
+<div class="formula">
+Eb = Keω
+</div>
+
+<div class="formula">
+Te = KtIa
+</div>
+
+<div class="formula">
+J(dω/dt) = Te - TL - Bω
+</div>
+
+<div class="formula">
+ω = dθ/dt
+</div>
+
+<h3>Speed Control</h3>
+
+<div class="formula">
+Speed Error = ωref − ωactual
+</div>
+
+<p>
+A PI controller is commonly used for speed control:
+</p>
+
+<div class="formula">
+u(t) = Kp e(t) + Ki ∫e(t)dt
+</div>
+
+<h3>Position Control</h3>
+
+<div class="formula">
+Position Error = θref − θactual
+</div>
+
+<p>
+For position control, the position error can be processed by a
+position controller to generate the speed reference.
+</p>
+
+<div class="formula">
+θref → Position Controller → ωref → Speed Controller → Motor
+</div>
+
+<h3>Encoder Position</h3>
+
+<div class="formula">
+θ = (Counts / CPR) × 360°
+</div>
+
+<p>where CPR is the encoder counts per revolution.</p>
+
+<h3>Mechanical Output Power</h3>
+
+<div class="formula">
+Pmech = T × ω
+</div>
+
+<div class="note">
+In a practical servo drive, a cascaded control structure is often used:
+<b>Position Loop → Speed Loop → Current/Torque Loop → PWM Inverter → Motor</b>.
+The inner current/torque loop is faster than the speed loop, while the
+position loop is normally the outer loop.
+</div>
+</div>
+
+
+<!-- MODEL UPLOAD -->
+<div class="card">
+<h2>6. Simulink Model Upload</h2>
+
+<p>
+Upload the screenshot of the complete DC servo motor control model.
+</p>
+
+<div class="upload-box">
+
+<input type="file"
+       accept="image/*"
+       onchange="previewImage(this,'modelPreview')">
+
+<img id="modelPreview"
+     class="preview"
+     style="display:none">
+
+</div>
+
+<h3>Recommended Speed-Control Structure</h3>
+
+<div class="formula">
+Speed Reference
+↓
+Σ (+ −)
+↓
+PI Speed Controller
+↓
+PWM / H-Bridge
+↓
+DC Servo Motor
+↓
+Speed Sensor
+└────────────── Feedback
+</div>
+
+<h3>Recommended Position-Control Structure</h3>
+
+<div class="formula">
+Position Reference
+↓
+Σ (+ −)
+↓
+Position Controller
+↓
+Speed Reference
+↓
+PI Speed Controller
+↓
+PWM / H-Bridge
+↓
+DC Servo Motor
+↓
+Encoder
+└────────────── Position Feedback
+</div>
+</div>
+
+
+<!-- CONTROL MODE -->
+<div class="card">
+<h2>7. Control Mode Selection</h2>
+
+<div class="tabs">
+
+<button class="tabbtn active"
+        onclick="showTab('speedTab',this)">
+Speed Control
+</button>
+
+<button class="tabbtn"
+        onclick="showTab('positionTab',this)">
+Position Control
+</button>
+
+</div>
+
+<div id="speedTab" class="tabcontent active">
+
+<h3>Speed Control</h3>
+
+<div class="grid">
+
+<div>
+<label>Speed Reference (RPM)</label>
+<input type="number"
+       id="speedRef"
+       value="1500"
+       oninput="calculateSpeed()">
+</div>
+
+<div>
+<label>Measured Speed (RPM)</label>
+<input type="number"
+       id="speedActual"
+       value="1450"
+       oninput="calculateSpeed()">
+</div>
+
+<div>
+<label>Kp</label>
+<input type="number"
+       id="speedKp"
+       value="0.02"
+       step="0.001"
+       oninput="calculateSpeed()">
+</div>
+
+<div>
+<label>Ki</label>
+<input type="number"
+       id="speedKi"
+       value="0.01"
+       step="0.001"
+       oninput="calculateSpeed()">
+</div>
+
+</div>
+
+<div class="success" id="speedOutput">
+Speed control calculation will appear here.
+</div>
+
+</div>
+
+
+<div id="positionTab" class="tabcontent">
+
+<h3>Position Control</h3>
+
+<div class="grid">
+
+<div>
+<label>Position Reference (degree)</label>
+<input type="number"
+       id="positionRef"
+       value="90"
+       oninput="calculatePosition()">
+</div>
+
+<div>
+<label>Measured Position (degree)</label>
+<input type="number"
+       id="positionActual"
+       value="82"
+       oninput="calculatePosition()">
+</div>
+
+<div>
+<label>Position Kp</label>
+<input type="number"
+       id="positionKp"
+       value="2"
+       step="0.1"
+       oninput="calculatePosition()">
+</div>
+
+<div>
+<label>Position Ki</label>
+<input type="number"
+       id="positionKi"
+       value="0"
+       step="0.01"
+       oninput="calculatePosition()">
+</div>
+
+</div>
+
+<div class="success" id="positionOutput">
+Position control calculation will appear here.
+</div>
+
+</div>
+
+</div>
+
+
+<!-- MOTOR PARAMETERS -->
+<div class="card">
+<h2>8. Servo Motor Parameters</h2>
+
+<div class="grid">
+
+<div>
+<label>DC Bus Voltage (V)</label>
+<input type="number"
+       id="vdc"
+       value="48"
+       step="0.1"
+       oninput="calculateMotor()">
+</div>
+
+<div>
+<label>Armature Resistance Ra (Ω)</label>
+<input type="number"
+       id="ra"
+       value="1"
+       step="0.01">
+</div>
+
+<div>
+<label>Armature Inductance La (H)</label>
+<input type="number"
+       id="la"
+       value="0.005"
+       step="0.0001">
+</div>
+
+<div>
+<label>Motor Constant Ke</label>
+<input type="number"
+       id="ke"
+       value="0.05"
+       step="0.001">
+</div>
+
+<div>
+<label>Torque Constant Kt</label>
+<input type="number"
+       id="kt"
+       value="0.05"
+       step="0.001">
+</div>
+
+<div>
+<label>Inertia J (kg·m²)</label>
+<input type="number"
+       id="inertia"
+       value="0.001"
+       step="0.0001">
+</div>
+
+<div>
+<label>Viscous Friction B</label>
+<input type="number"
+       id="friction"
+       value="0.0001"
+       step="0.00001">
+</div>
+
+<div>
+<label>Load Torque (N·m)</label>
+<input type="number"
+       id="loadTorque"
+       value="0.3"
+       step="0.01">
+</div>
+
+</div>
+
+<div class="success" id="motorOutput">
+Motor calculations will appear here.
+</div>
+</div>
+
+
+<!-- ENCODER -->
+<div class="card">
+<h2>9. Encoder / Position Feedback</h2>
+
+<div class="grid">
+
+<div>
+<label>Encoder CPR</label>
+<input type="number"
+       id="cpr"
+       value="1000"
+       oninput="calculateEncoder()">
+</div>
+
+<div>
+<label>Encoder Counts</label>
+<input type="number"
+       id="counts"
+       value="250"
+       oninput="calculateEncoder()">
+</div>
+
+<div>
+<label>Measured Position (degree)</label>
+<input type="number"
+       id="encoderPosition"
+       readonly>
+</div>
+
+<div>
+<label>Reference Position (degree)</label>
+<input type="number"
+       id="encoderReference"
+       value="90"
+       oninput="calculateEncoder()">
+</div>
+
+</div>
+
+<div class="success" id="encoderOutput">
+Encoder calculation will appear here.
+</div>
+
+<div class="note">
+For a practical encoder, CPR may be specified as counts per revolution,
+pulses per revolution, or counts after quadrature decoding. Use the
+definition appropriate to the encoder and Simulink block.
+</div>
+</div>
+
+
+<!-- PROCEDURE -->
+<div class="card">
+<h2>10. Procedure</h2>
+
+<h3>A. Speed Control</h3>
+
+<ol>
+<li>Open MATLAB and Simulink.</li>
+<li>Create the DC servo motor model.</li>
+<li>Connect the DC motor to the H-Bridge/PWM drive.</li>
+<li>Add the speed measurement block.</li>
+<li>Compare the reference speed with measured speed.</li>
+<li>Connect the speed error to a PI controller.</li>
+<li>Connect the controller output to the PWM generator.</li>
+<li>Set the desired reference speed.</li>
+<li>Run the simulation.</li>
+<li>Observe reference speed, actual speed, armature current and torque.</li>
+<li>Apply a load torque change and observe speed recovery.</li>
+</ol>
+
+<h3>B. Position Control</h3>
+
+<ol>
+<li>Add an encoder or rotational position sensor.</li>
+<li>Set the desired position reference.</li>
+<li>Compare reference position with measured position.</li>
+<li>Use a position controller to generate the speed reference.</li>
+<li>Use the speed controller to generate the motor drive command.</li>
+<li>Run the simulation.</li>
+<li>Observe reference position and actual position.</li>
+<li>Measure position error, overshoot and settling time.</li>
+<li>Change the position reference and repeat the experiment.</li>
+</ol>
+</div>
+
+
+<!-- SPEED OBSERVATION -->
+<div class="card">
+<h2>11. Speed Control Observation Table</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>Trial</th>
+<th>Speed Reference (RPM)</th>
+<th>Measured Speed (RPM)</th>
+<th>Speed Error (RPM)</th>
+<th>Armature Current (A)</th>
+<th>Torque (N·m)</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td>1</td>
+<td><input type="number" value="500"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+</tr>
+
+<tr>
+<td>2</td>
+<td><input type="number" value="1000"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+</tr>
+
+<tr>
+<td>3</td>
+<td><input type="number" value="1500"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+</tr>
+
+<tr>
+<td>4</td>
+<td><input type="number" value="2000"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+</tr>
+
+</tbody>
+</table>
+</div>
+
+
+<!-- POSITION OBSERVATION -->
+<div class="card">
+<h2>12. Position Control Observation Table</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>Trial</th>
+<th>Position Reference (°)</th>
+<th>Measured Position (°)</th>
+<th>Position Error (°)</th>
+<th>Speed (RPM)</th>
+<th>Settling Time (s)</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td>1</td>
+<td><input type="number" value="30"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+</tr>
+
+<tr>
+<td>2</td>
+<td><input type="number" value="60"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+</tr>
+
+<tr>
+<td>3</td>
+<td><input type="number" value="90"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+</tr>
+
+<tr>
+<td>4</td>
+<td><input type="number" value="180"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+</tr>
+
+</tbody>
+</table>
+</div>
+
+
+<!-- LOAD DISTURBANCE -->
+<div class="card">
+<h2>13. Load Disturbance Test</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>Condition</th>
+<th>Load Torque (N·m)</th>
+<th>Reference Speed (RPM)</th>
+<th>Measured Speed (RPM)</th>
+<th>Speed Error (RPM)</th>
+<th>Recovery Time (s)</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td>No Load</td>
+<td><input type="number" value="0"></td>
+<td><input type="number" value="1500"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+</tr>
+
+<tr>
+<td>Low Load</td>
+<td><input type="number" value="0.2"></td>
+<td><input type="number" value="1500"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+</tr>
+
+<tr>
+<td>Rated Load</td>
+<td><input type="number" value="0.5"></td>
+<td><input type="number" value="1500"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+</tr>
+
+</tbody>
+</table>
+</div>
+
+
+<!-- PERFORMANCE -->
+<div class="card">
+<h2>14. Automatic Servo Performance Calculation</h2>
+
+<div class="grid">
+
+<div>
+<label>Reference Speed (RPM)</label>
+<input type="number"
+       id="perfRefSpeed"
+       value="1500"
+       oninput="calculatePerformance()">
+</div>
+
+<div>
+<label>Measured Speed (RPM)</label>
+<input type="number"
+       id="perfActualSpeed"
+       value="1480"
+       oninput="calculatePerformance()">
+</div>
+
+<div>
+<label>Reference Position (°)</label>
+<input type="number"
+       id="perfRefPos"
+       value="90"
+       oninput="calculatePerformance()">
+</div>
+
+<div>
+<label>Measured Position (°)</label>
+<input type="number"
+       id="perfActualPos"
+       value="88"
+       oninput="calculatePerformance()">
+</div>
+
+<div>
+<label>Torque (N·m)</label>
+<input type="number"
+       id="perfTorque"
+       value="0.8"
+       oninput="calculatePerformance()">
+</div>
+
+</div>
+
+<div class="success" id="performance">
+Servo performance will appear here.
+</div>
+
+</div>
+
+
+<!-- DYNAMIC PERFORMANCE -->
+<div class="card">
+<h2>15. Dynamic Response Parameters</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Measured Value</th>
+<th>Unit</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td>Rise Time</td>
+<td><input type="number" id="riseTime"></td>
+<td>s</td>
+</tr>
+
+<tr>
+<td>Peak Time</td>
+<td><input type="number" id="peakTime"></td>
+<td>s</td>
+</tr>
+
+<tr>
+<td>Settling Time</td>
+<td><input type="number" id="settlingTime"></td>
+<td>s</td>
+</tr>
+
+<tr>
+<td>Maximum Overshoot</td>
+<td><input type="number" id="overshoot"></td>
+<td>%</td>
+</tr>
+
+<tr>
+<td>Steady-State Error</td>
+<td><input type="number" id="steadyError"></td>
+<td>%</td>
+</tr>
+
+</tbody>
+
+</table>
+
+<div class="formula">
+% Overshoot =
+[(Maximum Response − Final Value) / Final Value] × 100
+</div>
+
+<div class="formula">
+Steady-State Error =
+|Reference − Final Value|
+</div>
+
+</div>
+
+
+<!-- WAVEFORMS -->
+<div class="card">
+<h2>16. Simulink Waveform Upload</h2>
+
+<p>Upload the following screenshots from your Simulink Scope:</p>
+
+<ul>
+<li>Speed reference and actual speed</li>
+<li>Speed error</li>
+<li>Controller output</li>
+<li>Armature current</li>
+<li>Electromagnetic torque</li>
+<li>Position reference and actual position</li>
+<li>Position error</li>
+<li>PWM gate pulses</li>
+<li>Response during load disturbance</li>
+</ul>
+
+<div class="upload-box">
+
+<label>Speed Control Waveform</label>
+
+<input type="file"
+       accept="image/*"
+       onchange="previewImage(this,'waveSpeed')">
+
+<img id="waveSpeed"
+     class="preview"
+     style="display:none">
+
+</div>
+
+<div class="upload-box">
+
+<label>Position Control Waveform</label>
+
+<input type="file"
+       accept="image/*"
+       onchange="previewImage(this,'wavePosition')">
+
+<img id="wavePosition"
+     class="preview"
+     style="display:none">
+
+</div>
+
+<div class="upload-box">
+
+<label>Load Disturbance Response</label>
+
+<input type="file"
+       accept="image/*"
+       onchange="previewImage(this,'waveLoad')">
+
+<img id="waveLoad"
+     class="preview"
+     style="display:none">
+
+</div>
+
+</div>
+
+
+<!-- ANALYSIS -->
+<div class="card">
+<h2>17. Analysis of Results</h2>
+
+<label>Speed Control Analysis</label>
+<textarea id="analysisSpeed"
+placeholder="Discuss reference speed, actual speed, speed error and controller response."></textarea>
+
+<label>Position Control Analysis</label>
+<textarea id="analysisPosition"
+placeholder="Discuss position reference, actual position, position error and settling response."></textarea>
+
+<label>Encoder Feedback Analysis</label>
+<textarea id="analysisEncoder"
+placeholder="Explain the role of the encoder in position feedback."></textarea>
+
+<label>Load Disturbance Analysis</label>
+<textarea id="analysisLoad"
+placeholder="Explain the effect of sudden load torque on speed and how the controller restores the reference speed."></textarea>
+
+<label>Controller Analysis</label>
+<textarea id="analysisController"
+placeholder="Discuss the effect of Kp and Ki on response, overshoot, settling time and steady-state error."></textarea>
+
+</div>
+
+
+<!-- RESULT -->
+<div class="card">
+<h2>18. Result</h2>
+
+<textarea id="result"
+style="min-height:120px"
+placeholder="Enter the final result of the experiment."></textarea>
+
+<div class="success">
+
+<b>Suggested Result:</b><br>
+
+The speed and position control of a DC servo motor drive was
+successfully simulated. Closed-loop speed control was studied using
+speed feedback and a PI controller. Position control was implemented
+using position feedback from an encoder, with the position loop
+generating the speed reference. The effects of reference changes and
+load disturbances on the servo motor response were observed.
+
+</div>
+
+</div>
+
+
+<!-- POST LAB -->
+<div class="card">
+<h2>19. Post-Lab Questions</h2>
+
+<ol>
+
+<li>What is a servo motor?</li>
+
+<li>Why is feedback required in a servo drive?</li>
+
+<li>Differentiate between speed control and position control.</li>
+
+<li>What is the function of an encoder in a servo drive?</li>
+
+<li>Why is a PI controller commonly used in the speed loop?</li>
+
+<li>Why is the position loop normally placed outside the speed loop?</li>
+
+<li>What happens to the motor current when the load torque increases?</li>
+
+<li>What is steady-state error?</li>
+
+<li>What is overshoot and settling time?</li>
+
+<li>Why is the current/torque loop normally faster than the speed loop?</li>
+
+</ol>
+
+<div class="grid">
+
+<div>
+<label>Q1 Answer</label>
+<textarea></textarea>
+</div>
+
+<div>
+<label>Q2 Answer</label>
+<textarea></textarea>
+</div>
+
+<div>
+<label>Q3 Answer</label>
+<textarea></textarea>
+</div>
+
+<div>
+<label>Q4 Answer</label>
+<textarea></textarea>
+</div>
+
+<div>
+<label>Q5 Answer</label>
+<textarea></textarea>
+</div>
+
+<div>
+<label>Q6 Answer</label>
+<textarea></textarea>
+</div>
+
+<div>
+<label>Q7 Answer</label>
+<textarea></textarea>
+</div>
+
+<div>
+<label>Q8 Answer</label>
+<textarea></textarea>
+</div>
+
+<div>
+<label>Q9 Answer</label>
+<textarea></textarea>
+</div>
+
+<div>
+<label>Q10 Answer</label>
+<textarea></textarea>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- FACULTY -->
+<div class="card">
+<h2>20. Faculty Evaluation</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>Assessment Component</th>
+<th>Maximum Marks</th>
+<th>Marks Awarded</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td>Simulink Model</td>
+<td>2</td>
+<td><input type="number" min="0" max="2" class="mark"></td>
+</tr>
+
+<tr>
+<td>Speed Control</td>
+<td>1.5</td>
+<td><input type="number" min="0" max="1.5" step="0.5" class="mark"></td>
+</tr>
+
+<tr>
+<td>Position Control</td>
+<td>1.5</td>
+<td><input type="number" min="0" max="1.5" step="0.5" class="mark"></td>
+</tr>
+
+<tr>
+<td>Encoder / Feedback</td>
+<td>1</td>
+<td><input type="number" min="0" max="1" class="mark"></td>
+</tr>
+
+<tr>
+<td>Observation & Calculation</td>
+<td>1</td>
+<td><input type="number" min="0" max="1" class="mark"></td>
+</tr>
+
+<tr>
+<td>Waveform Analysis</td>
+<td>1</td>
+<td><input type="number" min="0" max="1" class="mark"></td>
+</tr>
+
+<tr>
+<td>Viva / Result</td>
+<td>2</td>
+<td><input type="number" min="0" max="2" class="mark"></td>
+</tr>
+
+</tbody>
+
+</table>
+
+<button onclick="calculateMarks()">Calculate Marks</button>
+
+<div class="score" id="totalMarks">
+Total: 0 / 10
+</div>
+
+</div>
+
+
+<!-- SAVE / JSON / EVALUATION -->
+<div class="card no-print">
+
+<h2>21. Save / Load / Evaluate / Print</h2>
+
+<button onclick="saveData()">
+Save Experiment
+</button>
+
+<button onclick="loadData()" class="secondary">
+Load Saved Data
+</button>
+
+<button onclick="saveJSON()">
+Save JSON
+</button>
+
+<button onclick="document.getElementById('jsonFileInput').click()"
+        class="secondary">
+Load JSON
+</button>
+
+<input type="file"
+       id="jsonFileInput"
+       accept=".json,application/json"
+       style="display:none"
+       onchange="loadJSON(event)">
+
+<button onclick="evaluateExperiment()">
+Evaluate Experiment
+</button>
+
+<button onclick="window.print()" class="secondary">
+Print / Save PDF
+</button>
+
+<button onclick="clearData()" class="danger">
+Clear Data
+</button>
+
+<p id="saveStatus" class="small"></p>
+
+<div id="evaluationResult"
+     class="success"
+     style="display:none;">
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* DATE */
+document.getElementById("expDate").value =
+new Date().toISOString().split("T")[0];
+
+
+/* TAB CONTROL */
+function showTab(id,button){
+
+    document.querySelectorAll(".tabcontent")
+        .forEach(function(tab){
+            tab.classList.remove("active");
+        });
+
+    document.querySelectorAll(".tabbtn")
+        .forEach(function(btn){
+            btn.classList.remove("active");
+        });
+
+    document.getElementById(id)
+        .classList.add("active");
+
+    button.classList.add("active");
+}
+
+
+/* IMAGE PREVIEW */
+function previewImage(input,id){
+
+    const file=input.files[0];
+
+    const img=document.getElementById(id);
+
+    if(file){
+
+        const reader=new FileReader();
+
+        reader.onload=function(e){
+
+            img.src=e.target.result;
+
+            img.style.display="block";
+
+        };
+
+        reader.readAsDataURL(file);
+    }
+}
+
+
+/* SPEED CONTROL */
+function calculateSpeed(){
+
+    const ref =
+        parseFloat(document.getElementById("speedRef").value)||0;
+
+    const actual =
+        parseFloat(document.getElementById("speedActual").value)||0;
+
+    const kp =
+        parseFloat(document.getElementById("speedKp").value)||0;
+
+    const ki =
+        parseFloat(document.getElementById("speedKi").value)||0;
+
+    const error=ref-actual;
+
+    const p=kp*error;
+
+    const i=ki*error;
+
+    const controller=p+i;
+
+    const errorPercent=
+        ref!==0 ? Math.abs(error/ref)*100 : 0;
+
+    document.getElementById("speedOutput").innerHTML=
+
+        "<b>Speed Control Calculation</b><br><br>"+
+
+        "Speed Error = "+error.toFixed(2)+" RPM<br>"+
+
+        "Error = "+errorPercent.toFixed(2)+" %<br>"+
+
+        "Proportional Term = "+p.toFixed(4)+"<br>"+
+
+        "Integral Contribution = "+i.toFixed(4)+"<br>"+
+
+        "Controller Output = "+controller.toFixed(4);
+}
+
+
+/* POSITION CONTROL */
+function calculatePosition(){
+
+    const ref =
+        parseFloat(document.getElementById("positionRef").value)||0;
+
+    const actual =
+        parseFloat(document.getElementById("positionActual").value)||0;
+
+    const kp =
+        parseFloat(document.getElementById("positionKp").value)||0;
+
+    const ki =
+        parseFloat(document.getElementById("positionKi").value)||0;
+
+    const error=ref-actual;
+
+    const p=kp*error;
+
+    const i=ki*error;
+
+    const speedReference=p+i;
+
+    document.getElementById("positionOutput").innerHTML=
+
+        "<b>Position Control Calculation</b><br><br>"+
+
+        "Position Error = "+error.toFixed(2)+"°<br>"+
+
+        "Proportional Term = "+p.toFixed(3)+"<br>"+
+
+        "Integral Contribution = "+i.toFixed(3)+"<br>"+
+
+        "Generated Speed Reference = "+speedReference.toFixed(3)+" RPM";
+}
+
+
+/* MOTOR */
+function calculateMotor(){
+
+    const Vdc =
+        parseFloat(document.getElementById("vdc").value)||0;
+
+    const load =
+        parseFloat(document.getElementById("loadTorque").value)||0;
+
+    document.getElementById("motorOutput").innerHTML=
+
+        "<b>Motor Operating Parameters</b><br><br>"+
+
+        "DC Bus Voltage = "+Vdc.toFixed(2)+" V<br>"+
+
+        "Load Torque = "+load.toFixed(3)+" N·m";
+}
+
+
+/* ENCODER */
+function calculateEncoder(){
+
+    const cpr =
+        parseFloat(document.getElementById("cpr").value)||0;
+
+    const counts =
+        parseFloat(document.getElementById("counts").value)||0;
+
+    const ref =
+        parseFloat(document.getElementById("encoderReference").value)||0;
+
+    const position =
+        cpr>0 ? counts/cpr*360 : 0;
+
+    const error=ref-position;
+
+    document.getElementById("encoderPosition").value=
+        position.toFixed(3);
+
+    document.getElementById("encoderOutput").innerHTML=
+
+        "<b>Encoder Position Calculation</b><br><br>"+
+
+        "Calculated Position = "+position.toFixed(3)+"°<br>"+
+
+        "Reference Position = "+ref.toFixed(3)+"°<br>"+
+
+        "Position Error = "+error.toFixed(3)+"°";
+}
+
+
+/* PERFORMANCE */
+function calculatePerformance(){
+
+    const refSpeed =
+        parseFloat(document.getElementById("perfRefSpeed").value)||0;
+
+    const actualSpeed =
+        parseFloat(document.getElementById("perfActualSpeed").value)||0;
+
+    const refPos =
+        parseFloat(document.getElementById("perfRefPos").value)||0;
+
+    const actualPos =
+        parseFloat(document.getElementById("perfActualPos").value)||0;
+
+    const torque =
+        parseFloat(document.getElementById("perfTorque").value)||0;
+
+    const speedError=refSpeed-actualSpeed;
+
+    const positionError=refPos-actualPos;
+
+    const omega=
+        2*Math.PI*actualSpeed/60;
+
+    const mechanicalPower=
+        Math.abs(torque*omega);
+
+    document.getElementById("performance").innerHTML=
+
+        "<b>Servo Performance</b><br><br>"+
+
+        "Speed Error = "+speedError.toFixed(2)+" RPM<br>"+
+
+        "Speed Error = "+
+        (refSpeed!==0 ?
+        Math.abs(speedError/refSpeed)*100 : 0).toFixed(2)+" %<br>"+
+
+        "Position Error = "+positionError.toFixed(2)+"°<br>"+
+
+        "Angular Speed = "+omega.toFixed(3)+" rad/s<br>"+
+
+        "Mechanical Output Power = "+
+        mechanicalPower.toFixed(2)+" W";
+}
+
+
+/* MARKS */
+function calculateMarks(){
+
+    let total=0;
+
+    document.querySelectorAll(".mark")
+        .forEach(function(x){
+
+            total+=parseFloat(x.value)||0;
+
+        });
+
+    document.getElementById("totalMarks").innerText=
+
+        "Total: "+total.toFixed(1)+" / 10";
+}
+
+
+/* SAVE */
+function saveData(){
+
+    const data={};
+
+    document.querySelectorAll("input,select,textarea")
+        .forEach(function(el){
+
+            if(el.type==="file") return;
+
+            if(el.id){
+
+                data[el.id]=el.value;
+
+            }
+
+        });
+
+    data.marks=[];
+
+    document.querySelectorAll(".mark")
+        .forEach(function(el){
+
+            data.marks.push(el.value);
+
+        });
+
+    localStorage.setItem(
+        "exp7_dc_servo_position_speed",
+        JSON.stringify(data)
+    );
+
+    document.getElementById("saveStatus").innerText=
+
+        "Experiment data saved successfully in this browser.";
+}
+
+
+/* LOAD */
+function loadData(){
+
+    const saved=
+        localStorage.getItem(
+            "exp7_dc_servo_position_speed"
+        );
+
+    if(!saved){
+
+        document.getElementById("saveStatus").innerText=
+
+            "No saved experiment data found.";
+
+        return;
+    }
+
+    const data=JSON.parse(saved);
+
+    Object.keys(data).forEach(function(id){
+
+        if(id==="marks") return;
+
+        const el=document.getElementById(id);
+
+        if(el){
+
+            el.value=data[id];
+
+        }
+
+    });
+
+    if(data.marks){
+
+        document.querySelectorAll(".mark")
+            .forEach(function(el,i){
+
+                if(data.marks[i]!==undefined){
+
+                    el.value=data.marks[i];
+
+                }
+
+            });
+
+    }
+
+    calculateSpeed();
+    calculatePosition();
+    calculateMotor();
+    calculateEncoder();
+    calculatePerformance();
+    calculateMarks();
+
+    document.getElementById("saveStatus").innerText=
+
+        "Saved experiment data loaded.";
+}
+
+
+/* CLEAR */
+function clearData(){
+
+    if(confirm(
+        "Clear all saved Experiment 7 data?"
+    )){
+
+        localStorage.removeItem(
+            "exp7_dc_servo_position_speed"
+        );
+
+        location.reload();
+
+    }
+}
+
+
+/* =========================================================
+   EXPERIMENT 7
+   JSON SAVE / LOAD / AUTOMATIC EVALUATION
+   ========================================================= */
+
+let lastEvaluation = null;
+
+
+/* =========================================================
+   HELPER FUNCTIONS
+   ========================================================= */
+
+function getValue(id){
+
+    const el=document.getElementById(id);
+
+    return el ? el.value : "";
+
+}
+
+
+function setValue(id,value){
+
+    const el=document.getElementById(id);
+
+    if(el && value!==undefined && value!==null){
+
+        el.value=value;
+
+    }
+
+}
+
+
+function isFilled(value){
+
+    return value!==undefined &&
+           value!==null &&
+           String(value).trim()!=="";
+
+}
+
+
+function isNumeric(value){
+
+    return isFilled(value) &&
+           !isNaN(parseFloat(value));
+
+}
+
+
+/* =========================================================
+   IMAGE FUNCTIONS
+   ========================================================= */
+
+function getImageData(id){
+
+    const img=document.getElementById(id);
+
+    if(!img) return "";
+
+    if(img.src &&
+       img.src.startsWith("data:image")){
+
+        return img.src;
+
+    }
+
+    return "";
+
+}
+
+
+function restoreImage(id,data){
+
+    const img=document.getElementById(id);
+
+    if(!img) return;
+
+    if(data &&
+       String(data).startsWith("data:image")){
+
+        img.src=data;
+
+        img.style.display="block";
+
+    }
+
+}
+
+
+/* =========================================================
+   FIND TABLES
+   ========================================================= */
+
+function findCardByHeading(text){
+
+    const cards=
+        Array.from(document.querySelectorAll(".card"));
+
+    return cards.find(function(card){
+
+        const h2=card.querySelector("h2");
+
+        return h2 &&
+               h2.textContent.includes(text);
+
+    });
+
+}
+
+
+/* =========================================================
+   SPEED OBSERVATION TABLE
+   ========================================================= */
+
+function getSpeedObservationData(){
+
+    const card=
+        findCardByHeading(
+            "11. Speed Control Observation Table"
+        );
+
+    if(!card) return [];
+
+    const rows=
+        Array.from(
+            card.querySelectorAll("table tbody tr")
+        );
+
+    return rows.map(function(row){
+
+        const inputs=
+            row.querySelectorAll("input");
+
+        return {
+
+            trial:
+                row.cells[0] ?
+                row.cells[0].innerText.trim() : "",
+
+            referenceSpeed:
+                inputs[0] ? inputs[0].value : "",
+
+            measuredSpeed:
+                inputs[1] ? inputs[1].value : "",
+
+            speedError:
+                inputs[2] ? inputs[2].value : "",
+
+            armatureCurrent:
+                inputs[3] ? inputs[3].value : "",
+
+            torque:
+                inputs[4] ? inputs[4].value : ""
+
+        };
+
+    });
+
+}
+
+
+function loadSpeedObservationData(data){
+
+    if(!Array.isArray(data)) return;
+
+    const card=
+        findCardByHeading(
+            "11. Speed Control Observation Table"
+        );
+
+    if(!card) return;
+
+    const rows=
+        Array.from(
+            card.querySelectorAll("table tbody tr")
+        );
+
+    data.forEach(function(item,index){
+
+        if(!rows[index]) return;
+
+        const inputs=
+            rows[index].querySelectorAll("input");
+
+        if(inputs[0])
+            inputs[0].value=item.referenceSpeed || "";
+
+        if(inputs[1])
+            inputs[1].value=item.measuredSpeed || "";
+
+        if(inputs[2])
+            inputs[2].value=item.speedError || "";
+
+        if(inputs[3])
+            inputs[3].value=item.armatureCurrent || "";
+
+        if(inputs[4])
+            inputs[4].value=item.torque || "";
+
+    });
+
+}
+
+
+/* =========================================================
+   POSITION OBSERVATION TABLE
+   ========================================================= */
+
+function getPositionObservationData(){
+
+    const card=
+        findCardByHeading(
+            "12. Position Control Observation Table"
+        );
+
+    if(!card) return [];
+
+    const rows=
+        Array.from(
+            card.querySelectorAll("table tbody tr")
+        );
+
+    return rows.map(function(row){
+
+        const inputs=
+            row.querySelectorAll("input");
+
+        return {
+
+            trial:
+                row.cells[0] ?
+                row.cells[0].innerText.trim() : "",
+
+            referencePosition:
+                inputs[0] ? inputs[0].value : "",
+
+            measuredPosition:
+                inputs[1] ? inputs[1].value : "",
+
+            positionError:
+                inputs[2] ? inputs[2].value : "",
+
+            speed:
+                inputs[3] ? inputs[3].value : "",
+
+            settlingTime:
+                inputs[4] ? inputs[4].value : ""
+
+        };
+
+    });
+
+}
+
+
+function loadPositionObservationData(data){
+
+    if(!Array.isArray(data)) return;
+
+    const card=
+        findCardByHeading(
+            "12. Position Control Observation Table"
+        );
+
+    if(!card) return;
+
+    const rows=
+        Array.from(
+            card.querySelectorAll("table tbody tr")
+        );
+
+    data.forEach(function(item,index){
+
+        if(!rows[index]) return;
+
+        const inputs=
+            rows[index].querySelectorAll("input");
+
+        if(inputs[0])
+            inputs[0].value=item.referencePosition || "";
+
+        if(inputs[1])
+            inputs[1].value=item.measuredPosition || "";
+
+        if(inputs[2])
+            inputs[2].value=item.positionError || "";
+
+        if(inputs[3])
+            inputs[3].value=item.speed || "";
+
+        if(inputs[4])
+            inputs[4].value=item.settlingTime || "";
+
+    });
+
+}
+
+
+/* =========================================================
+   LOAD DISTURBANCE TABLE
+   ========================================================= */
+
+function getLoadDisturbanceData(){
+
+    const card=
+        findCardByHeading(
+            "13. Load Disturbance Test"
+        );
+
+    if(!card) return [];
+
+    const rows=
+        Array.from(
+            card.querySelectorAll("table tbody tr")
+        );
+
+    return rows.map(function(row){
+
+        const inputs=
+            row.querySelectorAll("input");
+
+        return {
+
+            condition:
+                row.cells[0] ?
+                row.cells[0].innerText.trim() : "",
+
+            loadTorque:
+                inputs[0] ? inputs[0].value : "",
+
+            referenceSpeed:
+                inputs[1] ? inputs[1].value : "",
+
+            measuredSpeed:
+                inputs[2] ? inputs[2].value : "",
+
+            speedError:
+                inputs[3] ? inputs[3].value : "",
+
+            recoveryTime:
+                inputs[4] ? inputs[4].value : ""
+
+        };
+
+    });
+
+}
+
+
+function loadLoadDisturbanceData(data){
+
+    if(!Array.isArray(data)) return;
+
+    const card=
+        findCardByHeading(
+            "13. Load Disturbance Test"
+        );
+
+    if(!card) return;
+
+    const rows=
+        Array.from(
+            card.querySelectorAll("table tbody tr")
+        );
+
+    data.forEach(function(item,index){
+
+        if(!rows[index]) return;
+
+        const inputs=
+            rows[index].querySelectorAll("input");
+
+        if(inputs[0])
+            inputs[0].value=item.loadTorque || "";
+
+        if(inputs[1])
+            inputs[1].value=item.referenceSpeed || "";
+
+        if(inputs[2])
+            inputs[2].value=item.measuredSpeed || "";
+
+        if(inputs[3])
+            inputs[3].value=item.speedError || "";
+
+        if(inputs[4])
+            inputs[4].value=item.recoveryTime || "";
+
+    });
+
+}
+
+
+/* =========================================================
+   DYNAMIC RESPONSE TABLE
+   ========================================================= */
+
+function getDynamicResponseData(){
+
+    return {
+
+        riseTime:
+            getValue("riseTime"),
+
+        peakTime:
+            getValue("peakTime"),
+
+        settlingTime:
+            getValue("settlingTime"),
+
+        overshoot:
+            getValue("overshoot"),
+
+        steadyError:
+            getValue("steadyError")
+
+    };
+
+}
+
+
+function loadDynamicResponseData(data){
+
+    if(!data) return;
+
+    setValue("riseTime",data.riseTime);
+    setValue("peakTime",data.peakTime);
+    setValue("settlingTime",data.settlingTime);
+    setValue("overshoot",data.overshoot);
+    setValue("steadyError",data.steadyError);
+
+}
+
+
+/* =========================================================
+   POST-LAB ANSWERS
+   ========================================================= */
+
+function getPostLabTextareas(){
+
+    const card=
+        findCardByHeading(
+            "19. Post-Lab Questions"
+        );
+
+    if(!card) return [];
+
+    return Array.from(
+        card.querySelectorAll(".grid textarea")
+    );
+
+}
+
+
+function getPostLabData(){
+
+    return getPostLabTextareas().map(function(el){
+
+        return el.value;
+
+    });
+
+}
+
+
+function loadPostLabData(data){
+
+    if(!Array.isArray(data)) return;
+
+    const answers=
+        getPostLabTextareas();
+
+    data.forEach(function(value,index){
+
+        if(answers[index]){
+
+            answers[index].value=value || "";
+
+        }
+
+    });
+
+}
+
+
+/* =========================================================
+   FACULTY MARKS
+   ========================================================= */
+
+function getFacultyMarks(){
+
+    return Array.from(
+        document.querySelectorAll(".mark")
+    ).map(function(el){
+
+        return el.value;
+
+    });
+
+}
+
+
+function loadFacultyMarks(data){
+
+    if(!Array.isArray(data)) return;
+
+    document.querySelectorAll(".mark")
+        .forEach(function(el,index){
+
+            if(data[index]!==undefined){
+
+                el.value=data[index];
+
+            }
+
+        });
+
+}
+
+
+/* =========================================================
+   SAVE JSON
+   ========================================================= */
+
+function saveJSON(){
+
+    try{
+
+        const data={
+
+            experiment:{
+
+                number:"7",
+
+                title:
+                "Position and Speed Control of DC Servo Motor Drive",
+
+                version:"1.0"
+
+            },
+
+            savedAt:
+                new Date().toISOString(),
+
+
+            /* ---------------------------------------------
+               STUDENT
+               --------------------------------------------- */
+
+            studentDetails:{
+
+                name:
+                    getValue("studentName"),
+
+                registerNumber:
+                    getValue("regNo"),
+
+                classSection:
+                    getValue("classSection"),
+
+                date:
+                    getValue("expDate")
+
+            },
+
+
+            /* ---------------------------------------------
+               CONTROL MODE
+               --------------------------------------------- */
+
+            controlMode:{
+
+                selected:
+                    document.querySelector(
+                        ".tabbtn.active"
+                    ) ?
+                    document.querySelector(
+                        ".tabbtn.active"
+                    ).innerText.trim() : "",
+
+                speedReference:
+                    getValue("speedRef"),
+
+                measuredSpeed:
+                    getValue("speedActual"),
+
+                speedKp:
+                    getValue("speedKp"),
+
+                speedKi:
+                    getValue("speedKi"),
+
+                positionReference:
+                    getValue("positionRef"),
+
+                measuredPosition:
+                    getValue("positionActual"),
+
+                positionKp:
+                    getValue("positionKp"),
+
+                positionKi:
+                    getValue("positionKi")
+
+            },
+
+
+            /* ---------------------------------------------
+               MOTOR PARAMETERS
+               --------------------------------------------- */
+
+            motorParameters:{
+
+                dcBusVoltage:
+                    getValue("vdc"),
+
+                armatureResistance:
+                    getValue("ra"),
+
+                armatureInductance:
+                    getValue("la"),
+
+                ke:
+                    getValue("ke"),
+
+                kt:
+                    getValue("kt"),
+
+                inertia:
+                    getValue("inertia"),
+
+                friction:
+                    getValue("friction"),
+
+                loadTorque:
+                    getValue("loadTorque")
+
+            },
+
+
+            /* ---------------------------------------------
+               ENCODER
+               --------------------------------------------- */
+
+            encoder:{
+
+                cpr:
+                    getValue("cpr"),
+
+                counts:
+                    getValue("counts"),
+
+                measuredPosition:
+                    getValue("encoderPosition"),
+
+                referencePosition:
+                    getValue("encoderReference")
+
+            },
+
+
+            /* ---------------------------------------------
+               TABLES
+               --------------------------------------------- */
+
+            speedObservation:
+                getSpeedObservationData(),
+
+            positionObservation:
+                getPositionObservationData(),
+
+            loadDisturbance:
+                getLoadDisturbanceData(),
+
+
+            /* ---------------------------------------------
+               PERFORMANCE
+               --------------------------------------------- */
+
+            performance:{
+
+                referenceSpeed:
+                    getValue("perfRefSpeed"),
+
+                actualSpeed:
+                    getValue("perfActualSpeed"),
+
+                referencePosition:
+                    getValue("perfRefPos"),
+
+                actualPosition:
+                    getValue("perfActualPos"),
+
+                torque:
+                    getValue("perfTorque")
+
+            },
+
+
+            dynamicResponse:
+                getDynamicResponseData(),
+
+
+            /* ---------------------------------------------
+               ANALYSIS
+               --------------------------------------------- */
+
+            analysis:{
+
+                speed:
+                    getValue("analysisSpeed"),
+
+                position:
+                    getValue("analysisPosition"),
+
+                encoder:
+                    getValue("analysisEncoder"),
+
+                load:
+                    getValue("analysisLoad"),
+
+                controller:
+                    getValue("analysisController")
+
+            },
+
+
+            /* ---------------------------------------------
+               RESULT
+               --------------------------------------------- */
+
+            result:
+                getValue("result"),
+
+
+            /* ---------------------------------------------
+               POST LAB
+               --------------------------------------------- */
+
+            postLabAnswers:
+                getPostLabData(),
+
+
+            /* ---------------------------------------------
+               FACULTY
+               --------------------------------------------- */
+
+            facultyMarks:
+                getFacultyMarks(),
+
+            facultyTotal:
+                document.getElementById(
+                    "totalMarks"
+                ).innerText,
+
+
+            /* ---------------------------------------------
+               IMAGES
+               --------------------------------------------- */
+
+            images:{
+
+                simulinkModel:
+                    getImageData("modelPreview"),
+
+                speedControl:
+                    getImageData("waveSpeed"),
+
+                positionControl:
+                    getImageData("wavePosition"),
+
+                loadDisturbance:
+                    getImageData("waveLoad")
+
+            },
+
+
+            /* ---------------------------------------------
+               AUTOMATIC EVALUATION
+               --------------------------------------------- */
+
+            automaticEvaluation:
+                lastEvaluation
+
+        };
+
+
+        /* Browser backup */
+
+        try{
+
+            localStorage.setItem(
+                "exp7_dc_servo_position_speed_json",
+                JSON.stringify(data)
+            );
+
+        }catch(storageError){
+
+            console.warn(
+                "Browser JSON backup could not be stored.",
+                storageError
+            );
+
+        }
+
+
+        /* Create JSON file */
+
+        const json=
+            JSON.stringify(data,null,2);
+
+        const blob=
+            new Blob(
+                [json],
+                {
+                    type:"application/json"
+                }
+            );
+
+        const url=
+            URL.createObjectURL(blob);
+
+        const link=
+            document.createElement("a");
+
+
+        const reg=
+            getValue("regNo")
+            .trim()
+            .replace(/[^\w-]+/g,"_");
+
+
+        const fileName=
+            "Experiment7_DC_Servo_Position_Speed_"+
+            (reg || "Student")+
+            ".json";
+
+
+        link.href=url;
+
+        link.download=fileName;
+
+        document.body.appendChild(link);
+
+        link.click();
+
+        document.body.removeChild(link);
+
+        URL.revokeObjectURL(url);
+
+
+        document.getElementById(
+            "saveStatus"
+        ).innerText=
+            "JSON file saved successfully as: "+
+            fileName;
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        document.getElementById(
+            "saveStatus"
+        ).innerText=
+            "Error while saving JSON: "+
+            error.message;
+
+    }
+
+}
+
+
+/* =========================================================
+   LOAD JSON
+   ========================================================= */
+
+function loadJSON(event){
+
+    const file=
+        event.target.files[0];
+
+    if(!file) return;
+
+    const reader=
+        new FileReader();
+
+
+    reader.onload=function(e){
+
+        try{
+
+            const data=
+                JSON.parse(e.target.result);
+
+
+            /* ---------------------------------------------
+               VALIDATE EXPERIMENT
+               --------------------------------------------- */
+
+            if(
+                !data.experiment ||
+                String(data.experiment.number)!=="7"
+            ){
+
+                alert(
+                    "This JSON file is not for Experiment 7."
+                );
+
+                return;
+
+            }
+
+
+            /* ---------------------------------------------
+               STUDENT
+               --------------------------------------------- */
+
+            const student=
+                data.studentDetails || {};
+
+            setValue(
+                "studentName",
+                student.name
+            );
+
+            setValue(
+                "regNo",
+                student.registerNumber
+            );
+
+            setValue(
+                "classSection",
+                student.classSection
+            );
+
+            setValue(
+                "expDate",
+                student.date
+            );
+
+
+            /* ---------------------------------------------
+               CONTROL MODE
+               --------------------------------------------- */
+
+            const cm=
+                data.controlMode || {};
+
+            setValue(
+                "speedRef",
+                cm.speedReference
+            );
+
+            setValue(
+                "speedActual",
+                cm.measuredSpeed
+            );
+
+            setValue(
+                "speedKp",
+                cm.speedKp
+            );
+
+            setValue(
+                "speedKi",
+                cm.speedKi
+            );
+
+            setValue(
+                "positionRef",
+                cm.positionReference
+            );
+
+            setValue(
+                "positionActual",
+                cm.measuredPosition
+            );
+
+            setValue(
+                "positionKp",
+                cm.positionKp
+            );
+
+            setValue(
+                "positionKi",
+                cm.positionKi
+            );
+
+
+            /* Restore active tab */
+
+            if(
+                cm.selected &&
+                cm.selected.toLowerCase()
+                    .includes("position")
+            ){
+
+                const positionButton=
+                    Array.from(
+                        document.querySelectorAll(".tabbtn")
+                    ).find(function(btn){
+
+                        return btn.innerText
+                            .toLowerCase()
+                            .includes("position");
+
+                    });
+
+                if(positionButton){
+
+                    showTab(
+                        "positionTab",
+                        positionButton
+                    );
+
+                }
+
+            }else{
+
+                const speedButton=
+                    Array.from(
+                        document.querySelectorAll(".tabbtn")
+                    ).find(function(btn){
+
+                        return btn.innerText
+                            .toLowerCase()
+                            .includes("speed");
+
+                    });
+
+                if(speedButton){
+
+                    showTab(
+                        "speedTab",
+                        speedButton
+                    );
+
+                }
+
+            }
+
+
+            /* ---------------------------------------------
+               MOTOR PARAMETERS
+               --------------------------------------------- */
+
+            const motor=
+                data.motorParameters || {};
+
+            setValue(
+                "vdc",
+                motor.dcBusVoltage
+            );
+
+            setValue(
+                "ra",
+                motor.armatureResistance
+            );
+
+            setValue(
+                "la",
+                motor.armatureInductance
+            );
+
+            setValue(
+                "ke",
+                motor.ke
+            );
+
+            setValue(
+                "kt",
+                motor.kt
+            );
+
+            setValue(
+                "inertia",
+                motor.inertia
+            );
+
+            setValue(
+                "friction",
+                motor.friction
+            );
+
+            setValue(
+                "loadTorque",
+                motor.loadTorque
+            );
+
+
+            /* ---------------------------------------------
+               ENCODER
+               --------------------------------------------- */
+
+            const encoder=
+                data.encoder || {};
+
+            setValue(
+                "cpr",
+                encoder.cpr
+            );
+
+            setValue(
+                "counts",
+                encoder.counts
+            );
+
+            setValue(
+                "encoderReference",
+                encoder.referencePosition
+            );
+
+
+            /* ---------------------------------------------
+               OBSERVATION TABLES
+               --------------------------------------------- */
+
+            loadSpeedObservationData(
+                data.speedObservation
+            );
+
+            loadPositionObservationData(
+                data.positionObservation
+            );
+
+            loadLoadDisturbanceData(
+                data.loadDisturbance
+            );
+
+
+            /* ---------------------------------------------
+               PERFORMANCE
+               --------------------------------------------- */
+
+            const perf=
+                data.performance || {};
+
+            setValue(
+                "perfRefSpeed",
+                perf.referenceSpeed
+            );
+
+            setValue(
+                "perfActualSpeed",
+                perf.actualSpeed
+            );
+
+            setValue(
+                "perfRefPos",
+                perf.referencePosition
+            );
+
+            setValue(
+                "perfActualPos",
+                perf.actualPosition
+            );
+
+            setValue(
+                "perfTorque",
+                perf.torque
+            );
+
+
+            /* ---------------------------------------------
+               DYNAMIC RESPONSE
+               --------------------------------------------- */
+
+            loadDynamicResponseData(
+                data.dynamicResponse
+            );
+
+
+            /* ---------------------------------------------
+               ANALYSIS
+               --------------------------------------------- */
+
+            const analysis=
+                data.analysis || {};
+
+            setValue(
+                "analysisSpeed",
+                analysis.speed
+            );
+
+            setValue(
+                "analysisPosition",
+                analysis.position
+            );
+
+            setValue(
+                "analysisEncoder",
+                analysis.encoder
+            );
+
+            setValue(
+                "analysisLoad",
+                analysis.load
+            );
+
+            setValue(
+                "analysisController",
+                analysis.controller
+            );
+
+
+            /* ---------------------------------------------
+               RESULT
+               --------------------------------------------- */
+
+            setValue(
+                "result",
+                data.result
+            );
+
+
+            /* ---------------------------------------------
+               POST-LAB
+               --------------------------------------------- */
+
+            loadPostLabData(
+                data.postLabAnswers
+            );
+
+
+            /* ---------------------------------------------
+               FACULTY MARKS
+               --------------------------------------------- */
+
+            loadFacultyMarks(
+                data.facultyMarks
+            );
+
+
+            /* ---------------------------------------------
+               IMAGES
+               --------------------------------------------- */
+
+            const images=
+                data.images || {};
+
+            restoreImage(
+                "modelPreview",
+                images.simulinkModel
+            );
+
+            restoreImage(
+                "waveSpeed",
+                images.speedControl
+            );
+
+            restoreImage(
+                "wavePosition",
+                images.positionControl
+            );
+
+            restoreImage(
+                "waveLoad",
+                images.loadDisturbance
+            );
+
+
+            /* ---------------------------------------------
+               AUTOMATIC EVALUATION
+               --------------------------------------------- */
+
+            if(data.automaticEvaluation){
+
+                lastEvaluation=
+                    data.automaticEvaluation;
+
+                const evaluationResult=
+                    document.getElementById(
+                        "evaluationResult"
+                    );
+
+                if(evaluationResult){
+
+                    evaluationResult.style.display=
+                        "block";
+
+                    evaluationResult.innerHTML=
+
+                        "<h3>Automatic Experiment Evaluation</h3>"+
+
+                        "<div class='score'>"+
+                        "Completion Score: "+
+                        Number(
+                            data.automaticEvaluation.score || 0
+                        ).toFixed(2)+
+                        " / 10"+
+                        "</div>"+
+
+                        "<p>"+
+                        "Completion Percentage: "+
+                        Number(
+                            data.automaticEvaluation.percentage || 0
+                        ).toFixed(0)+
+                        "%"+
+                        "</p>"+
+
+                        "<hr>"+
+
+                        (
+                            data.automaticEvaluation.report ||
+                            ""
+                        );
+
+                }
+
+            }
+
+
+            /* ---------------------------------------------
+               RECALCULATE
+               --------------------------------------------- */
+
+            calculateSpeed();
+
+            calculatePosition();
+
+            calculateMotor();
+
+            calculateEncoder();
+
+            calculatePerformance();
+
+            calculateMarks();
+
+
+            /* Browser backup */
+
+            try{
+
+                localStorage.setItem(
+                    "exp7_dc_servo_position_speed_json",
+                    JSON.stringify(data)
+                );
+
+            }catch(err){
+
+                console.warn(
+                    "Browser JSON backup could not be stored."
+                );
+
+            }
+
+
+            document.getElementById(
+                "saveStatus"
+            ).innerText=
+                "JSON file loaded successfully. All available experiment data and images have been restored.";
+
+        }
+
+        catch(error){
+
+            console.error(error);
+
+            alert(
+                "Unable to load JSON file.\n\n"+
+                error.message
+            );
+
+        }
+
+        finally{
+
+            /*
+              Allows the same JSON file to be selected again.
+            */
+
+            event.target.value="";
+
+        }
+
+    };
+
+
+    reader.readAsText(file);
+
+}
+
+
+/* =========================================================
+   AUTOMATIC EXPERIMENT EVALUATION
+   =========================================================
+
+   Total = 10 Marks
+
+   1. Student details       = 1
+   2. Simulink model        = 2
+   3. Speed observation     = 1
+   4. Position observation = 1
+   5. Load disturbance      = 1
+   6. Encoder feedback      = 1
+   7. Dynamic parameters    = 1
+   8. Waveforms             = 1
+   9. Analysis/result       = 1
+
+   This evaluates COMPLETENESS of the experiment.
+   Faculty marks remain separate.
+   ========================================================= */
+
+function evaluateExperiment(){
+
+    let score=0;
+
+    let report=[];
+
+
+    /* -----------------------------------------------------
+       1. STUDENT DETAILS - 1 MARK
+       ----------------------------------------------------- */
+
+    const studentComplete=
+
+        isFilled(
+            getValue("studentName")
+        ) &&
+
+        isFilled(
+            getValue("regNo")
+        ) &&
+
+        isFilled(
+            getValue("classSection")
+        ) &&
+
+        isFilled(
+            getValue("expDate")
+        );
+
+
+    if(studentComplete){
+
+        score+=1;
+
+        report.push(
+            "✓ Student details completed – 1/1"
+        );
+
+    }else{
+
+        report.push(
+            "✗ Student details incomplete – 0/1"
+        );
+
+    }
+
+
+    /* -----------------------------------------------------
+       2. SIMULINK MODEL - 2 MARKS
+       ----------------------------------------------------- */
+
+    const modelUploaded=
+        Boolean(
+            getImageData("modelPreview")
+        );
+
+
+    if(modelUploaded){
+
+        score+=2;
+
+        report.push(
+            "✓ Simulink model screenshot uploaded – 2/2"
+        );
+
+    }else{
+
+        report.push(
+            "✗ Simulink model screenshot not uploaded – 0/2"
+        );
+
+    }
+
+
+    /* -----------------------------------------------------
+       3. SPEED OBSERVATION - 1 MARK
+       ----------------------------------------------------- */
+
+    const speedData=
+        getSpeedObservationData();
+
+    let speedRows=0;
+
+
+    speedData.forEach(function(row){
+
+        if(
+
+            isNumeric(row.referenceSpeed) &&
+
+            isNumeric(row.measuredSpeed) &&
+
+            isNumeric(row.speedError) &&
+
+            isNumeric(row.armatureCurrent) &&
+
+            isNumeric(row.torque)
+
+        ){
+
+            speedRows++;
+
+        }
+
+    });
+
+
+    let speedScore=0;
+
+
+    if(speedRows>=4){
+
+        speedScore=1;
+
+    }else if(speedRows>=2){
+
+        speedScore=0.5;
+
+    }
+
+
+    score+=speedScore;
+
+
+    report.push(
+
+        "Speed observation: "+
+
+        speedRows+"/"+
+        speedData.length+
+
+        " rows complete – "+
+
+        speedScore.toFixed(1)+
+        "/1"
+
+    );
+
+
+    /* -----------------------------------------------------
+       4. POSITION OBSERVATION - 1 MARK
+       ----------------------------------------------------- */
+
+    const positionData=
+        getPositionObservationData();
+
+    let positionRows=0;
+
+
+    positionData.forEach(function(row){
+
+        if(
+
+            isNumeric(row.referencePosition) &&
+
+            isNumeric(row.measuredPosition) &&
+
+            isNumeric(row.positionError) &&
+
+            isNumeric(row.speed) &&
+
+            isNumeric(row.settlingTime)
+
+        ){
+
+            positionRows++;
+
+        }
+
+    });
+
+
+    let positionScore=0;
+
+
+    if(positionRows>=4){
+
+        positionScore=1;
+
+    }else if(positionRows>=2){
+
+        positionScore=0.5;
+
+    }
+
+
+    score+=positionScore;
+
+
+    report.push(
+
+        "Position observation: "+
+
+        positionRows+"/"+
+        positionData.length+
+
+        " rows complete – "+
+
+        positionScore.toFixed(1)+
+        "/1"
+
+    );
+
+
+    /* -----------------------------------------------------
+       5. LOAD DISTURBANCE - 1 MARK
+       ----------------------------------------------------- */
+
+    const loadData=
+        getLoadDisturbanceData();
+
+    let loadRows=0;
+
+
+    loadData.forEach(function(row){
+
+        if(
+
+            isNumeric(row.loadTorque) &&
+
+            isNumeric(row.referenceSpeed) &&
+
+            isNumeric(row.measuredSpeed) &&
+
+            isNumeric(row.speedError) &&
+
+            isNumeric(row.recoveryTime)
+
+        ){
+
+            loadRows++;
+
+        }
+
+    });
+
+
+    let loadScore=0;
+
+
+    if(loadRows>=3){
+
+        loadScore=1;
+
+    }else if(loadRows>=2){
+
+        loadScore=0.5;
+
+    }
+
+
+    score+=loadScore;
+
+
+    report.push(
+
+        "Load disturbance test: "+
+
+        loadRows+"/"+
+        loadData.length+
+
+        " rows complete – "+
+
+        loadScore.toFixed(1)+
+        "/1"
+
+    );
+
+
+    /* -----------------------------------------------------
+       6. ENCODER - 1 MARK
+       ----------------------------------------------------- */
+
+    const encoderValues=[
+
+        getValue("cpr"),
+
+        getValue("counts"),
+
+        getValue("encoderPosition"),
+
+        getValue("encoderReference")
+
+    ];
+
+
+    const encoderComplete=
+        encoderValues.filter(
+            isNumeric
+        ).length;
+
+
+    let encoderScore=0;
+
+
+    if(encoderComplete>=4){
+
+        encoderScore=1;
+
+    }else if(encoderComplete>=2){
+
+        encoderScore=0.5;
+
+    }
+
+
+    score+=encoderScore;
+
+
+    report.push(
+
+        "Encoder feedback: "+
+
+        encoderComplete+
+        "/4 parameters completed – "+
+
+        encoderScore.toFixed(1)+
+        "/1"
+
+    );
+
+
+    /* -----------------------------------------------------
+       7. DYNAMIC RESPONSE - 1 MARK
+       ----------------------------------------------------- */
+
+    const dynamicValues=[
+
+        getValue("riseTime"),
+
+        getValue("peakTime"),
+
+        getValue("settlingTime"),
+
+        getValue("overshoot"),
+
+        getValue("steadyError")
+
+    ];
+
+
+    const dynamicComplete=
+        dynamicValues.filter(
+            isNumeric
+        ).length;
+
+
+    let dynamicScore=0;
+
+
+    if(dynamicComplete>=5){
+
+        dynamicScore=1;
+
+    }else if(dynamicComplete>=3){
+
+        dynamicScore=0.5;
+
+    }
+
+
+    score+=dynamicScore;
+
+
+    report.push(
+
+        "Dynamic response: "+
+
+        dynamicComplete+
+        "/5 parameters completed – "+
+
+        dynamicScore.toFixed(1)+
+        "/1"
+
+    );
+
+
+    /* -----------------------------------------------------
+       8. WAVEFORMS - 1 MARK
+       ----------------------------------------------------- */
+
+    const waveformCount=[
+
+        getImageData("waveSpeed"),
+
+        getImageData("wavePosition"),
+
+        getImageData("waveLoad")
+
+    ].filter(Boolean).length;
+
+
+    let waveformScore=0;
+
+
+    if(waveformCount===3){
+
+        waveformScore=1;
+
+    }else if(waveformCount===2){
+
+        waveformScore=0.75;
+
+    }else if(waveformCount===1){
+
+        waveformScore=0.5;
+
+    }
+
+
+    score+=waveformScore;
+
+
+    report.push(
+
+        "Waveform screenshots: "+
+
+        waveformCount+
+        "/3 uploaded – "+
+
+        waveformScore.toFixed(2)+
+        "/1"
+
+    );
+
+
+    /* -----------------------------------------------------
+       9. ANALYSIS + RESULT - 1 MARK
+       ----------------------------------------------------- */
+
+    const analysisValues=[
+
+        getValue("analysisSpeed"),
+
+        getValue("analysisPosition"),
+
+        getValue("analysisEncoder"),
+
+        getValue("analysisLoad"),
+
+        getValue("analysisController")
+
+    ];
+
+
+    const analysisComplete=
+        analysisValues.filter(function(value){
+
+            return String(value)
+                .trim()
+                .length>=30;
+
+        }).length;
+
+
+    const resultComplete=
+        String(
+            getValue("result")
+        )
+        .trim()
+        .length>=30;
+
+
+    let analysisScore=0;
+
+
+    if(
+        analysisComplete>=4 &&
+        resultComplete
+    ){
+
+        analysisScore=1;
+
+    }else if(
+        analysisComplete>=2 ||
+        resultComplete
+    ){
+
+        analysisScore=0.5;
+
+    }
+
+
+    score+=analysisScore;
+
+
+    report.push(
+
+        "Analysis: "+
+        analysisComplete+
+        "/5 sufficiently completed; "+
+
+        "Result: "+
+        (
+            resultComplete ?
+            "completed" :
+            "incomplete"
+        )+
+
+        " – "+
+
+        analysisScore.toFixed(1)+
+        "/1"
+
+    );
+
+
+    /* -----------------------------------------------------
+       FINAL SCORE
+       ----------------------------------------------------- */
+
+    score=
+        Math.min(
+            10,
+            Math.round(score*100)/100
+        );
+
+
+    const percentage=
+        score*10;
+
+
+    const evaluationTime=
+        new Date().toLocaleString();
+
+
+    lastEvaluation={
+
+        score:score,
+
+        maximum:10,
+
+        percentage:percentage,
+
+        evaluatedAt:evaluationTime,
+
+        report:
+            report.join("<br>")
+
+    };
+
+
+    /* -----------------------------------------------------
+       DISPLAY EVALUATION
+       ----------------------------------------------------- */
+
+    const evaluationResult=
+        document.getElementById(
+            "evaluationResult"
+        );
+
+
+    evaluationResult.style.display=
+        "block";
+
+
+    evaluationResult.innerHTML=
+
+        "<h3>Automatic Experiment Evaluation</h3>"+
+
+        "<div class='score'>"+
+        "Completion Score: "+
+        score.toFixed(2)+
+        " / 10"+
+        "</div>"+
+
+        "<p>"+
+        "Completion Percentage: "+
+        percentage.toFixed(0)+
+        "%"+
+        "</p>"+
+
+        "<hr>"+
+
+        report.join("<br>")+
+
+        "<br><br>"+
+
+        "<span class='small'>"+
+
+        "<b>Note:</b> This automatic evaluation checks "+
+        "whether the experiment has been completed and the "+
+        "required fields/data/screenshots have been entered. "+
+        "It does not verify the technical correctness of "+
+        "numerical values or written answers. Faculty "+
+        "evaluation remains the final academic assessment."+
+
+        "</span>";
+
+
+    document.getElementById(
+        "saveStatus"
+    ).innerText=
+
+        "Experiment evaluated. Completion score: "+
+        score.toFixed(2)+
+        " / 10";
+
+}
+
+
+/* =========================================================
+   INITIAL CALCULATIONS
+   ========================================================= */
+
+calculateSpeed();
+
+calculatePosition();
+
+calculateMotor();
+
+calculateEncoder();
+
+calculatePerformance();
+
+calculateMarks();
+
+</script>
+
+</body>
+</html>
+

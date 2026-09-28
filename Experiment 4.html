@@ -1,0 +1,4096 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Experiment 4 - Bidirectional Converter for Battery Charging</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#07111f;
+    color:#e8f1ff;
+    line-height:1.5;
+}
+
+header{
+    background:linear-gradient(135deg,#0b1d33,#123c5a);
+    padding:25px;
+    text-align:center;
+    border-bottom:3px solid #00d9ff;
+}
+
+header h1{
+    margin:0;
+    color:#00e5ff;
+    font-size:30px;
+}
+
+header p{
+    margin:8px 0 0;
+    color:#b9d7ef;
+}
+
+.container{
+    width:94%;
+    max-width:1300px;
+    margin:25px auto;
+}
+
+.card{
+    background:#0d1b2a;
+    border:1px solid #1e4563;
+    border-radius:12px;
+    padding:22px;
+    margin-bottom:22px;
+    box-shadow:0 5px 20px rgba(0,0,0,.25);
+}
+
+.card h2{
+    color:#00e5ff;
+    border-bottom:1px solid #24506d;
+    padding-bottom:8px;
+}
+
+.card h3{
+    color:#73e6ff;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:15px;
+}
+
+label{
+    display:block;
+    margin-bottom:5px;
+    color:#b9d7ef;
+    font-weight:bold;
+}
+
+input,textarea,select{
+    width:100%;
+    padding:10px;
+    border-radius:6px;
+    border:1px solid #315d79;
+    background:#071522;
+    color:white;
+}
+
+textarea{
+    min-height:100px;
+    resize:vertical;
+}
+
+.formula{
+    background:#06131f;
+    border-left:4px solid #00e5ff;
+    padding:13px;
+    margin:10px 0;
+    font-family:"Courier New",monospace;
+    color:#d7f8ff;
+    border-radius:5px;
+}
+
+.info{
+    background:#082437;
+    border-left:4px solid #00a9d4;
+    padding:13px;
+    margin:12px 0;
+    border-radius:5px;
+}
+
+.warning{
+    background:#35270b;
+    border-left:4px solid #ffc107;
+    padding:13px;
+    color:#ffe39a;
+    margin:12px 0;
+    border-radius:5px;
+}
+
+.upload-box{
+    border:2px dashed #2581a8;
+    border-radius:10px;
+    padding:20px;
+    text-align:center;
+    background:#081827;
+    margin-top:12px;
+}
+
+.upload-box input{
+    margin-top:12px;
+}
+
+.preview{
+    max-width:100%;
+    max-height:500px;
+    margin-top:15px;
+    border:1px solid #32657d;
+    border-radius:8px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:15px;
+}
+
+th,td{
+    border:1px solid #31536b;
+    padding:9px;
+    text-align:center;
+}
+
+th{
+    background:#12354d;
+    color:#00e5ff;
+}
+
+td input{
+    min-width:85px;
+}
+
+button{
+    padding:12px 20px;
+    border:none;
+    border-radius:7px;
+    background:#00a9d4;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    margin:5px;
+}
+
+button:hover{
+    background:#00d9ff;
+    color:#00131d;
+}
+
+.btn-green{
+    background:#16845a;
+}
+
+.btn-red{
+    background:#a73535;
+}
+
+.btn-orange{
+    background:#b86b13;
+}
+
+.result{
+    background:#071923;
+    border:1px solid #24667e;
+    padding:18px;
+    border-radius:8px;
+    white-space:pre-line;
+}
+
+.score{
+    font-size:24px;
+    color:#00ffae;
+    font-weight:bold;
+}
+
+.small{
+    font-size:13px;
+    color:#91afc3;
+}
+
+.mode-box{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+    margin-top:15px;
+}
+
+.mode{
+    padding:18px;
+    border-radius:10px;
+    background:#081827;
+    border:1px solid #315d79;
+}
+
+.mode h3{
+    margin-top:0;
+}
+
+canvas{
+    width:100%;
+    height:300px;
+    background:#06131f;
+    border:1px solid #315d79;
+    border-radius:8px;
+    margin-top:15px;
+}
+
+@media(max-width:700px){
+    .mode-box{
+        grid-template-columns:1fr;
+    }
+}
+
+@media print{
+    body{
+        background:white;
+        color:black;
+    }
+
+    .card{
+        background:white;
+        color:black;
+        border:1px solid #aaa;
+        box-shadow:none;
+    }
+
+    button{
+        display:none;
+    }
+
+    input,textarea,select{
+        color:black;
+        background:white;
+    }
+
+    header{
+        background:white;
+        color:black;
+        border-bottom:2px solid black;
+    }
+
+    header h1,
+    .card h2,
+    .card h3{
+        color:black;
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>VIRTUAL POWER ELECTRONICS & DRIVES LABORATORY</h1>
+
+<p>
+Experiment 4 – Simulation of Bidirectional DC-DC Converter for Battery Charging
+</p>
+
+</header>
+
+<div class="container">
+
+<!-- STUDENT DETAILS -->
+
+<div class="card">
+
+<h2>1. Student Details</h2>
+
+<div class="grid">
+
+<div>
+<label>Name</label>
+<input id="studentName">
+</div>
+
+<div>
+<label>Register Number</label>
+<input id="regNo">
+</div>
+
+<div>
+<label>Department</label>
+<input id="department">
+</div>
+
+<div>
+<label>Year / Semester</label>
+<input id="year">
+</div>
+
+<div>
+<label>Date</label>
+<input type="date" id="date">
+</div>
+
+<div>
+<label>Batch</label>
+<input id="batch">
+</div>
+
+</div>
+
+</div>
+
+<!-- AIM -->
+
+<div class="card">
+
+<h2>2. Aim</h2>
+
+<p>
+To simulate a bidirectional DC-DC converter for battery charging and
+discharging using MATLAB/Simulink and study the power flow, battery
+voltage, battery current, state of charge and converter efficiency.
+</p>
+
+</div>
+
+<!-- OBJECTIVES -->
+
+<div class="card">
+
+<h2>3. Learning Objectives</h2>
+
+<ul>
+
+<li>Understand the principle of bidirectional DC-DC power conversion.</li>
+
+<li>Understand buck operation during battery charging.</li>
+
+<li>Understand boost operation during battery discharging.</li>
+
+<li>Control the direction of power flow between DC bus and battery.</li>
+
+<li>Study battery charging current and voltage.</li>
+
+<li>Study battery State of Charge (SOC).</li>
+
+<li>Calculate charging and discharging power.</li>
+
+<li>Determine converter efficiency.</li>
+
+<li>Observe transient response during mode changes.</li>
+
+</ul>
+
+</div>
+
+<!-- SOFTWARE -->
+
+<div class="card">
+
+<h2>4. Software / Simulink Blocks Required</h2>
+
+<ul>
+
+<li>MATLAB</li>
+
+<li>Simulink</li>
+
+<li>Simscape Electrical</li>
+
+<li>DC Voltage Source</li>
+
+<li>Battery</li>
+
+<li>Inductor</li>
+
+<li>MOSFET / IGBT switches</li>
+
+<li>Diodes / synchronous switches</li>
+
+<li>Capacitor</li>
+
+<li>PWM Generator</li>
+
+<li>Voltage Measurement</li>
+
+<li>Current Measurement</li>
+
+<li>Scope</li>
+
+<li>powergui</li>
+
+</ul>
+
+</div>
+
+<!-- THEORY -->
+
+<div class="card">
+
+<h2>5. Theory</h2>
+
+<p>
+A bidirectional DC-DC converter allows electrical power to flow in both
+directions between a DC bus and a battery.
+</p>
+
+<div class="mode-box">
+
+<div class="mode">
+
+<h3>Charging Mode – Buck Operation</h3>
+
+<p>
+During charging, power flows from the DC bus to the battery.
+The converter operates approximately as a buck converter.
+</p>
+
+<div class="formula">
+V<sub>batt</sub> ≈ D × V<sub>dc</sub>
+</div>
+
+<p>
+The battery receives positive charging current.
+</p>
+
+</div>
+
+<div class="mode">
+
+<h3>Discharging Mode – Boost Operation</h3>
+
+<p>
+During discharging, power flows from the battery to the DC bus.
+The converter operates approximately as a boost converter.
+</p>
+
+<div class="formula">
+V<sub>dc</sub> ≈ V<sub>batt</sub>/(1-D)
+</div>
+
+<p>
+The battery supplies current to the DC bus.
+</p>
+
+</div>
+
+</div>
+
+<h3>Power Calculation</h3>
+
+<div class="formula">
+P<sub>batt</sub> = V<sub>batt</sub> × I<sub>batt</sub>
+</div>
+
+<div class="formula">
+P<sub>dc</sub> = V<sub>dc</sub> × I<sub>dc</sub>
+</div>
+
+<div class="formula">
+η = P<sub>out</sub>/P<sub>in</sub> × 100
+</div>
+
+<h3>Battery State of Charge</h3>
+
+<p>
+An approximate SOC calculation can be obtained using the current
+integration method:
+</p>
+
+<div class="formula">
+SOC(t) = SOC(t<sub>0</sub>) +
+(1/Q<sub>rated</sub>)
+∫ I<sub>batt</sub> dt
+</div>
+
+<p>
+The sign convention must be clearly defined. In this experiment,
+positive battery current represents charging current.
+</p>
+
+<div class="warning">
+
+<strong>Important:</strong>
+Actual battery charging should normally use a suitable CC-CV charging
+strategy and appropriate battery-management protections. The Simulink
+experiment is intended to study converter operation and control.
+
+</div>
+
+</div>
+
+<!-- SIMULINK DIAGRAM -->
+
+<div class="card">
+
+<h2>6. Simulink Model Submission</h2>
+
+<p>
+Construct the bidirectional converter model in MATLAB/Simulink and
+upload the circuit/model screenshot.
+</p>
+
+<div class="upload-box">
+
+<strong>
+Upload Bidirectional Converter Simulink Diagram
+</strong>
+
+<input
+type="file"
+id="diagramUpload"
+accept="image/*">
+
+<img
+id="diagramPreview"
+class="preview"
+style="display:none">
+
+</div>
+
+<h3>Expected Model Structure</h3>
+
+<p>
+
+DC Bus ↔ Bidirectional DC-DC Converter ↔ Battery
+
+<br><br>
+
+The model should contain controlled switches, inductor, battery,
+measurement blocks and PWM/control logic.
+
+</p>
+
+</div>
+
+<!-- PARAMETERS -->
+
+<div class="card">
+
+<h2>7. Converter and Battery Parameters</h2>
+
+<div class="grid">
+
+<div>
+<label>DC Bus Voltage V<sub>dc</sub> (V)</label>
+<input
+type="number"
+id="vdc"
+value="48"
+step="0.1">
+</div>
+
+<div>
+<label>Battery Nominal Voltage (V)</label>
+<input
+type="number"
+id="vbatt"
+value="24"
+step="0.1">
+</div>
+
+<div>
+<label>Battery Capacity (Ah)</label>
+<input
+type="number"
+id="capacity"
+value="20"
+step="0.1">
+</div>
+
+<div>
+<label>Initial SOC (%)</label>
+<input
+type="number"
+id="soc"
+value="50"
+min="0"
+max="100"
+step="1">
+</div>
+
+<div>
+<label>Switching Frequency (Hz)</label>
+<input
+type="number"
+id="fs"
+value="20000">
+</div>
+
+<div>
+<label>Charging Duty Ratio</label>
+<input
+type="number"
+id="dutyCharge"
+value="0.50"
+min="0.01"
+max="0.95"
+step="0.01">
+</div>
+
+<div>
+<label>Discharging Duty Ratio</label>
+<input
+type="number"
+id="dutyDischarge"
+value="0.50"
+min="0.01"
+max="0.95"
+step="0.01">
+</div>
+
+<div>
+<label>Inductance L (H)</label>
+<input
+type="number"
+id="inductor"
+value="0.0001"
+step="0.000001">
+</div>
+
+</div>
+
+<br>
+
+<button onclick="calculateParameters()">
+Calculate Converter Parameters
+</button>
+
+<div
+id="parameterResult"
+class="result">
+
+Enter the converter parameters and click Calculate.
+
+</div>
+
+</div>
+
+<!-- OPERATION MODES -->
+
+<div class="card">
+
+<h2>8. Operating Modes</h2>
+
+<div class="grid">
+
+<div>
+
+<label>Select Operating Mode</label>
+
+<select id="mode">
+
+<option value="charge">
+Charging – Buck Mode
+</option>
+
+<option value="discharge">
+Discharging – Boost Mode
+</option>
+
+</select>
+
+</div>
+
+<div>
+
+<label>Simulation Duration (s)</label>
+
+<input
+type="number"
+id="simTime"
+value="10"
+step="0.1">
+
+</div>
+
+</div>
+
+<div class="info">
+
+<strong>Charging:</strong>
+DC Bus → Converter → Battery
+
+<br><br>
+
+<strong>Discharging:</strong>
+Battery → Converter → DC Bus
+
+</div>
+
+</div>
+
+<!-- PROCEDURE -->
+
+<div class="card">
+
+<h2>9. Procedure</h2>
+
+<ol>
+
+<li>Open MATLAB and Simulink.</li>
+
+<li>Create a new Simulink model.</li>
+
+<li>Place the DC bus source and battery model.</li>
+
+<li>Insert the bidirectional DC-DC converter between the DC bus and battery.</li>
+
+<li>Use two controlled switches/MOSFETs for bidirectional operation.</li>
+
+<li>Connect the inductor in the converter power path.</li>
+
+<li>Generate PWM signals for both operating directions.</li>
+
+<li>Set the battery initial SOC.</li>
+
+<li>Run the converter in charging mode.</li>
+
+<li>Measure battery voltage and battery current.</li>
+
+<li>Measure DC bus voltage and current.</li>
+
+<li>Calculate charging power and converter efficiency.</li>
+
+<li>Repeat the experiment in discharging mode.</li>
+
+<li>Observe the reversal of power flow.</li>
+
+<li>Apply the variable charging/discharging profile.</li>
+
+</ol>
+
+</div>
+
+<!-- VARIABLE PROFILE -->
+
+<div class="card">
+
+<h2>10. Variable Charging / Discharging Profile</h2>
+
+<p>
+Use different operating conditions during different time intervals.
+The student should implement the corresponding profile in Simulink.
+</p>
+
+<table id="profileTable">
+
+<thead>
+
+<tr>
+
+<th>Interval</th>
+<th>Start Time (s)</th>
+<th>End Time (s)</th>
+<th>Mode</th>
+<th>Reference Current (A)</th>
+<th>Expected Power Flow</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>1</td>
+
+<td>
+<input class="start" value="0">
+</td>
+
+<td>
+<input class="end" value="2">
+</td>
+
+<td>
+
+<select class="profileMode">
+
+<option>Charging</option>
+<option>Discharging</option>
+
+</select>
+
+</td>
+
+<td>
+<input class="refCurrent" value="5">
+</td>
+
+<td class="powerFlow">
+DC Bus → Battery
+</td>
+
+</tr>
+
+<tr>
+
+<td>2</td>
+
+<td>
+<input class="start" value="2">
+</td>
+
+<td>
+<input class="end" value="5">
+</td>
+
+<td>
+
+<select class="profileMode">
+
+<option>Charging</option>
+<option>Discharging</option>
+
+</select>
+
+</td>
+
+<td>
+<input class="refCurrent" value="8">
+</td>
+
+<td class="powerFlow">
+DC Bus → Battery
+</td>
+
+</tr>
+
+<tr>
+
+<td>3</td>
+
+<td>
+<input class="start" value="5">
+</td>
+
+<td>
+<input class="end" value="8">
+</td>
+
+<td>
+
+<select class="profileMode">
+
+<option>Charging</option>
+<option selected>Discharging</option>
+
+</select>
+
+</td>
+
+<td>
+<input class="refCurrent" value="6">
+</td>
+
+<td class="powerFlow">
+Battery → DC Bus
+</td>
+
+</tr>
+
+<tr>
+
+<td>4</td>
+
+<td>
+<input class="start" value="8">
+</td>
+
+<td>
+<input class="end" value="10">
+</td>
+
+<td>
+
+<select class="profileMode">
+
+<option selected>Charging</option>
+<option>Discharging</option>
+
+</select>
+
+</td>
+
+<td>
+<input class="refCurrent" value="4">
+</td>
+
+<td class="powerFlow">
+DC Bus → Battery
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+<br>
+
+<button
+class="btn-green"
+onclick="addProfileRow()">
+
+* Add Interval
+
+</button>
+
+</div>
+
+<!-- OBSERVATION -->
+
+<div class="card">
+
+<h2>11. Observation Table</h2>
+
+<table id="observationTable">
+
+<thead>
+
+<tr>
+
+<th>Interval</th>
+
+<th>Mode</th>
+
+<th>V<sub>dc</sub> (V)</th>
+
+<th>I<sub>dc</sub> (A)</th>
+
+<th>V<sub>batt</sub> (V)</th>
+
+<th>I<sub>batt</sub> (A)</th>
+
+<th>P<sub>dc</sub> (W)</th>
+
+<th>P<sub>batt</sub> (W)</th>
+
+<th>Efficiency (%)</th>
+
+<th>SOC (%)</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>1</td>
+
+<td>
+<select class="obsMode">
+<option>Charging</option>
+<option>Discharging</option>
+</select>
+</td>
+
+<td><input class="obsVdc"></td>
+
+<td><input class="obsIdc"></td>
+
+<td><input class="obsVbatt"></td>
+
+<td><input class="obsIbatt"></td>
+
+<td class="obsPdc">-</td>
+
+<td class="obsPbatt">-</td>
+
+<td class="obsEta">-</td>
+
+<td><input class="obsSOC"></td>
+
+</tr>
+
+<tr>
+
+<td>2</td>
+
+<td>
+<select class="obsMode">
+<option>Charging</option>
+<option>Discharging</option>
+</select>
+</td>
+
+<td><input class="obsVdc"></td>
+
+<td><input class="obsIdc"></td>
+
+<td><input class="obsVbatt"></td>
+
+<td><input class="obsIbatt"></td>
+
+<td class="obsPdc">-</td>
+
+<td class="obsPbatt">-</td>
+
+<td class="obsEta">-</td>
+
+<td><input class="obsSOC"></td>
+
+</tr>
+
+<tr>
+
+<td>3</td>
+
+<td>
+<select class="obsMode">
+<option>Charging</option>
+<option selected>Discharging</option>
+</select>
+</td>
+
+<td><input class="obsVdc"></td>
+
+<td><input class="obsIdc"></td>
+
+<td><input class="obsVbatt"></td>
+
+<td><input class="obsIbatt"></td>
+
+<td class="obsPdc">-</td>
+
+<td class="obsPbatt">-</td>
+
+<td class="obsEta">-</td>
+
+<td><input class="obsSOC"></td>
+
+</tr>
+
+<tr>
+
+<td>4</td>
+
+<td>
+<select class="obsMode">
+<option selected>Charging</option>
+<option>Discharging</option>
+</select>
+</td>
+
+<td><input class="obsVdc"></td>
+
+<td><input class="obsIdc"></td>
+
+<td><input class="obsVbatt"></td>
+
+<td><input class="obsIbatt"></td>
+
+<td class="obsPdc">-</td>
+
+<td class="obsPbatt">-</td>
+
+<td class="obsEta">-</td>
+
+<td><input class="obsSOC"></td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+<br>
+
+<button onclick="calculateObservation()">
+Calculate Power & Efficiency
+</button>
+
+</div>
+
+<!-- WAVEFORMS -->
+
+<div class="card">
+
+<h2>12. Simulink Waveform Submission</h2>
+
+<p>
+Upload the following waveforms from the Simulink Scope:
+</p>
+
+<ul>
+
+<li>DC bus voltage</li>
+
+<li>DC bus current</li>
+
+<li>Battery voltage</li>
+
+<li>Battery current</li>
+
+<li>Inductor current</li>
+
+<li>PWM gate pulses</li>
+
+<li>Battery SOC</li>
+
+<li>Charging/discharging power</li>
+
+</ul>
+
+<div class="upload-box">
+
+<strong>
+Upload Scope / Waveform Screenshot
+</strong>
+
+<input
+type="file"
+id="waveUpload"
+accept="image/*">
+
+<img
+id="wavePreview"
+class="preview"
+style="display:none">
+
+</div>
+
+</div>
+
+<!-- SOC GRAPH -->
+
+<div class="card">
+
+<h2>13. Battery SOC and Current Profile</h2>
+
+<p>
+Upload the Simulink graph showing battery SOC and current during
+charging/discharging.
+</p>
+
+<div class="upload-box">
+
+<strong>
+Upload SOC / Current Graph
+</strong>
+
+<input
+type="file"
+id="socUpload"
+accept="image/*">
+
+<img
+id="socPreview"
+class="preview"
+style="display:none">
+
+</div>
+
+</div>
+
+<!-- POWER FLOW GRAPH -->
+
+<div class="card">
+
+<h2>14. Bidirectional Power Flow</h2>
+
+<p>
+Upload the graph showing power flow reversal between the DC bus and
+battery.
+</p>
+
+<div class="upload-box">
+
+<strong>
+Upload Power Flow Graph
+</strong>
+
+<input
+type="file"
+id="powerUpload"
+accept="image/*">
+
+<img
+id="powerPreview"
+class="preview"
+style="display:none">
+
+</div>
+
+</div>
+
+<!-- CALCULATION -->
+
+<div class="card">
+
+<h2>15. Sample Calculation</h2>
+
+<h3>Charging Mode</h3>
+
+<p>
+Assume:
+</p>
+
+<ul>
+
+<li>V<sub>dc</sub> = 48 V</li>
+
+<li>D = 0.5</li>
+
+</ul>
+
+<div class="formula">
+
+V<sub>batt</sub> ≈ D × V<sub>dc</sub>
+
+</div>
+
+<div class="formula">
+
+V<sub>batt</sub> ≈ 0.5 × 48
+
+= 24 V
+
+</div>
+
+<h3>Charging Power</h3>
+
+<p>
+If:
+</p>
+
+<div class="formula">
+
+V<sub>batt</sub> = 24 V
+
+</div>
+
+<div class="formula">
+
+I<sub>batt</sub> = 5 A
+
+</div>
+
+<div class="formula">
+
+# P<sub>batt</sub>
+
+# 24 × 5
+
+120 W
+
+</div>
+
+<h3>Discharging Mode</h3>
+
+<p>
+For a battery voltage of 24 V and duty ratio D = 0.5:
+</p>
+
+<div class="formula">
+
+V<sub>dc</sub>
+≈
+V<sub>batt</sub>/(1-D)
+
+</div>
+
+<div class="formula">
+
+V<sub>dc</sub>
+≈
+24/(1-0.5)
+
+=
+48 V
+
+</div>
+
+<h3>Efficiency</h3>
+
+<div class="formula">
+
+η =
+P<sub>out</sub>/P<sub>in</sub>
+× 100
+
+</div>
+
+</div>
+
+<!-- STUDENT ANALYSIS -->
+
+<div class="card">
+
+<h2>16. Student Analysis</h2>
+
+<label>
+1. Explain the operation of the converter during battery charging.
+</label>
+
+<textarea
+id="analysis1"
+placeholder="Enter your answer...">
+</textarea>
+
+<label>
+2. Explain the operation during battery discharging.
+</label>
+
+<textarea
+id="analysis2"
+placeholder="Enter your answer...">
+</textarea>
+
+<label>
+3. Explain the reversal of power flow.
+</label>
+
+<textarea
+id="analysis3"
+placeholder="Enter your answer...">
+</textarea>
+
+<label>
+4. Explain the variation of battery SOC.
+</label>
+
+<textarea
+id="analysis4"
+placeholder="Enter your answer...">
+</textarea>
+
+<label>
+5. Compare charging and discharging efficiency.
+</label>
+
+<textarea
+id="analysis5"
+placeholder="Enter your answer...">
+</textarea>
+
+</div>
+
+<!-- RESULT -->
+
+<div class="card">
+
+<h2>17. Result</h2>
+
+<div
+class="result"
+id="resultText">
+
+The bidirectional DC-DC converter was simulated using MATLAB/Simulink.
+Charging and discharging operation of the battery was studied.
+The direction of power flow was successfully reversed by controlling
+the switching operation of the converter. Battery voltage, current,
+SOC, power flow and converter efficiency were observed.
+
+</div>
+
+<button onclick="generateResult()">
+Generate Result
+</button>
+
+</div>
+
+<!-- QUESTIONS -->
+
+<div class="card">
+
+<h2>18. Post-Lab Questions</h2>
+
+<ol>
+
+<li>
+What is a bidirectional DC-DC converter?
+</li>
+
+<li>
+Why is bidirectional power flow required in battery energy storage systems?
+</li>
+
+<li>
+Explain buck operation during battery charging.
+</li>
+
+<li>
+Explain boost operation during battery discharging.
+</li>
+
+<li>
+How is the direction of power flow controlled?
+</li>
+
+<li>
+What is the role of the inductor?
+</li>
+
+<li>
+What is the purpose of complementary gate pulses?
+</li>
+
+<li>
+Why is dead time required between switching devices?
+</li>
+
+<li>
+What factors affect converter efficiency?
+</li>
+
+<li>
+How is battery SOC calculated?
+</li>
+
+</ol>
+
+<textarea
+id="questionsAnswer"
+placeholder="Enter your answers here...">
+</textarea>
+
+</div>
+
+<!-- EVALUATION -->
+
+<div class="card">
+
+<h2>19. Faculty Evaluation</h2>
+
+<table>
+
+<tr>
+
+<th>Evaluation Component</th>
+<th>Maximum Marks</th>
+<th>Obtained</th>
+
+</tr>
+
+<tr>
+
+<td>Simulink Model</td>
+
+<td>2</td>
+
+<td>
+<input
+type="number"
+class="mark"
+min="0"
+max="2">
+</td>
+
+</tr>
+
+<tr>
+
+<td>Charging Operation</td>
+
+<td>1.5</td>
+
+<td>
+<input
+type="number"
+class="mark"
+min="0"
+max="1.5">
+</td>
+
+</tr>
+
+<tr>
+
+<td>Discharging Operation</td>
+
+<td>1.5</td>
+
+<td>
+<input
+type="number"
+class="mark"
+min="0"
+max="1.5">
+</td>
+
+</tr>
+
+<tr>
+
+<td>Observation & Calculation</td>
+
+<td>2</td>
+
+<td>
+<input
+type="number"
+class="mark"
+min="0"
+max="2">
+</td>
+
+</tr>
+
+<tr>
+
+<td>Analysis</td>
+
+<td>1</td>
+
+<td>
+<input
+type="number"
+class="mark"
+min="0"
+max="1">
+</td>
+
+</tr>
+
+<tr>
+
+<td>Result & Viva</td>
+
+<td>2</td>
+
+<td>
+<input
+type="number"
+class="mark"
+min="0"
+max="2">
+</td>
+
+</tr>
+
+<tr>
+
+<td colspan="2">
+<strong>Total</strong>
+</td>
+
+<td
+class="score"
+id="totalScore">
+
+0 / 10
+
+</td>
+
+</tr>
+
+</table>
+
+<button onclick="calculateScore()">
+Calculate Score
+</button>
+
+</div>
+
+<!-- BUTTONS -->
+
+<div class="card">
+
+<h2>20. Experiment Data Management</h2>
+
+<button onclick="saveData()">
+Save Experiment
+</button>
+
+<button
+class="btn-green"
+onclick="saveJSON()">
+Save JSON
+</button>
+
+<button
+onclick="document.getElementById('jsonFileInput').click()">
+Load JSON
+</button>
+
+<input
+type="file"
+id="jsonFileInput"
+accept=".json,application/json"
+style="display:none"
+onchange="loadJSON(event)"
+>
+
+<button
+class="btn-orange"
+onclick="evaluateExperiment()">
+Evaluate Experiment
+</button>
+
+<button
+class="btn-green"
+onclick="window.print()">
+Print / Save PDF
+</button>
+
+<button
+class="btn-red"
+onclick="clearData()">
+Clear Data
+</button>
+
+<p class="small">
+<strong>Save JSON:</strong> Downloads the complete experiment record.
+The JSON file can be loaded later to continue an unfinished experiment.
+Uploaded screenshots are stored in the JSON file as image data.
+</p>
+
+</div>
+</div>
+
+<script>
+
+/* =========================================
+   PARAMETER CALCULATION
+========================================= */
+
+function calculateParameters(){
+
+    let Vdc =
+        parseFloat(
+            document.getElementById("vdc").value
+        );
+
+    let Vb =
+        parseFloat(
+            document.getElementById("vbatt").value
+        );
+
+    let Dc =
+        parseFloat(
+            document.getElementById("dutyCharge").value
+        );
+
+    let Dd =
+        parseFloat(
+            document.getElementById("dutyDischarge").value
+        );
+
+    let capacity =
+        parseFloat(
+            document.getElementById("capacity").value
+        );
+
+    let soc =
+        parseFloat(
+            document.getElementById("soc").value
+        );
+
+
+    if(
+        isNaN(Vdc) ||
+        isNaN(Vb) ||
+        isNaN(Dc) ||
+        isNaN(Dd)
+    ){
+
+        alert(
+            "Enter valid converter parameters."
+        );
+
+        return;
+
+    }
+
+
+    let chargeVoltage =
+        Dc * Vdc;
+
+
+    let dischargeVoltage =
+        Vb / (1-Dd);
+
+
+    document.getElementById(
+        "parameterResult"
+    ).innerHTML =
+
+        "<strong>Calculated Converter Parameters</strong><br><br>" +
+
+        "DC Bus Voltage = " +
+        Vdc.toFixed(2) +
+        " V<br>" +
+
+        "Battery Voltage = " +
+        Vb.toFixed(2) +
+        " V<br>" +
+
+        "Charging Duty Ratio = " +
+        Dc.toFixed(3) +
+        "<br>" +
+
+        "Estimated Battery Charging Voltage = " +
+        chargeVoltage.toFixed(2) +
+        " V<br>" +
+
+        "Discharging Duty Ratio = " +
+        Dd.toFixed(3) +
+        "<br>" +
+
+        "Estimated DC Bus Voltage during Boost = " +
+        dischargeVoltage.toFixed(2) +
+        " V<br>" +
+
+        "Battery Capacity = " +
+        capacity.toFixed(2) +
+        " Ah<br>" +
+
+        "Initial SOC = " +
+        soc.toFixed(1) +
+        " %";
+
+}
+
+
+/* =========================================
+   PROFILE POWER FLOW
+========================================= */
+
+document.addEventListener(
+    "change",
+    function(e){
+
+        if(
+            e.target.classList.contains(
+                "profileMode"
+            )
+        ){
+
+            let row =
+                e.target.closest("tr");
+
+            let cell =
+                row.querySelector(
+                    ".powerFlow"
+                );
+
+
+            if(
+                e.target.value ===
+                "Charging"
+            ){
+
+                cell.innerText =
+                    "DC Bus → Battery";
+
+            }
+            else{
+
+                cell.innerText =
+                    "Battery → DC Bus";
+
+            }
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   ADD PROFILE ROW
+========================================= */
+
+function addProfileRow(){
+
+    let tbody =
+        document.querySelector(
+            "#profileTable tbody"
+        );
+
+
+    let n =
+        tbody.rows.length + 1;
+
+
+    let row =
+        tbody.insertRow();
+
+
+    row.innerHTML = `
+
+        <td>${n}</td>
+
+        <td>
+            <input
+                class="start"
+                value="10">
+        </td>
+
+        <td>
+            <input
+                class="end"
+                value="12">
+        </td>
+
+        <td>
+
+            <select class="profileMode">
+
+                <option>
+                    Charging
+                </option>
+
+                <option>
+                    Discharging
+                </option>
+
+            </select>
+
+        </td>
+
+        <td>
+            <input
+                class="refCurrent"
+                value="5">
+        </td>
+
+        <td class="powerFlow">
+            DC Bus → Battery
+        </td>
+
+    `;
+
+}
+
+
+/* =========================================
+   OBSERVATION CALCULATION
+========================================= */
+
+function calculateObservation(){
+
+    document
+    .querySelectorAll(
+        "#observationTable tbody tr"
+    )
+    .forEach(
+
+        function(row){
+
+            let Vdc =
+                parseFloat(
+                    row.querySelector(
+                        ".obsVdc"
+                    ).value
+                );
+
+            let Idc =
+                parseFloat(
+                    row.querySelector(
+                        ".obsIdc"
+                    ).value
+                );
+
+            let Vb =
+                parseFloat(
+                    row.querySelector(
+                        ".obsVbatt"
+                    ).value
+                );
+
+            let Ib =
+                parseFloat(
+                    row.querySelector(
+                        ".obsIbatt"
+                    ).value
+                );
+
+            let mode =
+                row.querySelector(
+                    ".obsMode"
+                ).value;
+
+
+            if(
+                !isNaN(Vdc) &&
+                !isNaN(Idc)
+            ){
+
+                let Pdc =
+                    Math.abs(Vdc*Idc);
+
+
+                row.querySelector(
+                    ".obsPdc"
+                ).innerText =
+                    Pdc.toFixed(3);
+
+            }
+
+
+            if(
+                !isNaN(Vb) &&
+                !isNaN(Ib)
+            ){
+
+                let Pb =
+                    Math.abs(Vb*Ib);
+
+
+                row.querySelector(
+                    ".obsPbatt"
+                ).innerText =
+                    Pb.toFixed(3);
+
+            }
+
+
+            if(
+                !isNaN(Vdc) &&
+                !isNaN(Idc) &&
+                !isNaN(Vb) &&
+                !isNaN(Ib)
+            ){
+
+                let Pdc =
+                    Math.abs(Vdc*Idc);
+
+                let Pb =
+                    Math.abs(Vb*Ib);
+
+                let eta=0;
+
+
+                if(
+                    mode ===
+                    "Charging"
+                ){
+
+                    if(Pdc > 0)
+                        eta =
+                            (Pb/Pdc)*100;
+
+                }
+                else{
+
+                    if(Pb > 0)
+                        eta =
+                            (Pdc/Pb)*100;
+
+                }
+
+
+                row.querySelector(
+                    ".obsEta"
+                ).innerText =
+                    eta.toFixed(2) +
+                    " %";
+
+            }
+
+        }
+
+    );
+
+}
+
+
+/* =========================================
+   RESULT
+========================================= */
+
+function generateResult(){
+
+    let Vdc =
+        parseFloat(
+            document.getElementById(
+                "vdc"
+            ).value
+        );
+
+    let Vb =
+        parseFloat(
+            document.getElementById(
+                "vbatt"
+            ).value
+        );
+
+    let text =
+
+        "The bidirectional DC-DC converter was successfully simulated " +
+
+        "using MATLAB/Simulink. During charging, power flowed from the " +
+
+        "DC bus to the battery and the converter operated in buck mode. " +
+
+        "During discharging, power flowed from the battery to the DC bus " +
+
+        "and the converter operated in boost mode. Battery voltage, " +
+
+        "battery current, DC bus power, battery power, SOC and converter " +
+
+        "efficiency were observed for the specified operating conditions.";
+
+
+    text +=
+
+        "\n\nNominal DC bus voltage: " +
+        Vdc.toFixed(2) +
+        " V.";
+
+
+    text +=
+
+        "\nNominal battery voltage: " +
+        Vb.toFixed(2) +
+        " V.";
+
+
+    document.getElementById(
+        "resultText"
+    ).innerText = text;
+
+}
+
+
+/* =========================================
+   SCORE
+========================================= */
+
+function calculateScore(){
+
+    let total = 0;
+
+
+    document
+    .querySelectorAll(".mark")
+    .forEach(
+
+        function(input){
+
+            let value =
+                parseFloat(
+                    input.value
+                );
+
+
+            if(!isNaN(value))
+                total += value;
+
+        }
+
+    );
+
+
+    document.getElementById(
+        "totalScore"
+    ).innerText =
+        total.toFixed(1) +
+        " / 10";
+
+}
+
+
+/* =========================================
+   IMAGE PREVIEW
+========================================= */
+
+function previewImage(
+    input,
+    imageId
+){
+
+    let file =
+        input.files[0];
+
+
+    if(!file)
+        return;
+
+
+    let reader =
+        new FileReader();
+
+
+    reader.onload =
+        function(e){
+
+            let img =
+                document.getElementById(
+                    imageId
+                );
+
+            img.src =
+                e.target.result;
+
+            img.style.display =
+                "block";
+
+        };
+
+
+    reader.readAsDataURL(file);
+
+}
+
+
+document
+.getElementById(
+    "diagramUpload"
+)
+.addEventListener(
+    "change",
+    function(){
+
+        previewImage(
+            this,
+            "diagramPreview"
+        );
+
+    }
+);
+
+
+document
+.getElementById(
+    "waveUpload"
+)
+.addEventListener(
+    "change",
+    function(){
+
+        previewImage(
+            this,
+            "wavePreview"
+        );
+
+    }
+);
+
+
+document
+.getElementById(
+    "socUpload"
+)
+.addEventListener(
+    "change",
+    function(){
+
+        previewImage(
+            this,
+            "socPreview"
+        );
+
+    }
+);
+
+
+document
+.getElementById(
+    "powerUpload"
+)
+.addEventListener(
+    "change",
+    function(){
+
+        previewImage(
+            this,
+            "powerPreview"
+        );
+
+    }
+);
+
+
+/* =========================================
+   SAVE DATA
+========================================= */
+
+function saveData(){
+
+    let data = {};
+
+
+    document
+    .querySelectorAll(
+        "input,textarea,select"
+    )
+    .forEach(
+
+        function(el,index){
+
+            if(
+                el.type === "file"
+            )
+                return;
+
+
+            data[
+                "field_"+index
+            ] =
+                el.value;
+
+        }
+
+    );
+
+
+    localStorage.setItem(
+        "bidirectionalExperiment4",
+        JSON.stringify(data)
+    );
+
+
+    alert(
+        "Experiment data saved in this browser."
+    );
+
+}
+
+
+/* =========================================
+   CLEAR
+========================================= */
+
+function clearData(){
+
+    if(
+        confirm(
+            "Clear all experiment data?"
+        )
+    ){
+
+        localStorage.removeItem(
+            "bidirectionalExperiment4"
+        );
+
+        location.reload();
+
+    }
+
+}
+
+
+/* =========================================
+   LOAD SAVED DATA
+========================================= */
+
+window.addEventListener(
+    "load",
+    function(){
+
+        let saved =
+            localStorage.getItem(
+                "bidirectionalExperiment4"
+            );
+
+
+        if(!saved)
+            return;
+
+
+        try{
+
+            let data =
+                JSON.parse(saved);
+
+
+            document
+            .querySelectorAll(
+                "input,textarea,select"
+            )
+            .forEach(
+
+                function(el,index){
+
+                    if(
+                        el.type === "file"
+                    )
+                        return;
+
+
+                    if(
+                        data[
+                            "field_"+index
+                        ] !== undefined
+                    ){
+
+                        el.value =
+                            data[
+                                "field_"+index
+                            ];
+
+                    }
+
+                }
+
+            );
+
+        }
+        catch(e){
+
+            console.log(
+                "Saved data could not be loaded."
+            );
+
+        }
+
+    }
+);
+/* =========================================================
+   EXPERIMENT 4
+   SAVE JSON / LOAD JSON / EVALUATE EXPERIMENT
+========================================================= */
+
+
+/* =========================================================
+   GET IMAGE DATA
+   Images are stored as Base64 data URLs
+========================================================= */
+
+function getImageData(imageId){
+
+    const img =
+        document.getElementById(imageId);
+
+    if(
+        img &&
+        img.src &&
+        img.src.startsWith("data:image")
+    ){
+        return img.src;
+    }
+
+    return "";
+}
+
+
+/* =========================================================
+   GET PROFILE TABLE DATA
+========================================================= */
+
+function getProfileData(){
+
+    const rows =
+        document.querySelectorAll(
+            "#profileTable tbody tr"
+        );
+
+    let data = [];
+
+    rows.forEach(function(row){
+
+        const start =
+            row.querySelector(".start");
+
+        const end =
+            row.querySelector(".end");
+
+        const mode =
+            row.querySelector(".profileMode");
+
+        const refCurrent =
+            row.querySelector(".refCurrent");
+
+        const powerFlow =
+            row.querySelector(".powerFlow");
+
+        data.push({
+
+            interval:
+                row.cells[0].innerText.trim(),
+
+            startTime:
+                start ? start.value : "",
+
+            endTime:
+                end ? end.value : "",
+
+            mode:
+                mode ? mode.value : "",
+
+            referenceCurrent:
+                refCurrent ?
+                refCurrent.value : "",
+
+            expectedPowerFlow:
+                powerFlow ?
+                powerFlow.innerText.trim() : ""
+
+        });
+
+    });
+
+    return data;
+
+}
+
+
+/* =========================================================
+   GET OBSERVATION TABLE DATA
+========================================================= */
+
+function getObservationData(){
+
+    const rows =
+        document.querySelectorAll(
+            "#observationTable tbody tr"
+        );
+
+    let data = [];
+
+    rows.forEach(function(row){
+
+        const mode =
+            row.querySelector(".obsMode");
+
+        const vdc =
+            row.querySelector(".obsVdc");
+
+        const idc =
+            row.querySelector(".obsIdc");
+
+        const vbatt =
+            row.querySelector(".obsVbatt");
+
+        const ibatt =
+            row.querySelector(".obsIbatt");
+
+        const soc =
+            row.querySelector(".obsSOC");
+
+        const pdc =
+            row.querySelector(".obsPdc");
+
+        const pbatt =
+            row.querySelector(".obsPbatt");
+
+        const eta =
+            row.querySelector(".obsEta");
+
+
+        data.push({
+
+            interval:
+                row.cells[0].innerText.trim(),
+
+            mode:
+                mode ? mode.value : "",
+
+            dcVoltage:
+                vdc ? vdc.value : "",
+
+            dcCurrent:
+                idc ? idc.value : "",
+
+            batteryVoltage:
+                vbatt ? vbatt.value : "",
+
+            batteryCurrent:
+                ibatt ? ibatt.value : "",
+
+            dcPower:
+                pdc ? pdc.innerText.trim() : "",
+
+            batteryPower:
+                pbatt ? pbatt.innerText.trim() : "",
+
+            efficiency:
+                eta ? eta.innerText.trim() : "",
+
+            soc:
+                soc ? soc.value : ""
+
+        });
+
+    });
+
+    return data;
+
+}
+
+
+/* =========================================================
+   GET FACULTY EVALUATION
+========================================================= */
+
+function getFacultyEvaluation(){
+
+    let marks = [];
+
+    document
+    .querySelectorAll(".mark")
+    .forEach(function(input,index){
+
+        marks.push({
+
+            component:
+                index + 1,
+
+            mark:
+                input.value
+
+        });
+
+    });
+
+
+    return {
+
+        marks: marks,
+
+        total:
+            document.getElementById(
+                "totalScore"
+            ).innerText
+
+    };
+
+}
+
+
+/* =========================================================
+   SAVE COMPLETE EXPERIMENT AS JSON
+========================================================= */
+
+function saveJSON(){
+
+    /* Make sure calculated values are updated */
+
+    calculateParameters();
+    calculateObservation();
+    calculateScore();
+
+
+    const data = {
+
+        experiment:
+            "Experiment 4 - Bidirectional DC-DC Converter",
+
+        experimentNumber:
+            "4",
+
+        version:
+            "1.0",
+
+        savedAt:
+            new Date().toISOString(),
+
+
+        /* -----------------------------------------
+           STUDENT DETAILS
+        ----------------------------------------- */
+
+        studentDetails: {
+
+            name:
+                document.getElementById(
+                    "studentName"
+                ).value,
+
+            registerNumber:
+                document.getElementById(
+                    "regNo"
+                ).value,
+
+            department:
+                document.getElementById(
+                    "department"
+                ).value,
+
+            yearSemester:
+                document.getElementById(
+                    "year"
+                ).value,
+
+            date:
+                document.getElementById(
+                    "date"
+                ).value,
+
+            batch:
+                document.getElementById(
+                    "batch"
+                ).value
+
+        },
+
+
+        /* -----------------------------------------
+           CONVERTER PARAMETERS
+        ----------------------------------------- */
+
+        converterParameters: {
+
+            dcBusVoltage:
+                document.getElementById(
+                    "vdc"
+                ).value,
+
+            batteryVoltage:
+                document.getElementById(
+                    "vbatt"
+                ).value,
+
+            batteryCapacity:
+                document.getElementById(
+                    "capacity"
+                ).value,
+
+            initialSOC:
+                document.getElementById(
+                    "soc"
+                ).value,
+
+            switchingFrequency:
+                document.getElementById(
+                    "fs"
+                ).value,
+
+            chargingDutyRatio:
+                document.getElementById(
+                    "dutyCharge"
+                ).value,
+
+            dischargingDutyRatio:
+                document.getElementById(
+                    "dutyDischarge"
+                ).value,
+
+            inductance:
+                document.getElementById(
+                    "inductor"
+                ).value
+
+        },
+
+
+        /* -----------------------------------------
+           OPERATING MODE
+        ----------------------------------------- */
+
+        operatingConditions: {
+
+            mode:
+                document.getElementById(
+                    "mode"
+                ).value,
+
+            simulationDuration:
+                document.getElementById(
+                    "simTime"
+                ).value
+
+        },
+
+
+        /* -----------------------------------------
+           PARAMETER CALCULATION RESULT
+        ----------------------------------------- */
+
+        parameterResult:
+            document.getElementById(
+                "parameterResult"
+            ).innerHTML,
+
+
+        /* -----------------------------------------
+           VARIABLE PROFILE
+        ----------------------------------------- */
+
+        variableProfile:
+            getProfileData(),
+
+
+        /* -----------------------------------------
+           OBSERVATION TABLE
+        ----------------------------------------- */
+
+        observations:
+            getObservationData(),
+
+
+        /* -----------------------------------------
+           STUDENT ANALYSIS
+        ----------------------------------------- */
+
+        studentAnalysis: {
+
+            analysis1:
+                document.getElementById(
+                    "analysis1"
+                ).value,
+
+            analysis2:
+                document.getElementById(
+                    "analysis2"
+                ).value,
+
+            analysis3:
+                document.getElementById(
+                    "analysis3"
+                ).value,
+
+            analysis4:
+                document.getElementById(
+                    "analysis4"
+                ).value,
+
+            analysis5:
+                document.getElementById(
+                    "analysis5"
+                ).value
+
+        },
+
+
+        /* -----------------------------------------
+           RESULT
+        ----------------------------------------- */
+
+        result:
+            document.getElementById(
+                "resultText"
+            ).innerText,
+
+
+        /* -----------------------------------------
+           POST LAB
+        ----------------------------------------- */
+
+        postLabAnswers:
+            document.getElementById(
+                "questionsAnswer"
+            ).value,
+
+
+        /* -----------------------------------------
+           FACULTY EVALUATION
+        ----------------------------------------- */
+
+        facultyEvaluation:
+            getFacultyEvaluation(),
+
+
+        /* -----------------------------------------
+           UPLOADED IMAGES
+        ----------------------------------------- */
+
+        images: {
+
+            simulinkDiagram:
+                getImageData(
+                    "diagramPreview"
+                ),
+
+            waveform:
+                getImageData(
+                    "wavePreview"
+                ),
+
+            socGraph:
+                getImageData(
+                    "socPreview"
+                ),
+
+            powerFlowGraph:
+                getImageData(
+                    "powerPreview"
+                )
+
+        }
+
+    };
+
+
+    /* -----------------------------------------
+       ALSO KEEP A BROWSER COPY
+    ----------------------------------------- */
+
+    localStorage.setItem(
+        "bidirectionalExperiment4_JSON",
+        JSON.stringify(data)
+    );
+
+
+    /* -----------------------------------------
+       CREATE JSON FILE
+    ----------------------------------------- */
+
+    const jsonString =
+        JSON.stringify(
+            data,
+            null,
+            2
+        );
+
+
+    const blob =
+        new Blob(
+            [jsonString],
+            {
+                type:
+                    "application/json"
+            }
+        );
+
+
+    const url =
+        URL.createObjectURL(blob);
+
+
+    const a =
+        document.createElement("a");
+
+
+    let regNo =
+        document.getElementById(
+            "regNo"
+        ).value.trim();
+
+
+    if(!regNo)
+        regNo = "Student";
+
+
+    /* Remove characters that are not safe
+       in Windows filenames */
+
+    regNo =
+        regNo.replace(
+            /[<>:"\/\\|?*]/g,
+            "_"
+        );
+
+
+    a.href = url;
+
+    a.download =
+        "Experiment4_BidirectionalConverter_" +
+        regNo +
+        ".json";
+
+
+    document.body.appendChild(a);
+
+    a.click();
+
+    document.body.removeChild(a);
+
+
+    URL.revokeObjectURL(url);
+
+
+    alert(
+        "Experiment 4 JSON file saved successfully.\n\n" +
+        "The JSON contains student data, parameters, " +
+        "profile, observations, analysis, answers, " +
+        "evaluation and uploaded images."
+    );
+
+}
+
+
+/* =========================================================
+   SAFE SET VALUE
+========================================================= */
+
+function setJSONValue(id,value){
+
+    const element =
+        document.getElementById(id);
+
+    if(!element)
+        return;
+
+    element.value =
+        value === undefined ||
+        value === null
+        ? ""
+        : value;
+
+}
+
+
+/* =========================================================
+   LOAD PROFILE TABLE
+========================================================= */
+
+function loadProfileData(data){
+
+    if(!Array.isArray(data))
+        return;
+
+
+    const tbody =
+        document.querySelector(
+            "#profileTable tbody"
+        );
+
+
+    if(!tbody)
+        return;
+
+
+    /* Add required rows */
+
+    while(
+        tbody.rows.length <
+        data.length
+    ){
+
+        addProfileRow();
+
+    }
+
+
+    data.forEach(function(item,index){
+
+        const row =
+            tbody.rows[index];
+
+        if(!row)
+            return;
+
+
+        const start =
+            row.querySelector(".start");
+
+        const end =
+            row.querySelector(".end");
+
+        const mode =
+            row.querySelector(".profileMode");
+
+
+        const refCurrent =
+            row.querySelector(".refCurrent");
+
+
+        if(start)
+            start.value =
+                item.startTime || "";
+
+
+        if(end)
+            end.value =
+                item.endTime || "";
+
+
+        if(mode)
+            mode.value =
+                item.mode || "Charging";
+
+
+        if(refCurrent)
+            refCurrent.value =
+                item.referenceCurrent || "";
+
+
+        /* Restore expected power flow */
+
+        const powerFlow =
+            row.querySelector(
+                ".powerFlow"
+            );
+
+
+        if(powerFlow){
+
+            if(
+                mode &&
+                mode.value ===
+                "Discharging"
+            ){
+
+                powerFlow.innerText =
+                    "Battery → DC Bus";
+
+            }
+            else{
+
+                powerFlow.innerText =
+                    "DC Bus → Battery";
+
+            }
+
+        }
+
+    });
+
+}
+
+
+/* =========================================================
+   LOAD OBSERVATION TABLE
+========================================================= */
+
+function loadObservationData(data){
+
+    if(!Array.isArray(data))
+        return;
+
+
+    const rows =
+        document.querySelectorAll(
+            "#observationTable tbody tr"
+        );
+
+
+    data.forEach(function(item,index){
+
+        const row =
+            rows[index];
+
+        if(!row)
+            return;
+
+
+        const mode =
+            row.querySelector(".obsMode");
+
+        const vdc =
+            row.querySelector(".obsVdc");
+
+        const idc =
+            row.querySelector(".obsIdc");
+
+        const vbatt =
+            row.querySelector(".obsVbatt");
+
+        const ibatt =
+            row.querySelector(".obsIbatt");
+
+        const soc =
+            row.querySelector(".obsSOC");
+
+
+        if(mode)
+            mode.value =
+                item.mode || "Charging";
+
+
+        if(vdc)
+            vdc.value =
+                item.dcVoltage || "";
+
+
+        if(idc)
+            idc.value =
+                item.dcCurrent || "";
+
+
+        if(vbatt)
+            vbatt.value =
+                item.batteryVoltage || "";
+
+
+        if(ibatt)
+            ibatt.value =
+                item.batteryCurrent || "";
+
+
+        if(soc)
+            soc.value =
+                item.soc || "";
+
+    });
+
+}
+
+
+/* =========================================================
+   RESTORE IMAGE PREVIEW
+========================================================= */
+
+function restoreImage(
+    imageId,
+    imageData
+){
+
+    if(
+        !imageData ||
+        !imageData.startsWith(
+            "data:image"
+        )
+    )
+        return;
+
+
+    const img =
+        document.getElementById(
+            imageId
+        );
+
+
+    if(!img)
+        return;
+
+
+    img.src =
+        imageData;
+
+
+    img.style.display =
+        "block";
+
+}
+
+
+/* =========================================================
+   LOAD JSON FILE
+========================================================= */
+
+function loadJSON(event){
+
+    const file =
+        event.target.files[0];
+
+
+    if(!file)
+        return;
+
+
+    if(
+        !file.name
+        .toLowerCase()
+        .endsWith(".json")
+    ){
+
+        alert(
+            "Please select a valid JSON file."
+        );
+
+        event.target.value = "";
+
+        return;
+
+    }
+
+
+    const reader =
+        new FileReader();
+
+
+    reader.onload =
+        function(e){
+
+            try{
+
+                const data =
+                    JSON.parse(
+                        e.target.result
+                    );
+
+
+                /* ---------------------------------
+                   VERIFY EXPERIMENT
+                --------------------------------- */
+
+                if(
+                    !data.experiment ||
+                    !data.experiment
+                    .toLowerCase()
+                    .includes(
+                        "experiment 4"
+                    )
+                ){
+
+                    alert(
+                        "This JSON file does not belong to Experiment 4."
+                    );
+
+                    return;
+
+                }
+
+
+                /* ---------------------------------
+                   STUDENT DETAILS
+                --------------------------------- */
+
+                if(
+                    data.studentDetails
+                ){
+
+                    setJSONValue(
+                        "studentName",
+                        data.studentDetails.name
+                    );
+
+                    setJSONValue(
+                        "regNo",
+                        data.studentDetails.registerNumber
+                    );
+
+                    setJSONValue(
+                        "department",
+                        data.studentDetails.department
+                    );
+
+                    setJSONValue(
+                        "year",
+                        data.studentDetails.yearSemester
+                    );
+
+                    setJSONValue(
+                        "date",
+                        data.studentDetails.date
+                    );
+
+                    setJSONValue(
+                        "batch",
+                        data.studentDetails.batch
+                    );
+
+                }
+
+
+                /* ---------------------------------
+                   CONVERTER PARAMETERS
+                --------------------------------- */
+
+                if(
+                    data.converterParameters
+                ){
+
+                    setJSONValue(
+                        "vdc",
+                        data.converterParameters.dcBusVoltage
+                    );
+
+                    setJSONValue(
+                        "vbatt",
+                        data.converterParameters.batteryVoltage
+                    );
+
+                    setJSONValue(
+                        "capacity",
+                        data.converterParameters.batteryCapacity
+                    );
+
+                    setJSONValue(
+                        "soc",
+                        data.converterParameters.initialSOC
+                    );
+
+                    setJSONValue(
+                        "fs",
+                        data.converterParameters.switchingFrequency
+                    );
+
+                    setJSONValue(
+                        "dutyCharge",
+                        data.converterParameters.chargingDutyRatio
+                    );
+
+                    setJSONValue(
+                        "dutyDischarge",
+                        data.converterParameters.dischargingDutyRatio
+                    );
+
+                    setJSONValue(
+                        "inductor",
+                        data.converterParameters.inductance
+                    );
+
+                }
+
+
+                /* ---------------------------------
+                   OPERATING CONDITIONS
+                --------------------------------- */
+
+                if(
+                    data.operatingConditions
+                ){
+
+                    setJSONValue(
+                        "mode",
+                        data.operatingConditions.mode
+                    );
+
+                    setJSONValue(
+                        "simTime",
+                        data.operatingConditions.simulationDuration
+                    );
+
+                }
+
+
+                /* ---------------------------------
+                   VARIABLE PROFILE
+                --------------------------------- */
+
+                loadProfileData(
+                    data.variableProfile
+                );
+
+
+                /* ---------------------------------
+                   OBSERVATIONS
+                --------------------------------- */
+
+                loadObservationData(
+                    data.observations
+                );
+
+
+                /* ---------------------------------
+                   STUDENT ANALYSIS
+                --------------------------------- */
+
+                if(
+                    data.studentAnalysis
+                ){
+
+                    setJSONValue(
+                        "analysis1",
+                        data.studentAnalysis.analysis1
+                    );
+
+                    setJSONValue(
+                        "analysis2",
+                        data.studentAnalysis.analysis2
+                    );
+
+                    setJSONValue(
+                        "analysis3",
+                        data.studentAnalysis.analysis3
+                    );
+
+                    setJSONValue(
+                        "analysis4",
+                        data.studentAnalysis.analysis4
+                    );
+
+                    setJSONValue(
+                        "analysis5",
+                        data.studentAnalysis.analysis5
+                    );
+
+                }
+
+
+                /* ---------------------------------
+                   RESULT
+                --------------------------------- */
+
+                if(
+                    data.result !== undefined
+                ){
+
+                    document.getElementById(
+                        "resultText"
+                    ).innerText =
+                        data.result;
+
+                }
+
+
+                /* ---------------------------------
+                   POST LAB ANSWERS
+                --------------------------------- */
+
+                setJSONValue(
+                    "questionsAnswer",
+                    data.postLabAnswers
+                );
+
+
+                /* ---------------------------------
+                   FACULTY MARKS
+                --------------------------------- */
+
+                if(
+                    data.facultyEvaluation &&
+                    Array.isArray(
+                        data.facultyEvaluation.marks
+                    )
+                ){
+
+                    const marks =
+                        document.querySelectorAll(
+                            ".mark"
+                        );
+
+
+                    data.facultyEvaluation
+                    .marks
+                    .forEach(
+                        function(item,index){
+
+                            if(
+                                marks[index]
+                            ){
+
+                                marks[index].value =
+                                    item.mark || "";
+
+                            }
+
+                        }
+                    );
+
+                }
+
+
+                /* ---------------------------------
+                   RESTORE IMAGES
+                --------------------------------- */
+
+                if(
+                    data.images
+                ){
+
+                    restoreImage(
+                        "diagramPreview",
+                        data.images.simulinkDiagram
+                    );
+
+                    restoreImage(
+                        "wavePreview",
+                        data.images.waveform
+                    );
+
+                    restoreImage(
+                        "socPreview",
+                        data.images.socGraph
+                    );
+
+                    restoreImage(
+                        "powerPreview",
+                        data.images.powerFlowGraph
+                    );
+
+                }
+
+
+                /* ---------------------------------
+                   RECALCULATE
+                --------------------------------- */
+
+                calculateParameters();
+
+                calculateObservation();
+
+                calculateScore();
+
+
+                /* ---------------------------------
+                   STORE LOADED JSON LOCALLY
+                --------------------------------- */
+
+                localStorage.setItem(
+                    "bidirectionalExperiment4_JSON",
+                    JSON.stringify(data)
+                );
+
+
+                alert(
+                    "Experiment 4 JSON loaded successfully.\n\n" +
+                    "The student's saved work has been restored."
+                );
+
+            }
+            catch(error){
+
+                console.error(error);
+
+                alert(
+                    "Unable to load the JSON file.\n\n" +
+                    "Please check that the file is a valid Experiment 4 JSON file."
+                );
+
+            }
+            finally{
+
+                /* Allow the same JSON file to be selected again */
+
+                event.target.value = "";
+
+            }
+
+        };
+
+
+    reader.readAsText(file);
+
+}
+
+
+/* =========================================================
+   AUTOMATIC EXPERIMENT EVALUATION
+========================================================= */
+
+function evaluateExperiment(){
+
+    let score = 0;
+
+    let feedback = [];
+
+
+    /* =========================================
+       1. STUDENT DETAILS – 1 MARK
+    ========================================= */
+
+    const studentFields = [
+
+        "studentName",
+        "regNo",
+        "department",
+        "year",
+        "date",
+        "batch"
+
+    ];
+
+
+    const detailsComplete =
+        studentFields.every(function(id){
+
+            const el =
+                document.getElementById(id);
+
+            return el &&
+                   el.value.trim() !== "";
+
+        });
+
+
+    if(detailsComplete){
+
+        score += 1;
+
+        feedback.push(
+            "✓ Student details completed – 1/1"
+        );
+
+    }
+    else{
+
+        feedback.push(
+            "✗ Student details incomplete – 0/1"
+        );
+
+    }
+
+
+    /* =========================================
+       2. SIMULINK DIAGRAM – 1.5 MARKS
+    ========================================= */
+
+    const diagram =
+        document.getElementById(
+            "diagramPreview"
+        );
+
+
+    if(
+        diagram &&
+        diagram.style.display !== "none" &&
+        diagram.src.startsWith("data:image")
+    ){
+
+        score += 1.5;
+
+        feedback.push(
+            "✓ Simulink converter diagram uploaded – 1.5/1.5"
+        );
+
+    }
+    else{
+
+        feedback.push(
+            "✗ Simulink converter diagram missing – 0/1.5"
+        );
+
+    }
+
+
+    /* =========================================
+       3. PARAMETERS – 1 MARK
+    ========================================= */
+
+    const parameterIds = [
+
+        "vdc",
+        "vbatt",
+        "capacity",
+        "soc",
+        "fs",
+        "dutyCharge",
+        "dutyDischarge",
+        "inductor"
+
+    ];
+
+
+    const parametersComplete =
+        parameterIds.every(function(id){
+
+            const el =
+                document.getElementById(id);
+
+            return el &&
+                   el.value !== "" &&
+                   !isNaN(
+                       parseFloat(el.value)
+                   );
+
+        });
+
+
+    if(parametersComplete){
+
+        score += 1;
+
+        feedback.push(
+            "✓ Converter and battery parameters completed – 1/1"
+        );
+
+    }
+    else{
+
+        feedback.push(
+            "✗ Converter/battery parameters incomplete – 0/1"
+        );
+
+    }
+
+
+    /* =========================================
+       4. VARIABLE PROFILE – 1 MARK
+    ========================================= */
+
+    const profileRows =
+        document.querySelectorAll(
+            "#profileTable tbody tr"
+        );
+
+
+    let profileComplete =
+        profileRows.length > 0;
+
+
+    profileRows.forEach(function(row){
+
+        const start =
+            row.querySelector(".start");
+
+        const end =
+            row.querySelector(".end");
+
+        const mode =
+            row.querySelector(".profileMode");
+
+        const current =
+            row.querySelector(".refCurrent");
+
+
+        if(
+            !start ||
+            !end ||
+            !mode ||
+            !current ||
+            start.value === "" ||
+            end.value === "" ||
+            current.value === "" ||
+            isNaN(parseFloat(start.value)) ||
+            isNaN(parseFloat(end.value)) ||
+            isNaN(parseFloat(current.value))
+        ){
+
+            profileComplete = false;
+
+        }
+
+    });
+
+
+    if(profileComplete){
+
+        score += 1;
+
+        feedback.push(
+            "✓ Charging/discharging profile completed – 1/1"
+        );
+
+    }
+    else{
+
+        feedback.push(
+            "✗ Charging/discharging profile incomplete – 0/1"
+        );
+
+    }
+
+
+    /* =========================================
+       5. OBSERVATION TABLE – 2 MARKS
+    ========================================= */
+
+    const observationRows =
+        document.querySelectorAll(
+            "#observationTable tbody tr"
+        );
+
+
+    let observationsComplete =
+        observationRows.length > 0;
+
+
+    observationRows.forEach(function(row){
+
+        const fields = [
+
+            ".obsVdc",
+            ".obsIdc",
+            ".obsVbatt",
+            ".obsIbatt",
+            ".obsSOC"
+
+        ];
+
+
+        fields.forEach(function(selector){
+
+            const input =
+                row.querySelector(selector);
+
+
+            if(
+                !input ||
+                input.value.trim() === "" ||
+                isNaN(
+                    parseFloat(input.value)
+                )
+            ){
+
+                observationsComplete =
+                    false;
+
+            }
+
+        });
+
+    });
+
+
+    if(observationsComplete){
+
+        score += 2;
+
+        feedback.push(
+            "✓ Observation table completed – 2/2"
+        );
+
+    }
+    else{
+
+        feedback.push(
+            "✗ Observation table incomplete – 0/2"
+        );
+
+    }
+
+
+    /* =========================================
+       6. WAVEFORM – 1 MARK
+    ========================================= */
+
+    const waveform =
+        document.getElementById(
+            "wavePreview"
+        );
+
+
+    if(
+        waveform &&
+        waveform.style.display !== "none" &&
+        waveform.src.startsWith("data:image")
+    ){
+
+        score += 1;
+
+        feedback.push(
+            "✓ Simulink waveform uploaded – 1/1"
+        );
+
+    }
+    else{
+
+        feedback.push(
+            "✗ Simulink waveform missing – 0/1"
+        );
+
+    }
+
+
+    /* =========================================
+       7. SOC GRAPH – 0.5 MARK
+    ========================================= */
+
+    const socGraph =
+        document.getElementById(
+            "socPreview"
+        );
+
+
+    if(
+        socGraph &&
+        socGraph.style.display !== "none" &&
+        socGraph.src.startsWith("data:image")
+    ){
+
+        score += 0.5;
+
+        feedback.push(
+            "✓ SOC/current graph uploaded – 0.5/0.5"
+        );
+
+    }
+    else{
+
+        feedback.push(
+            "✗ SOC/current graph missing – 0/0.5"
+        );
+
+    }
+
+
+    /* =========================================
+       8. POWER FLOW GRAPH – 0.5 MARK
+    ========================================= */
+
+    const powerGraph =
+        document.getElementById(
+            "powerPreview"
+        );
+
+
+    if(
+        powerGraph &&
+        powerGraph.style.display !== "none" &&
+        powerGraph.src.startsWith("data:image")
+    ){
+
+        score += 0.5;
+
+        feedback.push(
+            "✓ Bidirectional power-flow graph uploaded – 0.5/0.5"
+        );
+
+    }
+    else{
+
+        feedback.push(
+            "✗ Power-flow graph missing – 0/0.5"
+        );
+
+    }
+
+
+    /* =========================================
+       9. STUDENT ANALYSIS – 1.5 MARKS
+    ========================================= */
+
+    const analysisIds = [
+
+        "analysis1",
+        "analysis2",
+        "analysis3",
+        "analysis4",
+        "analysis5"
+
+    ];
+
+
+    let analysisCount = 0;
+
+
+    analysisIds.forEach(function(id){
+
+        const el =
+            document.getElementById(id);
+
+
+        if(
+            el &&
+            el.value.trim().length >= 30
+        ){
+
+            analysisCount++;
+
+        }
+
+    });
+
+
+    const analysisScore =
+        (analysisCount / 5) * 1.5;
+
+
+    score += analysisScore;
+
+
+    if(analysisCount === 5){
+
+        feedback.push(
+            "✓ Student analysis completed – 1.5/1.5"
+        );
+
+    }
+    else{
+
+        feedback.push(
+            "△ Student analysis: " +
+            analysisCount +
+            "/5 answers sufficiently completed – " +
+            analysisScore.toFixed(1) +
+            "/1.5"
+        );
+
+    }
+
+
+    /* =========================================
+       10. POST-LAB QUESTIONS – 0.5 MARK
+    ========================================= */
+
+    const postLab =
+        document.getElementById(
+            "questionsAnswer"
+        );
+
+
+    if(
+        postLab &&
+        postLab.value.trim().length >= 100
+    ){
+
+        score += 0.5;
+
+        feedback.push(
+            "✓ Post-lab answers entered – 0.5/0.5"
+        );
+
+    }
+    else{
+
+        feedback.push(
+            "✗ Post-lab answers incomplete – 0/0.5"
+        );
+
+    }
+
+
+    /* =========================================
+       FINAL SCORE
+       TOTAL = 10 MARKS
+    ========================================= */
+
+    score =
+        Math.min(
+            10,
+            Math.max(
+                0,
+                score
+            )
+        );
+
+
+    /* =========================================
+       CREATE EVALUATION REPORT
+    ========================================= */
+
+    const report =
+
+        "EXPERIMENT 4 – AUTOMATIC EVALUATION\n" +
+        "====================================\n\n" +
+
+        "Student: " +
+        document.getElementById(
+            "studentName"
+        ).value +
+        "\n" +
+
+        "Register Number: " +
+        document.getElementById(
+            "regNo"
+        ).value +
+        "\n\n" +
+
+        "AUTOMATIC SCORE: " +
+        score.toFixed(1) +
+        " / 10\n\n" +
+
+        feedback.join("\n") +
+
+        "\n\n" +
+
+        "Note: This automatic evaluation checks " +
+        "completion of required experiment components. " +
+        "It does not determine the scientific correctness " +
+        "of student answers or Simulink results.";
+
+
+    document.getElementById(
+        "resultText"
+    ).innerText =
+        report;
+
+
+    /* =========================================
+       DISPLAY SCORE
+    ========================================= */
+
+    document.getElementById(
+        "totalScore"
+    ).innerText =
+        score.toFixed(1) +
+        " / 10";
+
+
+    /* =========================================
+       SAVE EVALUATION
+    ========================================= */
+
+    const evaluationData = {
+
+        experiment:
+            "Experiment 4",
+
+        studentName:
+            document.getElementById(
+                "studentName"
+            ).value,
+
+        registerNumber:
+            document.getElementById(
+                "regNo"
+            ).value,
+
+        score:
+            score,
+
+        maximum:
+            10,
+
+        feedback:
+            feedback,
+
+        evaluatedAt:
+            new Date().toISOString()
+
+    };
+
+
+    localStorage.setItem(
+        "bidirectionalExperiment4Evaluation",
+        JSON.stringify(
+            evaluationData
+        )
+    );
+
+
+    alert(
+        "Experiment evaluated.\n\n" +
+        "Automatic Score = " +
+        score.toFixed(1) +
+        " / 10\n\n" +
+        "The result section contains the detailed feedback."
+    );
+
+}
+</script>
+
+</body>
+</html>

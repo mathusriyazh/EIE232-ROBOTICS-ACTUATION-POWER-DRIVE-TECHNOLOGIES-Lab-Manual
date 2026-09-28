@@ -1,0 +1,4030 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Experiment 9 - Speed Control of Squirrel Cage Induction Motor Drive</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#071018;
+    color:#eaf3f8;
+}
+
+header{
+    background:linear-gradient(135deg,#0b1c29,#123447);
+    padding:24px;
+    text-align:center;
+    border-bottom:2px solid #19d3ae;
+}
+
+header h1{
+    margin:0;
+    color:#19d3ae;
+    font-size:27px;
+}
+
+header p{
+    color:#b8cad5;
+    margin:8px 0 0;
+}
+
+.container{
+    width:95%;
+    max-width:1450px;
+    margin:20px auto;
+}
+
+.card{
+    background:#101c26;
+    border:1px solid #294451;
+    border-radius:12px;
+    padding:20px;
+    margin-bottom:18px;
+    box-shadow:0 5px 20px rgba(0,0,0,.25);
+}
+
+h2{
+    color:#19d3ae;
+    border-left:5px solid #19d3ae;
+    padding-left:10px;
+}
+
+h3{
+    color:#6ed6ff;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:14px;
+}
+
+label{
+    display:block;
+    margin-top:9px;
+    color:#b9cbd5;
+    font-weight:bold;
+}
+
+input,select,textarea{
+    width:100%;
+    padding:10px;
+    margin-top:5px;
+    background:#07131c;
+    color:white;
+    border:1px solid #3b5867;
+    border-radius:6px;
+}
+
+textarea{
+    min-height:100px;
+    resize:vertical;
+}
+
+button{
+    border:0;
+    border-radius:7px;
+    padding:11px 17px;
+    margin:6px;
+    cursor:pointer;
+    font-weight:bold;
+    background:#19d3ae;
+    color:#061015;
+}
+
+button:hover{
+    filter:brightness(1.15);
+}
+
+.secondary{
+    background:#29485b;
+    color:white;
+}
+
+.warning{
+    background:#d89e2c;
+    color:#111;
+}
+
+.danger{
+    background:#d64d59;
+    color:white;
+}
+
+.formula{
+    background:#07151e;
+    border-left:4px solid #19d3ae;
+    padding:12px;
+    margin:10px 0;
+    font-family:"Courier New",monospace;
+}
+
+.note{
+    background:#1e2830;
+    border-left:4px solid #ffc857;
+    padding:13px;
+    margin:12px 0;
+}
+
+.success{
+    background:#102b20;
+    border-left:4px solid #28d17c;
+    padding:13px;
+    margin:12px 0;
+}
+
+.dangerBox{
+    background:#32191c;
+    border-left:4px solid #ff6262;
+    padding:13px;
+    margin:12px 0;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:12px;
+}
+
+th,td{
+    border:1px solid #3a5665;
+    padding:8px;
+    text-align:center;
+}
+
+th{
+    background:#173444;
+    color:#6ed6ff;
+}
+
+td input{
+    margin:0;
+}
+
+.badge{
+    display:inline-block;
+    padding:6px 11px;
+    margin:4px;
+    border-radius:20px;
+    background:#153b4b;
+    color:#6ed6ff;
+}
+
+.upload-box{
+    border:2px dashed #456271;
+    padding:20px;
+    text-align:center;
+    border-radius:8px;
+    margin-top:10px;
+}
+
+.preview{
+    max-width:100%;
+    max-height:500px;
+    margin-top:12px;
+    border-radius:8px;
+    border:1px solid #405968;
+}
+
+.kpi{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:12px;
+    margin-top:15px;
+}
+
+.kpi div{
+    background:#091821;
+    padding:15px;
+    text-align:center;
+    border-radius:8px;
+}
+
+.kpi strong{
+    display:block;
+    color:#19d3ae;
+    font-size:22px;
+    margin-top:6px;
+}
+
+.tabs{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+.tab{
+    background:#1b303d;
+    color:white;
+}
+
+.tab.active{
+    background:#19d3ae;
+    color:#061015;
+}
+
+.tabcontent{
+    display:none;
+}
+
+.tabcontent.active{
+    display:block;
+}
+
+@media print{
+    body{
+        background:white;
+        color:black;
+    }
+
+    .card{
+        box-shadow:none;
+        border:1px solid #999;
+    }
+
+    button,
+    .upload-box{
+        display:none;
+    }
+
+    input,textarea,select{
+        background:white;
+        color:black;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>VIRTUAL POWER ELECTRONICS & DRIVES LABORATORY</h1>
+<p>Experiment 9 – Speed Control of Squirrel-Cage Induction Motor Drive – Hardware Experiment</p>
+</header>
+
+<div class="container">
+
+<!-- STUDENT DETAILS -->
+
+<div class="card">
+
+<h2>1. Student Details</h2>
+
+<div class="grid">
+
+<div>
+<label>Name</label>
+<input id="studentName" placeholder="Enter student name">
+</div>
+
+<div>
+<label>Register Number</label>
+<input id="regNo" placeholder="Enter register number">
+</div>
+
+<div>
+<label>Class / Section</label>
+<input id="classSection" placeholder="Enter class / section">
+</div>
+
+<div>
+<label>Date</label>
+<input type="date" id="expDate">
+</div>
+
+<div>
+<label>Laboratory Batch</label>
+<input id="batch" placeholder="Enter batch">
+</div>
+
+</div>
+</div>
+
+
+<!-- AIM -->
+
+<div class="card">
+
+<h2>2. Aim</h2>
+
+<p>
+To study the <b>speed control of a three-phase squirrel-cage induction
+motor drive</b> using a variable-frequency drive (VFD), observe the
+variation of motor speed with supply frequency, and investigate the
+effect of voltage, frequency and load torque on motor performance.
+</p>
+
+</div>
+
+
+<!-- OBJECTIVES -->
+
+<div class="card">
+
+<h2>3. Learning Objectives</h2>
+
+<ul>
+<li>Understand the operating principle of a squirrel-cage induction motor.</li>
+<li>Understand synchronous speed and slip.</li>
+<li>Study speed control using frequency variation.</li>
+<li>Understand constant V/f control.</li>
+<li>Observe motor speed at different frequencies.</li>
+<li>Measure voltage, current, power, speed and torque.</li>
+<li>Study the effect of load torque on motor speed.</li>
+<li>Calculate slip and efficiency.</li>
+<li>Understand acceleration and deceleration using a VFD.</li>
+<li>Study the practical precautions required for an induction motor drive.</li>
+</ul>
+
+<span class="badge">3-Phase Induction Motor</span>
+<span class="badge">Squirrel Cage</span>
+<span class="badge">VFD</span>
+<span class="badge">V/f Control</span>
+<span class="badge">Slip</span>
+<span class="badge">Speed Control</span>
+<span class="badge">Hardware Experiment</span>
+
+</div>
+
+
+<!-- HARDWARE -->
+
+<div class="card">
+
+<h2>4. Hardware Required</h2>
+
+<table>
+
+<tr>
+<th>S.No</th>
+<th>Equipment</th>
+<th>Purpose</th>
+</tr>
+
+<tr>
+<td>1</td>
+<td>Three-phase squirrel-cage induction motor</td>
+<td>Drive under test</td>
+</tr>
+
+<tr>
+<td>2</td>
+<td>Variable Frequency Drive (VFD)</td>
+<td>Frequency and voltage control</td>
+</tr>
+
+<tr>
+<td>3</td>
+<td>Three-phase AC supply</td>
+<td>Input power</td>
+</tr>
+
+<tr>
+<td>4</td>
+<td>Motor protection / MCB</td>
+<td>Electrical protection</td>
+</tr>
+
+<tr>
+<td>5</td>
+<td>Digital tachometer / encoder</td>
+<td>Speed measurement</td>
+</tr>
+
+<tr>
+<td>6</td>
+<td>Three-phase power analyzer / wattmeter</td>
+<td>Electrical measurements</td>
+</tr>
+
+<tr>
+<td>7</td>
+<td>Ammeter</td>
+<td>Current measurement</td>
+</tr>
+
+<tr>
+<td>8</td>
+<td>Voltmeter</td>
+<td>Voltage measurement</td>
+</tr>
+
+<tr>
+<td>9</td>
+<td>Loading arrangement</td>
+<td>Mechanical loading</td>
+</tr>
+
+<tr>
+<td>10</td>
+<td>Emergency stop</td>
+<td>Safety</td>
+</tr>
+
+<tr>
+<td>11</td>
+<td>Connecting cables</td>
+<td>Electrical connections</td>
+</tr>
+
+</table>
+
+<div class="dangerBox">
+
+<b>Safety:</b>
+
+Do not change motor/VFD wiring while energized.
+Ensure the motor nameplate data is entered into the VFD.
+Use appropriate over-current, overload and emergency-stop protection.
+Never exceed the rated motor frequency, voltage or current.
+
+</div>
+
+</div>
+
+
+<!-- MOTOR NAMEPLATE -->
+
+<div class="card">
+
+<h2>5. Motor Nameplate Details</h2>
+
+<div class="grid">
+
+<div>
+<label>Rated Power (kW)</label>
+<input type="number" id="ratedPower" value="1.5" step="0.1">
+</div>
+
+<div>
+<label>Rated Voltage (V)</label>
+<input type="number" id="ratedVoltage" value="415">
+</div>
+
+<div>
+<label>Rated Current (A)</label>
+<input type="number" id="ratedCurrent" value="3.2" step="0.1">
+</div>
+
+<div>
+<label>Rated Frequency (Hz)</label>
+<input type="number" id="ratedFreq" value="50">
+</div>
+
+<div>
+<label>Rated Speed (rpm)</label>
+<input type="number" id="ratedSpeed" value="1440">
+</div>
+
+<div>
+<label>Number of Poles</label>
+<select id="poles">
+<option value="2">2</option>
+<option value="4" selected>4</option>
+<option value="6">6</option>
+<option value="8">8</option>
+</select>
+</div>
+
+<div>
+<label>Power Factor</label>
+<input type="number" id="pf" value="0.82" step="0.01">
+</div>
+
+<div>
+<label>Motor Efficiency (%)</label>
+<input type="number" id="motorEfficiency" value="88">
+</div>
+
+</div>
+
+<button onclick="calculateNameplate()">
+Calculate Nameplate Parameters
+</button>
+
+<div class="result" id="nameplateResult"></div>
+
+</div>
+
+
+<!-- THEORY -->
+
+<div class="card">
+
+<h2>6. Theory</h2>
+
+<h3>6.1 Synchronous Speed</h3>
+
+<div class="formula">
+Ns = 120 f / P
+</div>
+
+<p>
+where:
+<br>
+Ns = synchronous speed in rpm
+<br>
+f = supply frequency in Hz
+<br>
+P = number of poles
+</p>
+
+
+<h3>6.2 Rotor Speed</h3>
+
+<div class="formula">
+N = Ns(1 - s)
+</div>
+
+<p>
+where s is the slip.
+</p>
+
+
+<h3>6.3 Slip</h3>
+
+<div class="formula">
+s = (Ns - N) / Ns
+</div>
+
+<div class="formula">
+Slip (%) = [(Ns - N) / Ns] × 100
+</div>
+
+
+<h3>6.4 Frequency Control</h3>
+
+<p>
+The most commonly used method for high-performance induction motor
+speed control is variable-frequency control using a VFD.
+</p>
+
+<div class="formula">
+Speed ≈ 120f/P × (1-s)
+</div>
+
+
+<h3>6.5 Constant V/f Control</h3>
+
+<p>
+Below the rated frequency, the VFD approximately maintains the
+voltage-to-frequency ratio constant.
+</p>
+
+<div class="formula">
+V/f ≈ Constant
+</div>
+
+<p>
+Therefore, if the rated point is 415 V at 50 Hz, the idealized
+voltage reference at 25 Hz is approximately:
+</p>
+
+<div class="formula">
+V25 ≈ 415 × 25/50 = 207.5 V
+</div>
+
+<div class="note">
+Actual VFD output voltage may differ because of motor parameters,
+boost settings, PWM modulation, inverter losses and the specific
+VFD control algorithm.
+</div>
+
+
+<h3>6.6 Motor Input Power</h3>
+
+<div class="formula">
+Pin = √3 VL IL cosφ
+</div>
+
+
+<h3>6.7 Mechanical Output Power</h3>
+
+<div class="formula">
+Pout = T × ω
+</div>
+
+<div class="formula">
+ω = 2πN / 60
+</div>
+
+
+<h3>6.8 Efficiency</h3>
+
+<div class="formula">
+η = Pout / Pin × 100
+</div>
+
+
+<h3>6.9 Torque</h3>
+
+<div class="formula">
+T = Pout / ω
+</div>
+
+</div>
+
+
+<!-- HARDWARE CONNECTION -->
+
+<div class="card">
+
+<h2>7. Hardware Connection / Experimental Setup</h2>
+
+<div class="note">
+
+Recommended experimental arrangement:
+
+<br><br>
+
+<b>
+3-Phase AC Supply
+→ Protection / MCB
+→ VFD
+→ Squirrel-Cage Induction Motor
+→ Mechanical Loading System
+</b>
+
+<br><br>
+
+Speed feedback is measured using a tachometer or encoder.
+
+Electrical measurements are obtained at the VFD input or using the
+appropriate power analyzer.
+
+</div>
+
+<h3>VFD Terminals – General Arrangement</h3>
+
+<table>
+
+<tr>
+<th>Terminal</th>
+<th>Connection</th>
+<th>Function</th>
+</tr>
+
+<tr>
+<td>L1 / L2 / L3</td>
+<td>Three-phase input</td>
+<td>AC supply</td>
+</tr>
+
+<tr>
+<td>U / V / W</td>
+<td>Motor terminals</td>
+<td>Three-phase motor output</td>
+</tr>
+
+<tr>
+<td>DI</td>
+<td>Start/Stop control</td>
+<td>Digital command</td>
+</tr>
+
+<tr>
+<td>AI</td>
+<td>0–10 V / 4–20 mA depending on VFD</td>
+<td>Speed reference</td>
+</tr>
+
+<tr>
+<td>COM</td>
+<td>Control common</td>
+<td>Control circuit reference</td>
+</tr>
+
+</table>
+
+<div class="dangerBox">
+
+<b>Important:</b>
+
+VFD terminal names differ by manufacturer.
+Students must follow the actual VFD manual and laboratory wiring
+diagram. The table above is only a general educational representation.
+
+</div>
+
+</div>
+
+
+<!-- MODEL IMAGE -->
+
+<div class="card">
+
+<h2>8. Hardware Setup Photograph</h2>
+
+<p>
+Take a photograph of the complete experimental setup and upload it.
+</p>
+
+<div class="upload-box">
+
+<input type="file" id="setupImage" accept="image/*">
+
+<img id="setupPreview"
+class="preview"
+style="display:none">
+
+</div>
+
+</div>
+
+
+<!-- VFD PARAMETERS -->
+
+<div class="card">
+
+<h2>9. VFD Parameter Settings</h2>
+
+<div class="grid">
+
+<div>
+<label>Minimum Frequency (Hz)</label>
+<input type="number" id="minFreq" value="5">
+</div>
+
+<div>
+<label>Maximum Frequency (Hz)</label>
+<input type="number" id="maxFreq" value="50">
+</div>
+
+<div>
+<label>Base Frequency (Hz)</label>
+<input type="number" id="baseFreq" value="50">
+</div>
+
+<div>
+<label>Acceleration Time (s)</label>
+<input type="number" id="accTime" value="5">
+</div>
+
+<div>
+<label>Deceleration Time (s)</label>
+<input type="number" id="decTime" value="5">
+</div>
+
+<div>
+<label>Control Mode</label>
+<select id="controlMode">
+<option>V/f Control</option>
+<option>Sensorless Vector Control</option>
+<option>Vector Control with Encoder</option>
+</select>
+</div>
+
+</div>
+
+<div class="note">
+
+Before running the experiment, enter the motor nameplate values into the
+VFD according to the manufacturer's parameter structure.
+
+Typical values include:
+
+<ul>
+<li>Motor rated voltage</li>
+<li>Motor rated current</li>
+<li>Motor rated frequency</li>
+<li>Motor rated power</li>
+<li>Motor rated speed</li>
+<li>Acceleration time</li>
+<li>Deceleration time</li>
+<li>Minimum and maximum frequency</li>
+</ul>
+
+</div>
+
+</div>
+
+
+<!-- PROCEDURE -->
+
+<div class="card">
+
+<h2>10. Experimental Procedure</h2>
+
+<ol>
+
+<li>Inspect the induction motor, VFD, cables and protection devices.</li>
+
+<li>Record the motor nameplate data.</li>
+
+<li>Connect the three-phase supply to the VFD input through the
+laboratory protection system.</li>
+
+<li>Connect the VFD output terminals to the motor according to the
+VFD manufacturer's instructions.</li>
+
+<li>Connect the tachometer or encoder for speed measurement.</li>
+
+<li>Connect the power analyzer / meters required for voltage, current
+and power measurement.</li>
+
+<li>Enter the motor nameplate parameters into the VFD.</li>
+
+<li>Select V/f or the prescribed laboratory control mode.</li>
+
+<li>Set the acceleration and deceleration times.</li>
+
+<li>Start the motor at a low frequency.</li>
+
+<li>Increase the frequency gradually.</li>
+
+<li>Record motor speed at each frequency.</li>
+
+<li>Record voltage, current and input power.</li>
+
+<li>Repeat the experiment for different load torques.</li>
+
+<li>Calculate synchronous speed and slip.</li>
+
+<li>Calculate mechanical output power when torque is available.</li>
+
+<li>Calculate efficiency.</li>
+
+<li>Observe the motor current and speed during acceleration and
+deceleration.</li>
+
+<li>Stop the motor using the prescribed VFD stop command.</li>
+
+</ol>
+
+<div class="dangerBox">
+
+Never use an abrupt mechanical loading or braking procedure beyond the
+rating of the motor, dynamometer or VFD.
+
+</div>
+
+</div>
+
+
+<!-- FREQUENCY TEST -->
+
+<div class="card">
+
+<h2>11. Speed Control – Frequency Variation Test</h2>
+
+<p>
+Maintain the prescribed control mode and vary the VFD output frequency.
+Record the steady-state motor speed.
+</p>
+
+<table id="freqTable">
+
+<thead>
+
+<tr>
+<th>S.No</th>
+<th>Frequency (Hz)</th>
+<th>Line Voltage (V)</th>
+<th>Line Current (A)</th>
+<th>Input Power (W)</th>
+<th>Measured Speed (rpm)</th>
+<th>Synchronous Speed (rpm)</th>
+<th>Slip (%)</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+<td>1</td>
+<td><input value="10"></td>
+<td><input></td>
+<td><input></td>
+<td><input></td>
+<td><input value="285"></td>
+<td><input></td>
+<td><input></td>
+</tr>
+
+<tr>
+<td>2</td>
+<td><input value="20"></td>
+<td><input></td>
+<td><input></td>
+<td><input></td>
+<td><input value="580"></td>
+<td><input></td>
+<td><input></td>
+</tr>
+
+<tr>
+<td>3</td>
+<td><input value="30"></td>
+<td><input></td>
+<td><input></td>
+<td><input value="650"></td>
+<td><input value="870"></td>
+<td><input></td>
+<td><input></td>
+</tr>
+
+<tr>
+<td>4</td>
+<td><input value="40"></td>
+<td><input></td>
+<td><input></td>
+<td><input></td>
+<td><input value="1165"></td>
+<td><input></td>
+<td><input></td>
+</tr>
+
+<tr>
+<td>5</td>
+<td><input value="50"></td>
+<td><input value="415"></td>
+<td><input value="3.0"></td>
+<td><input value="1750"></td>
+<td><input value="1440"></td>
+<td><input></td>
+<td><input></td>
+</tr>
+
+</tbody>
+</table>
+
+<button onclick="calculateFrequencyTable()">
+Calculate Frequency Test
+</button>
+
+</div>
+
+
+<!-- V/F -->
+
+<div class="card">
+
+<h2>12. V/f Control Observation</h2>
+
+<table id="vfTable">
+
+<thead>
+
+<tr>
+<th>S.No</th>
+<th>Frequency (Hz)</th>
+<th>Measured Voltage (V)</th>
+<th>V/f (V/Hz)</th>
+<th>Speed (rpm)</th>
+<th>Speed Error (%)</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+<td>1</td>
+<td><input value="10"></td>
+<td><input value="83"></td>
+<td><input></td>
+<td><input value="285"></td>
+<td><input></td>
+</tr>
+
+<tr>
+<td>2</td>
+<td><input value="20"></td>
+<td><input value="166"></td>
+<td><input></td>
+<td><input value="580"></td>
+<td><input></td>
+</tr>
+
+<tr>
+<td>3</td>
+<td><input value="30"></td>
+<td><input value="250"></td>
+<td><input></td>
+<td><input value="870"></td>
+<td><input></td>
+</tr>
+
+<tr>
+<td>4</td>
+<td><input value="40"></td>
+<td><input value="332"></td>
+<td><input></td>
+<td><input value="1165"></td>
+<td><input></td>
+</tr>
+
+<tr>
+<td>5</td>
+<td><input value="50"></td>
+<td><input value="415"></td>
+<td><input></td>
+<td><input value="1440"></td>
+<td><input></td>
+</tr>
+
+</tbody>
+</table>
+
+<button onclick="calculateVFTable()">
+Calculate V/f Table
+</button>
+
+</div>
+
+
+<!-- LOAD TEST -->
+
+<div class="card">
+
+<h2>13. Load Test</h2>
+
+<p>
+Maintain a selected frequency and increase the mechanical load gradually.
+Record speed, current and torque.
+</p>
+
+<table id="loadTable">
+
+<thead>
+
+<tr>
+<th>S.No</th>
+<th>Frequency (Hz)</th>
+<th>Load Torque (N·m)</th>
+<th>Voltage (V)</th>
+<th>Current (A)</th>
+<th>Speed (rpm)</th>
+<th>Input Power (W)</th>
+<th>Output Power (W)</th>
+<th>Slip (%)</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+<td>1</td>
+<td><input value="50"></td>
+<td><input value="0"></td>
+<td><input value="415"></td>
+<td><input value="1.8"></td>
+<td><input value="1490"></td>
+<td><input value="900"></td>
+<td><input></td>
+<td><input></td>
+</tr>
+
+<tr>
+<td>2</td>
+<td><input value="50"></td>
+<td><input value="2"></td>
+<td><input value="415"></td>
+<td><input value="2.1"></td>
+<td><input value="1470"></td>
+<td><input value="1100"></td>
+<td><input></td>
+<td><input></td>
+</tr>
+
+<tr>
+<td>3</td>
+<td><input value="50"></td>
+<td><input value="4"></td>
+<td><input value="415"></td>
+<td><input value="2.6"></td>
+<td><input value="1445"></td>
+<td><input value="1450"></td>
+<td><input></td>
+<td><input></td>
+</tr>
+
+<tr>
+<td>4</td>
+<td><input value="50"></td>
+<td><input value="6"></td>
+<td><input value="415"></td>
+<td><input value="3.1"></td>
+<td><input value="1415"></td>
+<td><input value="1850"></td>
+<td><input></td>
+<td><input></td>
+</tr>
+
+</tbody>
+</table>
+
+<button onclick="calculateLoadTable()">
+Calculate Load Test
+</button>
+
+</div>
+
+
+<!-- ACCELERATION -->
+
+<div class="card">
+
+<h2>14. Acceleration / Deceleration Test</h2>
+
+<table>
+
+<thead>
+
+<tr>
+<th>Test</th>
+<th>Initial Frequency (Hz)</th>
+<th>Final Frequency (Hz)</th>
+<th>Acceleration / Deceleration Time (s)</th>
+<th>Initial Speed (rpm)</th>
+<th>Final Speed (rpm)</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+<td>Acceleration</td>
+<td><input value="10"></td>
+<td><input value="50"></td>
+<td><input value="5"></td>
+<td><input value="280"></td>
+<td><input value="1440"></td>
+</tr>
+
+<tr>
+<td>Deceleration</td>
+<td><input value="50"></td>
+<td><input value="10"></td>
+<td><input value="5"></td>
+<td><input value="1440"></td>
+<td><input value="280"></td>
+</tr>
+
+</tbody>
+
+</table>
+
+<div class="note">
+
+Observe the speed waveform using the VFD monitoring software, tachometer,
+encoder or data acquisition system if available.
+
+Record:
+
+<ul>
+<li>Acceleration time</li>
+<li>Deceleration time</li>
+<li>Peak current</li>
+<li>Speed overshoot</li>
+<li>Regenerative effects during deceleration, if applicable</li>
+</ul>
+
+</div>
+
+</div>
+
+
+<!-- TORQUE SPEED -->
+
+<div class="card">
+
+<h2>15. Torque-Speed Observation</h2>
+
+<table>
+
+<thead>
+
+<tr>
+<th>Frequency (Hz)</th>
+<th>Torque (N·m)</th>
+<th>Speed (rpm)</th>
+<th>Current (A)</th>
+<th>Power (W)</th>
+<th>Observation</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+<td><input value="20"></td>
+<td><input></td>
+<td><input></td>
+<td><input></td>
+<td><input></td>
+<td><input placeholder="Enter observation"></td>
+</tr>
+
+<tr>
+<td><input value="30"></td>
+<td><input></td>
+<td><input></td>
+<td><input></td>
+<td><input></td>
+<td><input placeholder="Enter observation"></td>
+</tr>
+
+<tr>
+<td><input value="40"></td>
+<td><input></td>
+<td><input></td>
+<td><input></td>
+<td><input></td>
+<td><input placeholder="Enter observation"></td>
+</tr>
+
+<tr>
+<td><input value="50"></td>
+<td><input></td>
+<td><input></td>
+<td><input></td>
+<td><input></td>
+<td><input placeholder="Enter observation"></td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<!-- CALCULATOR -->
+
+<div class="card">
+
+<h2>16. Automatic Performance Calculator</h2>
+
+<div class="grid">
+
+<div>
+<label>Frequency (Hz)</label>
+<input type="number" id="calcFreq" value="50">
+</div>
+
+<div>
+<label>Number of Poles</label>
+<input type="number" id="calcPoles" value="4">
+</div>
+
+<div>
+<label>Measured Speed (rpm)</label>
+<input type="number" id="calcSpeed" value="1440">
+</div>
+
+<div>
+<label>Load Torque (N·m)</label>
+<input type="number" id="calcTorque" value="5">
+</div>
+
+<div>
+<label>Line Voltage (V)</label>
+<input type="number" id="calcVoltage" value="415">
+</div>
+
+<div>
+<label>Line Current (A)</label>
+<input type="number" id="calcCurrent" value="2.8">
+</div>
+
+<div>
+<label>Power Factor</label>
+<input type="number" id="calcPF" value="0.82" step="0.01">
+</div>
+
+</div>
+
+<button onclick="calculatePerformance()">
+Calculate Performance
+</button>
+
+<div class="kpi">
+
+<div>
+Synchronous Speed
+<strong id="syncSpeed">-</strong>
+</div>
+
+<div>
+Slip
+<strong id="slipValue">-</strong>
+</div>
+
+<div>
+Input Power
+<strong id="inputPower">-</strong>
+</div>
+
+<div>
+Mechanical Output
+<strong id="outputPower">-</strong>
+</div>
+
+<div>
+Efficiency
+<strong id="efficiency">-</strong>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- WAVEFORM UPLOAD -->
+
+<div class="card">
+
+<h2>17. Measurement / Waveform Evidence</h2>
+
+<h3>VFD Display / Measurement</h3>
+
+<div class="upload-box">
+<input type="file" id="vfdImage" accept="image/*">
+<img id="vfdPreview" class="preview" style="display:none">
+</div>
+
+<h3>Speed vs Frequency Graph</h3>
+
+<div class="upload-box">
+<input type="file" id="speedGraph" accept="image/*">
+<img id="speedPreview" class="preview" style="display:none">
+</div>
+
+<h3>Acceleration / Deceleration Waveform</h3>
+
+<div class="upload-box">
+<input type="file" id="accGraph" accept="image/*">
+<img id="accPreview" class="preview" style="display:none">
+</div>
+
+<h3>Current / Voltage Waveform</h3>
+
+<div class="upload-box">
+<input type="file" id="currentGraph" accept="image/*">
+<img id="currentPreview" class="preview" style="display:none">
+</div>
+
+</div>
+
+
+<!-- ANALYSIS -->
+
+<div class="card">
+
+<h2>18. Student Analysis</h2>
+
+<label>Frequency vs Speed</label>
+
+<textarea id="analysisFrequency"
+placeholder="Explain the relationship between VFD frequency and induction motor speed."></textarea>
+
+<label>Slip Analysis</label>
+
+<textarea id="analysisSlip"
+placeholder="Explain how slip changes with load torque."></textarea>
+
+<label>V/f Control Analysis</label>
+
+<textarea id="analysisVF"
+placeholder="Discuss whether V/f remained approximately constant and explain deviations."></textarea>
+
+<label>Load Effect</label>
+
+<textarea id="analysisLoad"
+placeholder="Explain the effect of increasing mechanical load on speed and current."></textarea>
+
+<label>Acceleration / Deceleration</label>
+
+<textarea id="analysisAcceleration"
+placeholder="Discuss the effect of acceleration and deceleration time on motor current and speed response."></textarea>
+
+<label>Practical Observations</label>
+
+<textarea id="analysisPractical"
+placeholder="Record practical observations, noise, vibration, heating, current variation and VFD display information."></textarea>
+
+</div>
+
+
+<!-- RESULT -->
+
+<div class="card">
+
+<h2>19. Result</h2>
+
+<textarea id="resultText">
+The speed control of the squirrel-cage induction motor was successfully
+studied using a variable-frequency drive. The variation of motor speed
+with supply frequency was observed. The synchronous speed and slip were
+calculated for different operating conditions. The effect of mechanical
+loading, V/f control and acceleration/deceleration settings on motor
+performance was investigated.
+</textarea>
+
+<div class="success">
+
+<b>Suggested Result:</b>
+
+<br><br>
+
+The squirrel-cage induction motor speed was successfully controlled by
+varying the VFD output frequency. The measured speed increased with
+frequency and remained below synchronous speed because of slip. The
+effects of load torque, current, V/f ratio and acceleration/deceleration
+settings were experimentally observed.
+
+</div>
+
+</div>
+
+
+<!-- QUESTIONS -->
+
+<div class="card">
+
+<h2>20. Post-Lab Questions</h2>
+
+<ol>
+
+<li>What is the operating principle of a squirrel-cage induction motor?</li>
+
+<li>Define synchronous speed.</li>
+
+<li>What is slip?</li>
+
+<li>Calculate synchronous speed of a 4-pole motor at 50 Hz.</li>
+
+<li>Why does the rotor never normally reach synchronous speed in motoring operation?</li>
+
+<li>Why is frequency variation used for induction motor speed control?</li>
+
+<li>What is constant V/f control?</li>
+
+<li>What happens to motor flux if frequency is reduced without reducing voltage?</li>
+
+<li>Why is acceleration time programmed in a VFD?</li>
+
+<li>What happens to motor current when mechanical load increases?</li>
+
+<li>What is the difference between scalar V/f control and vector control?</li>
+
+<li>What is the purpose of slip compensation in a VFD?</li>
+
+<li>Why should motor nameplate data be entered correctly into the VFD?</li>
+
+<li>What happens during deceleration of an induction motor?</li>
+
+<li>What are the advantages of variable-frequency speed control?</li>
+
+</ol>
+
+<textarea id="answers"
+placeholder="Enter answers / viva observations here..."></textarea>
+
+</div>
+
+
+<!-- FACULTY EVALUATION -->
+
+<div class="card">
+
+<h2>21. Faculty Evaluation – 10 Marks</h2>
+
+<table>
+
+<tr>
+<th>Assessment Component</th>
+<th>Maximum Marks</th>
+<th>Marks Awarded</th>
+</tr>
+
+<tr>
+<td>Hardware Setup & Safety</td>
+<td>2</td>
+<td><input type="number" min="0" max="2" step="0.5"></td>
+</tr>
+
+<tr>
+<td>VFD Parameter Configuration</td>
+<td>1.5</td>
+<td><input type="number" min="0" max="1.5" step="0.5"></td>
+</tr>
+
+<tr>
+<td>Frequency / Speed Control</td>
+<td>2</td>
+<td><input type="number" min="0" max="2" step="0.5"></td>
+</tr>
+
+<tr>
+<td>Measurement & Observation</td>
+<td>1.5</td>
+<td><input type="number" min="0" max="1.5" step="0.5"></td>
+</tr>
+
+<tr>
+<td>Calculation & Analysis</td>
+<td>1</td>
+<td><input type="number" min="0" max="1" step="0.5"></td>
+</tr>
+
+<tr>
+<td>Result / Discussion</td>
+<td>1</td>
+<td><input type="number" min="0" max="1" step="0.5"></td>
+</tr>
+
+<tr>
+<td>Viva Voce</td>
+<td>1</td>
+<td><input type="number" min="0" max="1" step="0.5"></td>
+</tr>
+
+<tr>
+<th colspan="2">Total</th>
+<th id="totalMarks">0 / 10</th>
+</tr>
+
+</table>
+
+</div>
+
+
+<!-- SAVE / JSON / EVALUATION -->
+
+<div class="card no-print">
+
+<h2>22. Save / Load / Evaluate Experiment</h2>
+
+<button onclick="saveData()">
+💾 Save Experiment
+</button>
+
+<button onclick="loadData()" class="secondary">
+📂 Load Saved Data
+</button>
+
+<button onclick="saveJSON()">
+📄 Save JSON
+</button>
+
+<button onclick="document.getElementById('jsonFileInput').click()" class="secondary">
+📂 Load JSON
+</button>
+
+<input
+    type="file"
+    id="jsonFileInput"
+    accept=".json,application/json"
+    style="display:none"
+    onchange="loadJSON(event)"
+>
+
+<button onclick="evaluateExperiment()" class="warning">
+📝 Evaluate Experiment
+</button>
+
+<button onclick="window.print()" class="warning">
+🖨 Print / Save PDF
+</button>
+
+<button onclick="clearData()" class="danger">
+🗑 Clear Data
+</button>
+
+<div id="evaluationResult"
+     class="success"
+     style="display:none">
+</div>
+
+<div id="saveStatus"
+     class="success"
+     style="display:none">
+Experiment data saved successfully.
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* DATE */
+
+document.getElementById("expDate").value =
+new Date().toISOString().split("T")[0];
+
+
+/* IMAGE PREVIEW */
+
+function imagePreview(inputId,previewId){
+
+document.getElementById(inputId)
+.addEventListener("change",function(){
+
+const file=this.files[0];
+
+if(!file)return;
+
+const reader=new FileReader();
+
+reader.onload=function(e){
+
+const img=document.getElementById(previewId);
+
+img.src=e.target.result;
+
+img.style.display="block";
+
+};
+
+reader.readAsDataURL(file);
+
+});
+
+}
+
+imagePreview("setupImage","setupPreview");
+imagePreview("vfdImage","vfdPreview");
+imagePreview("speedGraph","speedPreview");
+imagePreview("accGraph","accPreview");
+imagePreview("currentGraph","currentPreview");
+
+
+/* NAMEPLATE */
+
+function calculateNameplate(){
+
+let f=parseFloat(document.getElementById("ratedFreq").value);
+
+let p=parseFloat(document.getElementById("poles").value);
+
+let n=parseFloat(document.getElementById("ratedSpeed").value);
+
+let ns=120*f/p;
+
+let slip=((ns-n)/ns)*100;
+
+document.getElementById("nameplateResult").innerHTML=`
+
+<b>Nameplate Calculations</b><br><br>
+
+Synchronous speed = ${ns.toFixed(2)} rpm<br>
+
+Rated rotor speed = ${n.toFixed(2)} rpm<br>
+
+Estimated rated slip = ${slip.toFixed(2)} %
+
+`;
+
+}
+
+
+/* FREQUENCY TABLE */
+
+function calculateFrequencyTable(){
+
+let table=document.getElementById("freqTable");
+
+let rows=table.tBodies[0].rows;
+
+let poles=parseFloat(
+document.getElementById("poles").value
+);
+
+for(let i=0;i<rows.length;i++){
+
+let c=rows[i].cells;
+
+let f=parseFloat(c[1].querySelector("input").value);
+
+let n=parseFloat(c[5].querySelector("input").value);
+
+let ns=120*f/poles;
+
+let slip=ns!==0 ?
+((ns-n)/ns)*100 : 0;
+
+c[6].querySelector("input").value=
+ns.toFixed(2);
+
+c[7].querySelector("input").value=
+slip.toFixed(2);
+
+}
+
+}
+
+
+/* V/F TABLE */
+
+function calculateVFTable(){
+
+let table=document.getElementById("vfTable");
+
+let rows=table.tBodies[0].rows;
+
+let baseFreq=parseFloat(
+document.getElementById("baseFreq").value
+);
+
+let baseVoltage=parseFloat(
+document.getElementById("ratedVoltage").value
+);
+
+for(let i=0;i<rows.length;i++){
+
+let c=rows[i].cells;
+
+let f=parseFloat(c[1].querySelector("input").value);
+
+let v=parseFloat(c[2].querySelector("input").value);
+
+let n=parseFloat(c[4].querySelector("input").value);
+
+let vf=f!==0 ? v/f : 0;
+
+let expectedSpeed=
+120*f/
+parseFloat(document.getElementById("poles").value);
+
+let speedError=
+expectedSpeed!==0 ?
+Math.abs(expectedSpeed-n)/expectedSpeed*100 : 0;
+
+c[3].querySelector("input").value=
+vf.toFixed(3);
+
+c[5].querySelector("input").value=
+speedError.toFixed(2);
+
+}
+
+}
+
+
+/* LOAD TABLE */
+
+function calculateLoadTable(){
+
+let table=document.getElementById("loadTable");
+
+let rows=table.tBodies[0].rows;
+
+let poles=parseFloat(
+document.getElementById("poles").value
+);
+
+for(let i=0;i<rows.length;i++){
+
+let c=rows[i].cells;
+
+let f=parseFloat(c[1].querySelector("input").value);
+
+let torque=parseFloat(c[2].querySelector("input").value);
+
+let n=parseFloat(c[5].querySelector("input").value);
+
+let ns=120*f/poles;
+
+let omega=2*Math.PI*n/60;
+
+let pout=torque*omega;
+
+let slip=((ns-n)/ns)*100;
+
+c[7].querySelector("input").value=
+pout.toFixed(2);
+
+c[8].querySelector("input").value=
+slip.toFixed(2);
+
+}
+
+}
+
+
+/* PERFORMANCE */
+
+function calculatePerformance(){
+
+let f=parseFloat(
+document.getElementById("calcFreq").value
+);
+
+let p=parseFloat(
+document.getElementById("calcPoles").value
+);
+
+let n=parseFloat(
+document.getElementById("calcSpeed").value
+);
+
+let torque=parseFloat(
+document.getElementById("calcTorque").value
+);
+
+let v=parseFloat(
+document.getElementById("calcVoltage").value
+);
+
+let i=parseFloat(
+document.getElementById("calcCurrent").value
+);
+
+let pf=parseFloat(
+document.getElementById("calcPF").value
+);
+
+let ns=120*f/p;
+
+let slip=((ns-n)/ns)*100;
+
+let pin=Math.sqrt(3)*v*i*pf;
+
+let omega=2*Math.PI*n/60;
+
+let pout=torque*omega;
+
+let eta=pin>0 ?
+pout/pin*100 : 0;
+
+document.getElementById("syncSpeed").innerText=
+ns.toFixed(2)+" rpm";
+
+document.getElementById("slipValue").innerText=
+slip.toFixed(2)+" %";
+
+document.getElementById("inputPower").innerText=
+pin.toFixed(2)+" W";
+
+document.getElementById("outputPower").innerText=
+pout.toFixed(2)+" W";
+
+document.getElementById("efficiency").innerText=
+eta.toFixed(2)+" %";
+
+}
+
+
+/* MARK CALCULATION */
+
+document.querySelectorAll(
+'input[type="number"]'
+).forEach(function(input){
+
+input.addEventListener("input",calculateMarks);
+
+});
+
+function calculateMarks(){
+
+let total=0;
+
+document.querySelectorAll(
+'table input[type="number"]'
+).forEach(function(input){
+
+let max=parseFloat(input.max);
+
+let value=parseFloat(input.value);
+
+if(!isNaN(value) && !isNaN(max)){
+total+=Math.min(Math.max(value,0),max);
+}
+
+});
+
+document.getElementById("totalMarks").innerText=
+total.toFixed(1)+" / 10";
+
+}
+
+
+/* =========================================================
+   EXPERIMENT 9 - COMPLETE DATA MANAGEMENT
+   SAVE / LOAD / JSON / EVALUATION
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   BASIC HELPERS
+   --------------------------------------------------------- */
+
+const EXP9_STORAGE_KEY =
+"experiment9_induction_motor";
+
+const EXP9_JSON_STORAGE_KEY =
+"experiment9_induction_motor_json";
+
+let lastEvaluation = null;
+
+
+function cleanText(value){
+
+    return String(value || "").trim();
+
+}
+
+
+function isFilled(value){
+
+    return cleanText(value) !== "";
+
+}
+
+
+function isNumeric(value){
+
+    return value !== "" &&
+           value !== null &&
+           Number.isFinite(parseFloat(value));
+
+}
+
+
+/* ---------------------------------------------------------
+   IMAGE DATA
+   --------------------------------------------------------- */
+
+function getImageData(imageId){
+
+    const img=document.getElementById(imageId);
+
+    if(
+        img &&
+        img.src &&
+        img.src.startsWith("data:image")
+    ){
+
+        return img.src;
+
+    }
+
+    return "";
+
+}
+
+
+function restoreImage(imageId,dataUrl){
+
+    const img=document.getElementById(imageId);
+
+    if(!img)return;
+
+    if(dataUrl && dataUrl.startsWith("data:image")){
+
+        img.src=dataUrl;
+
+        img.style.display="block";
+
+    }
+    else{
+
+        img.removeAttribute("src");
+
+        img.style.display="none";
+
+    }
+
+}
+
+
+/* ---------------------------------------------------------
+   TABLE DATA COLLECTION
+   --------------------------------------------------------- */
+
+function collectTable(tableId){
+
+    const table=document.getElementById(tableId);
+
+    if(!table)return [];
+
+    const rows=[...table.tBodies[0].rows];
+
+    return rows.map(row=>{
+
+        return [...row.querySelectorAll("input")]
+            .map(input=>input.value);
+
+    });
+
+}
+
+
+/* ---------------------------------------------------------
+   RESTORE TABLE DATA
+   --------------------------------------------------------- */
+
+function restoreTable(tableId,tableData){
+
+    const table=document.getElementById(tableId);
+
+    if(!table)return;
+
+    const rows=[...table.tBodies[0].rows];
+
+    /* Clear current values first */
+
+    rows.forEach(row=>{
+
+        row.querySelectorAll("input").forEach(input=>{
+
+            input.value="";
+
+        });
+
+    });
+
+
+    if(!Array.isArray(tableData))return;
+
+
+    tableData.forEach((savedRow,rowIndex)=>{
+
+        if(!rows[rowIndex])return;
+
+        const inputs=
+        [...rows[rowIndex].querySelectorAll("input")];
+
+        if(!Array.isArray(savedRow))return;
+
+        savedRow.forEach((value,colIndex)=>{
+
+            if(inputs[colIndex]){
+
+                inputs[colIndex].value=
+                value ?? "";
+
+            }
+
+        });
+
+    });
+
+}
+
+
+/* ---------------------------------------------------------
+   ACCELERATION / DECELERATION TABLE
+   --------------------------------------------------------- */
+
+function collectGenericTableByHeading(headingText){
+
+    const cards=[...document.querySelectorAll(".card")];
+
+    const card=cards.find(c=>{
+
+        const h2=c.querySelector("h2");
+
+        return h2 &&
+        h2.textContent.includes(headingText);
+
+    });
+
+    if(!card)return [];
+
+    return [...card.querySelectorAll("tbody tr")]
+        .map(row=>{
+
+            return [...row.querySelectorAll("input")]
+                .map(input=>input.value);
+
+        });
+
+}
+
+
+function restoreGenericTableByHeading(
+    headingText,
+    tableData
+){
+
+    const cards=[...document.querySelectorAll(".card")];
+
+    const card=cards.find(c=>{
+
+        const h2=c.querySelector("h2");
+
+        return h2 &&
+        h2.textContent.includes(headingText);
+
+    });
+
+    if(!card)return;
+
+    const rows=[...card.querySelectorAll("tbody tr")];
+
+    rows.forEach(row=>{
+
+        row.querySelectorAll("input").forEach(input=>{
+
+            input.value="";
+
+        });
+
+    });
+
+
+    if(!Array.isArray(tableData))return;
+
+
+    tableData.forEach((savedRow,rowIndex)=>{
+
+        if(!rows[rowIndex])return;
+
+        const inputs=
+        [...rows[rowIndex].querySelectorAll("input")];
+
+        if(!Array.isArray(savedRow))return;
+
+        savedRow.forEach((value,colIndex)=>{
+
+            if(inputs[colIndex]){
+
+                inputs[colIndex].value=
+                value ?? "";
+
+            }
+
+        });
+
+    });
+
+}
+
+
+/* ---------------------------------------------------------
+   TORQUE-SPEED TABLE
+   --------------------------------------------------------- */
+
+function collectTorqueSpeedTable(){
+
+    return collectGenericTableByHeading(
+        "15. Torque-Speed Observation"
+    );
+
+}
+
+
+function restoreTorqueSpeedTable(data){
+
+    restoreGenericTableByHeading(
+        "15. Torque-Speed Observation",
+        data
+    );
+
+}
+
+
+/* ---------------------------------------------------------
+   ACCELERATION TABLE
+   --------------------------------------------------------- */
+
+function collectAccelerationTable(){
+
+    return collectGenericTableByHeading(
+        "14. Acceleration / Deceleration Test"
+    );
+
+}
+
+
+function restoreAccelerationTable(data){
+
+    restoreGenericTableByHeading(
+        "14. Acceleration / Deceleration Test",
+        data
+    );
+
+}
+
+
+/* ---------------------------------------------------------
+   FACULTY MARKS
+   --------------------------------------------------------- */
+
+function collectFacultyMarks(){
+
+    const card=[...document.querySelectorAll(".card")]
+        .find(c=>{
+
+            const h2=c.querySelector("h2");
+
+            return h2 &&
+            h2.textContent.includes(
+                "21. Faculty Evaluation"
+            );
+
+        });
+
+    if(!card)return [];
+
+    return [...card.querySelectorAll(
+        'input[type="number"]'
+    )].map(input=>input.value);
+
+}
+
+
+function restoreFacultyMarks(data){
+
+    const card=[...document.querySelectorAll(".card")]
+        .find(c=>{
+
+            const h2=c.querySelector("h2");
+
+            return h2 &&
+            h2.textContent.includes(
+                "21. Faculty Evaluation"
+            );
+
+        });
+
+    if(!card)return;
+
+    const inputs=[...card.querySelectorAll(
+        'input[type="number"]'
+    )];
+
+    inputs.forEach(input=>{
+
+        input.value="";
+
+    });
+
+    if(!Array.isArray(data))return;
+
+    data.forEach((value,index)=>{
+
+        if(inputs[index]){
+
+            inputs[index].value=value ?? "";
+
+        }
+
+    });
+
+}
+
+
+/* ---------------------------------------------------------
+   COMPLETE JSON DATA COLLECTION
+   --------------------------------------------------------- */
+
+function collectExperiment9JSON(){
+
+    const data={
+
+        experiment:
+        "Experiment 9 - Speed Control of Squirrel-Cage Induction Motor Drive",
+
+        experimentNumber:"9",
+
+        version:"2.0",
+
+        savedAt:
+        new Date().toISOString(),
+
+
+        /* STUDENT DETAILS */
+
+        studentDetails:{
+
+            studentName:
+            document.getElementById("studentName").value,
+
+            regNo:
+            document.getElementById("regNo").value,
+
+            classSection:
+            document.getElementById("classSection").value,
+
+            expDate:
+            document.getElementById("expDate").value,
+
+            batch:
+            document.getElementById("batch").value
+
+        },
+
+
+        /* MOTOR NAMEPLATE */
+
+        motorNameplate:{
+
+            ratedPower:
+            document.getElementById("ratedPower").value,
+
+            ratedVoltage:
+            document.getElementById("ratedVoltage").value,
+
+            ratedCurrent:
+            document.getElementById("ratedCurrent").value,
+
+            ratedFreq:
+            document.getElementById("ratedFreq").value,
+
+            ratedSpeed:
+            document.getElementById("ratedSpeed").value,
+
+            poles:
+            document.getElementById("poles").value,
+
+            pf:
+            document.getElementById("pf").value,
+
+            motorEfficiency:
+            document.getElementById("motorEfficiency").value
+
+        },
+
+
+        /* VFD PARAMETERS */
+
+        vfdParameters:{
+
+            minFreq:
+            document.getElementById("minFreq").value,
+
+            maxFreq:
+            document.getElementById("maxFreq").value,
+
+            baseFreq:
+            document.getElementById("baseFreq").value,
+
+            accTime:
+            document.getElementById("accTime").value,
+
+            decTime:
+            document.getElementById("decTime").value,
+
+            controlMode:
+            document.getElementById("controlMode").value
+
+        },
+
+
+        /* FREQUENCY TABLE */
+
+        frequencyObservation:
+        collectTable("freqTable"),
+
+
+        /* V/F TABLE */
+
+        vfObservation:
+        collectTable("vfTable"),
+
+
+        /* LOAD TABLE */
+
+        loadObservation:
+        collectTable("loadTable"),
+
+
+        /* ACCELERATION / DECELERATION */
+
+        accelerationObservation:
+        collectAccelerationTable(),
+
+
+        /* TORQUE SPEED */
+
+        torqueSpeedObservation:
+        collectTorqueSpeedTable(),
+
+
+        /* PERFORMANCE CALCULATOR */
+
+        performance:{
+
+            calcFreq:
+            document.getElementById("calcFreq").value,
+
+            calcPoles:
+            document.getElementById("calcPoles").value,
+
+            calcSpeed:
+            document.getElementById("calcSpeed").value,
+
+            calcTorque:
+            document.getElementById("calcTorque").value,
+
+            calcVoltage:
+            document.getElementById("calcVoltage").value,
+
+            calcCurrent:
+            document.getElementById("calcCurrent").value,
+
+            calcPF:
+            document.getElementById("calcPF").value,
+
+            syncSpeed:
+            document.getElementById("syncSpeed").innerText,
+
+            slipValue:
+            document.getElementById("slipValue").innerText,
+
+            inputPower:
+            document.getElementById("inputPower").innerText,
+
+            outputPower:
+            document.getElementById("outputPower").innerText,
+
+            efficiency:
+            document.getElementById("efficiency").innerText
+
+        },
+
+
+        /* ANALYSIS */
+
+        analysis:{
+
+            frequency:
+            document.getElementById("analysisFrequency").value,
+
+            slip:
+            document.getElementById("analysisSlip").value,
+
+            vf:
+            document.getElementById("analysisVF").value,
+
+            load:
+            document.getElementById("analysisLoad").value,
+
+            acceleration:
+            document.getElementById("analysisAcceleration").value,
+
+            practical:
+            document.getElementById("analysisPractical").value
+
+        },
+
+
+        /* RESULT */
+
+        result:
+        document.getElementById("resultText").value,
+
+
+        /* POST-LAB ANSWERS */
+
+        postLabAnswers:
+        document.getElementById("answers").value,
+
+
+        /* FACULTY MARKS */
+
+        facultyMarks:
+        collectFacultyMarks(),
+
+        facultyTotal:
+        document.getElementById("totalMarks").innerText,
+
+
+        /* IMAGES */
+
+        images:{
+
+            setup:
+            getImageData("setupPreview"),
+
+            vfd:
+            getImageData("vfdPreview"),
+
+            speedGraph:
+            getImageData("speedPreview"),
+
+            accelerationGraph:
+            getImageData("accPreview"),
+
+            currentGraph:
+            getImageData("currentPreview")
+
+        },
+
+
+        /* AUTOMATIC EVALUATION */
+
+        automaticEvaluation:
+        lastEvaluation
+
+    };
+
+
+    return data;
+
+}
+
+
+/* ---------------------------------------------------------
+   SAVE JSON FILE
+   --------------------------------------------------------- */
+
+function saveJSON(){
+
+    const data=collectExperiment9JSON();
+
+    const json=JSON.stringify(data,null,2);
+
+    const blob=new Blob(
+        [json],
+        {type:"application/json"}
+    );
+
+    const url=
+    URL.createObjectURL(blob);
+
+    const link=
+    document.createElement("a");
+
+    link.href=url;
+
+
+    let reg=
+    cleanText(
+        document.getElementById("regNo").value
+    );
+
+    if(!reg){
+
+        reg="Student";
+
+    }
+
+
+    reg=reg.replace(
+        /[^\w-]+/g,
+        "_"
+    );
+
+
+    link.download=
+    `Experiment9_Induction_Motor_${reg}.json`;
+
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+
+
+    /* Also keep a browser backup */
+
+    try{
+
+        localStorage.setItem(
+            EXP9_JSON_STORAGE_KEY,
+            json
+        );
+
+    }
+    catch(error){
+
+        console.warn(
+            "JSON backup could not be stored in localStorage:",
+            error
+        );
+
+    }
+
+
+    const status=
+    document.getElementById("saveStatus");
+
+    status.innerHTML=
+    "✓ Complete experiment saved as JSON successfully.";
+
+    status.style.display="block";
+
+
+    setTimeout(()=>{
+
+        status.style.display="none";
+
+    },4000);
+
+}
+
+
+/* ---------------------------------------------------------
+   LOAD JSON FILE
+   --------------------------------------------------------- */
+
+function loadJSON(event){
+
+    const file=
+    event.target.files[0];
+
+    if(!file)return;
+
+
+    const reader=
+    new FileReader();
+
+
+    reader.onload=function(e){
+
+        try{
+
+            const data=
+            JSON.parse(e.target.result);
+
+
+            /* Validate file */
+
+            if(
+                data.experimentNumber !== "9"
+            ){
+
+                alert(
+                    "This JSON file does not belong to Experiment 9."
+                );
+
+                return;
+
+            }
+
+
+            restoreExperiment9(data);
+
+
+            alert(
+                "Experiment 9 JSON data loaded successfully."
+            );
+
+        }
+        catch(error){
+
+            alert(
+                "Invalid JSON file.\n\n"+
+                error.message
+            );
+
+        }
+
+
+        /* Allow selecting same file again */
+
+        event.target.value="";
+
+    };
+
+
+    reader.readAsText(file);
+
+}
+
+
+/* ---------------------------------------------------------
+   RESTORE COMPLETE EXPERIMENT
+   --------------------------------------------------------- */
+
+function setValue(id,value){
+
+    const el=
+    document.getElementById(id);
+
+    if(el){
+
+        el.value=value ?? "";
+
+    }
+
+}
+
+
+function restoreExperiment9(data){
+
+    /* STUDENT DETAILS */
+
+    setValue(
+        "studentName",
+        data.studentDetails?.studentName
+    );
+
+    setValue(
+        "regNo",
+        data.studentDetails?.regNo
+    );
+
+    setValue(
+        "classSection",
+        data.studentDetails?.classSection
+    );
+
+    setValue(
+        "expDate",
+        data.studentDetails?.expDate
+    );
+
+    setValue(
+        "batch",
+        data.studentDetails?.batch
+    );
+
+
+    /* MOTOR NAMEPLATE */
+
+    setValue(
+        "ratedPower",
+        data.motorNameplate?.ratedPower
+    );
+
+    setValue(
+        "ratedVoltage",
+        data.motorNameplate?.ratedVoltage
+    );
+
+    setValue(
+        "ratedCurrent",
+        data.motorNameplate?.ratedCurrent
+    );
+
+    setValue(
+        "ratedFreq",
+        data.motorNameplate?.ratedFreq
+    );
+
+    setValue(
+        "ratedSpeed",
+        data.motorNameplate?.ratedSpeed
+    );
+
+    setValue(
+        "poles",
+        data.motorNameplate?.poles
+    );
+
+    setValue(
+        "pf",
+        data.motorNameplate?.pf
+    );
+
+    setValue(
+        "motorEfficiency",
+        data.motorNameplate?.motorEfficiency
+    );
+
+
+    /* VFD PARAMETERS */
+
+    setValue(
+        "minFreq",
+        data.vfdParameters?.minFreq
+    );
+
+    setValue(
+        "maxFreq",
+        data.vfdParameters?.maxFreq
+    );
+
+    setValue(
+        "baseFreq",
+        data.vfdParameters?.baseFreq
+    );
+
+    setValue(
+        "accTime",
+        data.vfdParameters?.accTime
+    );
+
+    setValue(
+        "decTime",
+        data.vfdParameters?.decTime
+    );
+
+    setValue(
+        "controlMode",
+        data.vfdParameters?.controlMode
+    );
+
+
+    /* TABLES */
+
+    restoreTable(
+        "freqTable",
+        data.frequencyObservation
+    );
+
+    restoreTable(
+        "vfTable",
+        data.vfObservation
+    );
+
+    restoreTable(
+        "loadTable",
+        data.loadObservation
+    );
+
+    restoreAccelerationTable(
+        data.accelerationObservation
+    );
+
+    restoreTorqueSpeedTable(
+        data.torqueSpeedObservation
+    );
+
+
+    /* PERFORMANCE */
+
+    setValue(
+        "calcFreq",
+        data.performance?.calcFreq
+    );
+
+    setValue(
+        "calcPoles",
+        data.performance?.calcPoles
+    );
+
+    setValue(
+        "calcSpeed",
+        data.performance?.calcSpeed
+    );
+
+    setValue(
+        "calcTorque",
+        data.performance?.calcTorque
+    );
+
+    setValue(
+        "calcVoltage",
+        data.performance?.calcVoltage
+    );
+
+    setValue(
+        "calcCurrent",
+        data.performance?.calcCurrent
+    );
+
+    setValue(
+        "calcPF",
+        data.performance?.calcPF
+    );
+
+
+    /* ANALYSIS */
+
+    setValue(
+        "analysisFrequency",
+        data.analysis?.frequency
+    );
+
+    setValue(
+        "analysisSlip",
+        data.analysis?.slip
+    );
+
+    setValue(
+        "analysisVF",
+        data.analysis?.vf
+    );
+
+    setValue(
+        "analysisLoad",
+        data.analysis?.load
+    );
+
+    setValue(
+        "analysisAcceleration",
+        data.analysis?.acceleration
+    );
+
+    setValue(
+        "analysisPractical",
+        data.analysis?.practical
+    );
+
+
+    /* RESULT */
+
+    setValue(
+        "resultText",
+        data.result
+    );
+
+
+    /* POST LAB */
+
+    setValue(
+        "answers",
+        data.postLabAnswers
+    );
+
+
+    /* FACULTY MARKS */
+
+    restoreFacultyMarks(
+        data.facultyMarks
+    );
+
+
+    /* IMAGES */
+
+    restoreImage(
+        "setupPreview",
+        data.images?.setup
+    );
+
+    restoreImage(
+        "vfdPreview",
+        data.images?.vfd
+    );
+
+    restoreImage(
+        "speedPreview",
+        data.images?.speedGraph
+    );
+
+    restoreImage(
+        "accPreview",
+        data.images?.accelerationGraph
+    );
+
+    restoreImage(
+        "currentPreview",
+        data.images?.currentGraph
+    );
+
+
+    /* RESTORE EVALUATION */
+
+    if(data.automaticEvaluation){
+
+        lastEvaluation=
+        data.automaticEvaluation;
+
+    }
+
+
+    /* RECALCULATE */
+
+    calculateNameplate();
+
+    calculateFrequencyTable();
+
+    calculateVFTable();
+
+    calculateLoadTable();
+
+    calculatePerformance();
+
+    calculateMarks();
+
+
+    /* DISPLAY PREVIOUS EVALUATION */
+
+    if(lastEvaluation){
+
+        displayEvaluation(
+            lastEvaluation
+        );
+
+    }
+
+}
+
+
+/* ---------------------------------------------------------
+   AUTOMATIC EVALUATION
+   --------------------------------------------------------- */
+
+function evaluateExperiment(){
+
+    let score=0;
+
+    let missing=[];
+
+
+    /* ---------------------------------------------
+       1. STUDENT DETAILS - 1 MARK
+       --------------------------------------------- */
+
+    const studentFields=[
+
+        "studentName",
+        "regNo",
+        "classSection",
+        "expDate",
+        "batch"
+
+    ];
+
+
+    let studentCompleted=
+    studentFields.filter(id=>{
+
+        return isFilled(
+            document.getElementById(id).value
+        );
+
+    }).length;
+
+
+    if(studentCompleted===5){
+
+        score+=1;
+
+    }
+    else if(studentCompleted>=3){
+
+        score+=0.5;
+
+        missing.push(
+            "Complete all student details"
+        );
+
+    }
+    else{
+
+        missing.push(
+            "Student details"
+        );
+
+    }
+
+
+    /* ---------------------------------------------
+       2. HARDWARE SETUP PHOTO - 1 MARK
+       --------------------------------------------- */
+
+    if(
+        getImageData("setupPreview")
+    ){
+
+        score+=1;
+
+    }
+    else{
+
+        missing.push(
+            "Hardware setup photograph"
+        );
+
+    }
+
+
+    /* ---------------------------------------------
+       3. FREQUENCY TABLE - 1.5 MARKS
+       --------------------------------------------- */
+
+    const freqRows=
+    document.querySelectorAll(
+        "#freqTable tbody tr"
+    );
+
+
+    let freqComplete=0;
+
+
+    freqRows.forEach(row=>{
+
+        const inputs=
+        [...row.querySelectorAll("input")];
+
+        /*
+        Frequency,
+        Voltage,
+        Current,
+        Power,
+        Speed
+        */
+
+        const required=[
+            inputs[0],
+            inputs[1],
+            inputs[2],
+            inputs[3],
+            inputs[4]
+        ];
+
+
+        if(
+            required.length===5 &&
+            required.every(input=>
+                isNumeric(input.value)
+            )
+        ){
+
+            freqComplete++;
+
+        }
+
+    });
+
+
+    score+=
+    freqComplete /
+    freqRows.length *
+    1.5;
+
+
+    if(freqComplete<freqRows.length){
+
+        missing.push(
+            `Frequency observation table: ${freqComplete}/${freqRows.length} rows complete`
+        );
+
+    }
+
+
+    /* ---------------------------------------------
+       4. V/F TABLE - 1 MARK
+       --------------------------------------------- */
+
+    const vfRows=
+    document.querySelectorAll(
+        "#vfTable tbody tr"
+    );
+
+
+    let vfComplete=0;
+
+
+    vfRows.forEach(row=>{
+
+        const inputs=
+        [...row.querySelectorAll("input")];
+
+        /*
+        Frequency,
+        Voltage,
+        V/f,
+        Speed
+        */
+
+        const required=[
+
+            inputs[0],
+            inputs[1],
+            inputs[2],
+            inputs[3]
+
+        ];
+
+
+        if(
+            required.length===4 &&
+            required.every(input=>
+                isNumeric(input.value)
+            )
+        ){
+
+            vfComplete++;
+
+        }
+
+    });
+
+
+    score+=
+    vfComplete /
+    vfRows.length *
+    1;
+
+
+    if(vfComplete<vfRows.length){
+
+        missing.push(
+            `V/f observation table: ${vfComplete}/${vfRows.length} rows complete`
+        );
+
+    }
+
+
+    /* ---------------------------------------------
+       5. LOAD TEST - 1.5 MARKS
+       --------------------------------------------- */
+
+    const loadRows=
+    document.querySelectorAll(
+        "#loadTable tbody tr"
+    );
+
+
+    let loadComplete=0;
+
+
+    loadRows.forEach(row=>{
+
+        const inputs=
+        [...row.querySelectorAll("input")];
+
+        /*
+        Frequency,
+        Torque,
+        Voltage,
+        Current,
+        Speed,
+        Input Power,
+        Output Power,
+        Slip
+        */
+
+        if(
+            inputs.length>=8 &&
+            inputs.every(input=>
+                isNumeric(input.value)
+            )
+        ){
+
+            loadComplete++;
+
+        }
+
+    });
+
+
+    score+=
+    loadComplete /
+    loadRows.length *
+    1.5;
+
+
+    if(loadComplete<loadRows.length){
+
+        missing.push(
+            `Load test table: ${loadComplete}/${loadRows.length} rows complete`
+        );
+
+    }
+
+
+    /* ---------------------------------------------
+       6. ACCELERATION / DECELERATION - 0.5 MARK
+       --------------------------------------------- */
+
+    const accRows=
+    document.querySelectorAll(
+        ".card h2"
+    );
+
+
+    const accCard=
+    [...document.querySelectorAll(".card")]
+    .find(card=>{
+
+        const h2=card.querySelector("h2");
+
+        return h2 &&
+        h2.textContent.includes(
+            "14. Acceleration / Deceleration Test"
+        );
+
+    });
+
+
+    let accComplete=0;
+
+
+    if(accCard){
+
+        const rows=
+        accCard.querySelectorAll("tbody tr");
+
+
+        rows.forEach(row=>{
+
+            const inputs=
+            [...row.querySelectorAll("input")];
+
+
+            if(
+                inputs.length>=5 &&
+                inputs.every(input=>
+                    isNumeric(input.value)
+                )
+            ){
+
+                accComplete++;
+
+            }
+
+        });
+
+
+        if(rows.length>0){
+
+            score+=
+            accComplete /
+            rows.length *
+            0.5;
+
+        }
+
+    }
+
+
+    if(accComplete<2){
+
+        missing.push(
+            "Complete acceleration/deceleration observations"
+        );
+
+    }
+
+
+    /* ---------------------------------------------
+       7. TORQUE-SPEED - 0.5 MARK
+       --------------------------------------------- */
+
+    const torqueRows=
+    document.querySelectorAll(
+        ".card"
+    );
+
+
+    const torqueCard=
+    [...torqueRows].find(card=>{
+
+        const h2=card.querySelector("h2");
+
+        return h2 &&
+        h2.textContent.includes(
+            "15. Torque-Speed Observation"
+        );
+
+    });
+
+
+    let torqueComplete=0;
+
+
+    if(torqueCard){
+
+        const rows=
+        torqueCard.querySelectorAll("tbody tr");
+
+
+        rows.forEach(row=>{
+
+            const inputs=
+            [...row.querySelectorAll("input")];
+
+
+            if(
+                inputs.length>=5 &&
+                inputs.slice(0,5).every(input=>
+                    isNumeric(input.value)
+                )
+            ){
+
+                torqueComplete++;
+
+            }
+
+        });
+
+
+        if(rows.length>0){
+
+            score+=
+            torqueComplete /
+            rows.length *
+            0.5;
+
+        }
+
+    }
+
+
+    if(torqueComplete<4){
+
+        missing.push(
+            "Complete torque-speed observations"
+        );
+
+    }
+
+
+    /* ---------------------------------------------
+       8. PERFORMANCE CALCULATOR - 1 MARK
+       --------------------------------------------- */
+
+    const performanceFields=[
+
+        "calcFreq",
+        "calcPoles",
+        "calcSpeed",
+        "calcTorque",
+        "calcVoltage",
+        "calcCurrent",
+        "calcPF"
+
+    ];
+
+
+    const performanceComplete=
+    performanceFields.filter(id=>{
+
+        return isNumeric(
+            document.getElementById(id).value
+        );
+
+    }).length;
+
+
+    if(performanceComplete===7){
+
+        score+=1;
+
+    }
+    else if(performanceComplete>=4){
+
+        score+=0.5;
+
+        missing.push(
+            "Complete performance calculator inputs"
+        );
+
+    }
+    else{
+
+        missing.push(
+            "Performance calculator data"
+        );
+
+    }
+
+
+    /* ---------------------------------------------
+       9. WAVEFORM / MEASUREMENT EVIDENCE - 1 MARK
+       --------------------------------------------- */
+
+    const imageIds=[
+
+        "vfdPreview",
+        "speedPreview",
+        "accPreview",
+        "currentPreview"
+
+    ];
+
+
+    let imageCount=0;
+
+
+    imageIds.forEach(id=>{
+
+        if(getImageData(id)){
+
+            imageCount++;
+
+        }
+
+    });
+
+
+    score+=
+    imageCount /
+    imageIds.length *
+    1;
+
+
+    if(imageCount<imageIds.length){
+
+        missing.push(
+            `Measurement evidence: ${imageCount}/${imageIds.length} images uploaded`
+        );
+
+    }
+
+
+    /* ---------------------------------------------
+       10. ANALYSIS + RESULT + POST-LAB - 1 MARK
+       --------------------------------------------- */
+
+    const analysisIds=[
+
+        "analysisFrequency",
+        "analysisSlip",
+        "analysisVF",
+        "analysisLoad",
+        "analysisAcceleration",
+        "analysisPractical"
+
+    ];
+
+
+    let analysisComplete=0;
+
+
+    analysisIds.forEach(id=>{
+
+        if(
+            cleanText(
+                document.getElementById(id).value
+            ).length>=30
+        ){
+
+            analysisComplete++;
+
+        }
+
+    });
+
+
+    let analysisScore=
+    analysisComplete /
+    analysisIds.length *
+    0.5;
+
+
+    score+=analysisScore;
+
+
+    if(analysisComplete<analysisIds.length){
+
+        missing.push(
+            `Student analysis: ${analysisComplete}/${analysisIds.length} sections complete`
+        );
+
+    }
+
+
+    /* RESULT */
+
+    const resultLength=
+    cleanText(
+        document.getElementById("resultText").value
+    ).length;
+
+
+    if(resultLength>=30){
+
+        score+=0.25;
+
+    }
+    else{
+
+        missing.push(
+            "Complete result statement"
+        );
+
+    }
+
+
+    /* POST LAB */
+
+    const answers=
+    cleanText(
+        document.getElementById("answers").value
+    );
+
+
+    /*
+    Since the page currently uses one textarea
+    for all 15 questions, evaluate based on
+    meaningful answer content.
+    */
+
+    if(answers.length>=100){
+
+        score+=0.25;
+
+    }
+    else if(answers.length>=40){
+
+        score+=0.125;
+
+        missing.push(
+            "Expand post-lab answers"
+        );
+
+    }
+    else{
+
+        missing.push(
+            "Post-lab answers"
+        );
+
+    }
+
+
+    /* ---------------------------------------------
+       FINAL SCORE
+       --------------------------------------------- */
+
+    score=
+    Math.min(
+        10,
+        Math.max(
+            0,
+            score
+        )
+    );
+
+
+    score=
+    Math.round(
+        score*10
+    )/10;
+
+
+    lastEvaluation={
+
+        evaluatedAt:
+        new Date().toISOString(),
+
+        score:score,
+
+        maximum:10,
+
+        missing:missing,
+
+        details:{
+
+            studentDetails:
+            studentCompleted+"/5",
+
+            setupPhoto:
+            getImageData("setupPreview") ?
+            "Completed":"Missing",
+
+            frequencyTable:
+            freqComplete+"/"+freqRows.length,
+
+            vfTable:
+            vfComplete+"/"+vfRows.length,
+
+            loadTable:
+            loadComplete+"/"+loadRows.length,
+
+            acceleration:
+            accComplete+"/2",
+
+            torqueSpeed:
+            torqueComplete+"/4",
+
+            performance:
+            performanceComplete+"/7",
+
+            evidenceImages:
+            imageCount+"/4",
+
+            analysis:
+            analysisComplete+"/6"
+
+        }
+
+    };
+
+
+    displayEvaluation(
+        lastEvaluation
+    );
+
+
+    /* Automatically preserve evaluation */
+
+    try{
+
+        const data=
+        collectExperiment9JSON();
+
+        localStorage.setItem(
+            EXP9_JSON_STORAGE_KEY,
+            JSON.stringify(data)
+        );
+
+    }
+    catch(error){
+
+        console.warn(
+            "Evaluation backup failed:",
+            error
+        );
+
+    }
+
+}
+
+
+/* ---------------------------------------------------------
+   DISPLAY EVALUATION
+   --------------------------------------------------------- */
+
+function displayEvaluation(evaluation){
+
+    const box=
+    document.getElementById(
+        "evaluationResult"
+    );
+
+
+    if(!box)return;
+
+
+    let missingHTML="";
+
+
+    if(
+        evaluation.missing &&
+        evaluation.missing.length>0
+    ){
+
+        missingHTML=`
+
+        <hr>
+
+        <b>Items requiring completion:</b>
+
+        <ul>
+
+        ${evaluation.missing
+            .map(item=>`<li>${item}</li>`)
+            .join("")}
+
+        </ul>
+
+        `;
+
+    }
+    else{
+
+        missingHTML=`
+
+        <hr>
+
+        <b>All required experiment sections
+        are completed.</b>
+
+        `;
+
+    }
+
+
+    box.innerHTML=`
+
+        <h3>Automatic Evaluation</h3>
+
+        <div class="kpi">
+
+            <div>
+                Completion Score
+                <strong>
+                    ${evaluation.score} / 10
+                </strong>
+            </div>
+
+            <div>
+                Student Details
+                <strong>
+                    ${evaluation.details.studentDetails}
+                </strong>
+            </div>
+
+            <div>
+                Frequency Test
+                <strong>
+                    ${evaluation.details.frequencyTable}
+                </strong>
+            </div>
+
+            <div>
+                V/f Test
+                <strong>
+                    ${evaluation.details.vfTable}
+                </strong>
+            </div>
+
+            <div>
+                Load Test
+                <strong>
+                    ${evaluation.details.loadTable}
+                </strong>
+            </div>
+
+            <div>
+                Evidence
+                <strong>
+                    ${evaluation.details.evidenceImages}
+                </strong>
+            </div>
+
+        </div>
+
+        <p>
+        <b>Evaluation note:</b>
+        This automatic evaluation checks completion of the
+        experiment record, observations, uploaded evidence,
+        analysis and calculations. It does not independently
+        verify the scientific correctness of the student's
+        experimental measurements or answers.
+        </p>
+
+        ${missingHTML}
+
+    `;
+
+
+    box.style.display="block";
+
+}
+
+
+/* ---------------------------------------------------------
+   ORIGINAL LOCAL STORAGE SAVE
+   --------------------------------------------------------- */
+
+function collectData(){
+
+    let data={};
+
+
+    document.querySelectorAll(
+        "input,textarea,select"
+    ).forEach(function(el,index){
+
+        if(el.type==="file")return;
+
+        data["field_"+index]=el.value;
+
+    });
+
+
+    return data;
+
+}
+
+
+function saveData(){
+
+    localStorage.setItem(
+        EXP9_STORAGE_KEY,
+        JSON.stringify(
+            collectData()
+        )
+    );
+
+
+    const status=
+    document.getElementById(
+        "saveStatus"
+    );
+
+
+    status.innerHTML=
+    "✓ Experiment data saved in this browser.";
+
+    status.style.display="block";
+
+
+    setTimeout(function(){
+
+        status.style.display="none";
+
+    },3000);
+
+}
+
+
+/* ---------------------------------------------------------
+   ORIGINAL LOCAL STORAGE LOAD
+   --------------------------------------------------------- */
+
+function loadData(){
+
+    const saved=
+    localStorage.getItem(
+        EXP9_STORAGE_KEY
+    );
+
+
+    if(!saved){
+
+        alert(
+            "No saved experiment data found."
+        );
+
+        return;
+
+    }
+
+
+    try{
+
+        const data=
+        JSON.parse(saved);
+
+
+        document.querySelectorAll(
+            "input,textarea,select"
+        ).forEach(function(el,index){
+
+            if(el.type==="file")return;
+
+            if(
+                data["field_"+index] !==
+                undefined
+            ){
+
+                el.value=
+                data["field_"+index];
+
+            }
+
+        });
+
+
+        calculateNameplate();
+
+        calculateFrequencyTable();
+
+        calculateVFTable();
+
+        calculateLoadTable();
+
+        calculatePerformance();
+
+        calculateMarks();
+
+
+        alert(
+            "Saved experiment data loaded."
+        );
+
+    }
+    catch(error){
+
+        alert(
+            "Unable to load saved data.\n\n"+
+            error.message
+        );
+
+    }
+
+}
+
+
+/* ---------------------------------------------------------
+   CLEAR ALL DATA
+   --------------------------------------------------------- */
+
+function clearData(){
+
+    if(!confirm(
+        "Clear all Experiment 9 data, including saved JSON backup?"
+    )){
+
+        return;
+
+    }
+
+
+    localStorage.removeItem(
+        EXP9_STORAGE_KEY
+    );
+
+    localStorage.removeItem(
+        EXP9_JSON_STORAGE_KEY
+    );
+
+
+    lastEvaluation=null;
+
+
+    location.reload();
+
+}
+
+
+/* ---------------------------------------------------------
+   INITIAL CALCULATIONS
+   --------------------------------------------------------- */
+
+calculateNameplate();
+
+calculateFrequencyTable();
+
+calculateVFTable();
+
+calculateLoadTable();
+
+calculatePerformance();
+
+calculateMarks();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,3161 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Experiment 6 - Speed Control of BLDC Motor Drive</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#071018;
+    color:#e8f1f8;
+    line-height:1.5;
+}
+
+header{
+    background:linear-gradient(135deg,#0d2535,#123c52);
+    padding:25px;
+    text-align:center;
+    border-bottom:2px solid #19c5ff;
+}
+
+header h1{
+    margin:0;
+    font-size:28px;
+    color:#19c5ff;
+}
+
+header p{
+    margin:7px 0 0;
+    color:#b8d8e8;
+}
+
+.container{
+    max-width:1250px;
+    margin:auto;
+    padding:20px;
+}
+
+.card{
+    background:#0d1b26;
+    border:1px solid #214052;
+    border-radius:12px;
+    padding:20px;
+    margin-bottom:20px;
+    box-shadow:0 4px 18px rgba(0,0,0,.25);
+}
+
+.card h2{
+    margin-top:0;
+    color:#19c5ff;
+    border-bottom:1px solid #234656;
+    padding-bottom:8px;
+}
+
+.card h3{
+    color:#79dcff;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:14px;
+}
+
+label{
+    display:block;
+    font-weight:bold;
+    color:#b9d8e7;
+    margin-bottom:5px;
+}
+
+input,select,textarea{
+    width:100%;
+    padding:10px;
+    background:#07141d;
+    color:#fff;
+    border:1px solid #315466;
+    border-radius:7px;
+}
+
+textarea{
+    min-height:100px;
+    resize:vertical;
+}
+
+button{
+    background:#19c5ff;
+    color:#031018;
+    border:0;
+    padding:11px 18px;
+    border-radius:7px;
+    cursor:pointer;
+    font-weight:bold;
+    margin:5px;
+}
+
+button:hover{
+    opacity:.85;
+}
+
+button.secondary{
+    background:#304858;
+    color:#fff;
+}
+
+button.danger{
+    background:#d9534f;
+    color:#fff;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:12px;
+}
+
+th,td{
+    border:1px solid #315466;
+    padding:9px;
+    text-align:center;
+}
+
+th{
+    background:#123344;
+    color:#7ee2ff;
+}
+
+td input,td select{
+    min-width:80px;
+}
+
+.formula{
+    background:#07141d;
+    border-left:4px solid #19c5ff;
+    padding:12px;
+    margin:8px 0;
+    font-family:"Courier New",monospace;
+}
+
+.note{
+    background:#172b36;
+    border-left:4px solid #ffc107;
+    padding:12px;
+    margin:12px 0;
+}
+
+.success{
+    background:#102e24;
+    border-left:4px solid #21d07a;
+    padding:12px;
+    margin-top:12px;
+}
+
+.upload-box{
+    border:2px dashed #315466;
+    padding:18px;
+    text-align:center;
+    border-radius:10px;
+    margin-top:10px;
+}
+
+.preview{
+    max-width:100%;
+    max-height:400px;
+    margin-top:12px;
+    border:1px solid #315466;
+    border-radius:8px;
+}
+
+.score{
+    font-size:28px;
+    color:#21d07a;
+    font-weight:bold;
+}
+
+.badge{
+    display:inline-block;
+    padding:5px 10px;
+    border-radius:20px;
+    background:#123c52;
+    color:#7ee2ff;
+    margin:3px;
+}
+
+.small{
+    font-size:13px;
+    color:#9db5c3;
+}
+
+@media(max-width:700px){
+    header h1{font-size:21px}
+    .container{padding:10px}
+    .card{padding:14px}
+}
+
+@media print{
+    body{
+        background:white;
+        color:black;
+    }
+
+    .card{
+        background:white;
+        color:black;
+        border:1px solid #aaa;
+        box-shadow:none;
+    }
+
+    button,.no-print{
+        display:none!important;
+    }
+
+    input,textarea,select{
+        color:black;
+        background:white;
+        border:1px solid #777;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>VIRTUAL POWER ELECTRONICS & DRIVES LABORATORY</h1>
+<p>Experiment 6 – Speed Control of BLDC Motor Drive</p>
+</header>
+
+<div class="container">
+
+<!-- STUDENT DETAILS -->
+<div class="card">
+<h2>1. Student Details</h2>
+
+<div class="grid">
+
+<div>
+<label>Name</label>
+<input id="studentName" placeholder="Enter student name">
+</div>
+
+<div>
+<label>Register Number</label>
+<input id="regNo" placeholder="Enter register number">
+</div>
+
+<div>
+<label>Class / Section</label>
+<input id="classSection" placeholder="Class / Section">
+</div>
+
+<div>
+<label>Date</label>
+<input type="date" id="expDate">
+</div>
+
+</div>
+</div>
+
+
+<!-- AIM -->
+<div class="card">
+<h2>2. Aim</h2>
+
+<p>
+To simulate and study the <b>speed control of a Brushless DC (BLDC)
+motor drive</b> using PWM control and electronic commutation, and to
+analyze the effect of PWM duty ratio and load torque on motor speed,
+current and electromagnetic torque.
+</p>
+</div>
+
+
+<!-- OBJECTIVES -->
+<div class="card">
+<h2>3. Learning Objectives</h2>
+
+<ul>
+<li>Understand the construction and operating principle of a BLDC motor.</li>
+<li>Understand electronic commutation using Hall-effect position sensors.</li>
+<li>Understand six-step inverter operation.</li>
+<li>Generate PWM signals for BLDC speed control.</li>
+<li>Study the relationship between PWM duty ratio and motor speed.</li>
+<li>Analyze the effect of load torque on speed and current.</li>
+<li>Observe phase currents, Hall signals, speed and electromagnetic torque.</li>
+<li>Understand closed-loop speed control of a BLDC motor.</li>
+</ul>
+</div>
+
+
+<!-- APPARATUS -->
+<div class="card">
+<h2>4. Software / Simulink Blocks Required</h2>
+
+<div>
+<span class="badge">MATLAB</span>
+<span class="badge">Simulink</span>
+<span class="badge">Simscape Electrical</span>
+<span class="badge">BLDC Motor</span>
+<span class="badge">Universal Bridge</span>
+<span class="badge">Hall Sensors</span>
+<span class="badge">PWM</span>
+<span class="badge">Scope</span>
+<span class="badge">powergui</span>
+</div>
+
+<h3>Recommended Blocks</h3>
+
+<ul>
+<li>DC Voltage Source</li>
+<li>Three-Phase Inverter / Universal Bridge</li>
+<li>BLDC Motor</li>
+<li>Hall Effect Position Sensors</li>
+<li>Six-Step Commutation Logic</li>
+<li>PWM Generator</li>
+<li>Speed Measurement</li>
+<li>Current Measurement</li>
+<li>Torque Measurement</li>
+<li>Mechanical Load</li>
+<li>Scope</li>
+<li>powergui</li>
+</ul>
+</div>
+
+
+<!-- THEORY -->
+<div class="card">
+<h2>5. Theory</h2>
+
+<p>
+A Brushless DC motor is a permanent-magnet synchronous motor in which
+mechanical commutation using brushes and a commutator is replaced by
+electronic commutation.
+</p>
+
+<p>
+The rotor position is generally detected using Hall-effect sensors.
+The Hall signals are used to select the appropriate inverter switches.
+</p>
+
+<h3>Six-Step Electronic Commutation</h3>
+
+<table>
+<thead>
+<tr>
+<th>Hall A</th>
+<th>Hall B</th>
+<th>Hall C</th>
+<th>Typical Energized Phases</th>
+</tr>
+</thead>
+
+<tbody>
+<tr><td>1</td><td>0</td><td>1</td><td>A+ , B−</td></tr>
+<tr><td>1</td><td>0</td><td>0</td><td>A+ , C−</td></tr>
+<tr><td>1</td><td>1</td><td>0</td><td>B+ , C−</td></tr>
+<tr><td>0</td><td>1</td><td>0</td><td>B+ , A−</td></tr>
+<tr><td>0</td><td>1</td><td>1</td><td>C+ , A−</td></tr>
+<tr><td>0</td><td>0</td><td>1</td><td>C+ , B−</td></tr>
+</tbody>
+</table>
+
+<p class="small">
+The exact Hall sequence and switch assignment depend on the motor
+phase sequence and inverter convention used in the Simulink model.
+</p>
+
+<h3>PWM Speed Control</h3>
+
+<div class="formula">
+D = Ton / T
+</div>
+
+<div class="formula">
+fs = 1 / T
+</div>
+
+<p>
+Increasing the PWM duty ratio increases the average voltage applied to
+the motor phases and generally increases motor speed, subject to
+back-EMF, load torque and motor-drive losses.
+</p>
+
+<h3>BLDC Motor Equations</h3>
+
+<div class="formula">
+Eb = Ke × ω
+</div>
+
+<div class="formula">
+Te = Kt × I
+</div>
+
+<div class="formula">
+ω = 2πN / 60
+</div>
+
+<div class="formula">
+Pmech = Te × ω
+</div>
+
+<div class="formula">
+Pin = Vdc × Idc
+</div>
+
+<div class="formula">
+η = (Pmech / Pin) × 100
+</div>
+
+<div class="note">
+<b>Important:</b> The relationship between duty ratio and speed is not
+perfectly linear in a practical BLDC drive because speed also depends
+on back EMF, load torque, winding resistance, inductance, commutation,
+controller action and losses.
+</div>
+</div>
+
+
+<!-- MODEL UPLOAD -->
+<div class="card">
+<h2>6. Simulink Model Upload</h2>
+
+<p>
+Build the BLDC motor drive in MATLAB/Simulink and upload the complete
+model screenshot.
+</p>
+
+<div class="upload-box">
+
+<input type="file"
+       accept="image/*"
+       onchange="previewImage(this,'modelPreview')">
+
+<img id="modelPreview"
+     class="preview"
+     style="display:none">
+
+</div>
+
+<h3>Recommended Model Structure</h3>
+
+<div class="formula">
+DC Source
+↓
+Three-Phase Inverter
+↓
+BLDC Motor
+↓
+Mechanical Load
+<br><br>
+Hall Sensors → Commutation Logic → Inverter Gate Signals
+<br><br>
+Speed Reference → Speed Controller → PWM Duty Ratio
+</div>
+</div>
+
+
+<!-- PARAMETERS -->
+<div class="card">
+<h2>7. BLDC Drive Parameters</h2>
+
+<div class="grid">
+
+<div>
+<label>DC Bus Voltage Vdc (V)</label>
+<input type="number"
+       id="vdc"
+       value="48"
+       step="0.1"
+       oninput="calculate()">
+</div>
+
+<div>
+<label>PWM Frequency (Hz)</label>
+<input type="number"
+       id="freq"
+       value="10000"
+       step="100"
+       oninput="calculate()">
+</div>
+
+<div>
+<label>PWM Duty Ratio (%)</label>
+<input type="number"
+       id="duty"
+       value="60"
+       min="0"
+       max="100"
+       oninput="calculate()">
+</div>
+
+<div>
+<label>Reference Speed (RPM)</label>
+<input type="number"
+       id="refSpeed"
+       value="1500"
+       oninput="calculate()">
+</div>
+
+<div>
+<label>Motor Resistance (Ω)</label>
+<input type="number"
+       id="resistance"
+       value="0.8"
+       step="0.01">
+</div>
+
+<div>
+<label>Phase Inductance (H)</label>
+<input type="number"
+       id="inductance"
+       value="0.001"
+       step="0.0001">
+</div>
+
+<div>
+<label>Back EMF Constant Ke</label>
+<input type="number"
+       id="ke"
+       value="0.05"
+       step="0.001">
+</div>
+
+<div>
+<label>Torque Constant Kt (N·m/A)</label>
+<input type="number"
+       id="kt"
+       value="0.05"
+       step="0.001">
+</div>
+
+<div>
+<label>Load Torque (N·m)</label>
+<input type="number"
+       id="loadTorque"
+       value="0.5"
+       step="0.01">
+</div>
+
+</div>
+
+<div class="success" id="theoryOutput">
+Theoretical values will appear here.
+</div>
+</div>
+
+
+<!-- OPEN LOOP / CLOSED LOOP -->
+<div class="card">
+<h2>8. Speed Control Mode</h2>
+
+<div class="grid">
+
+<div>
+<label>Control Mode</label>
+
+<select id="controlMode">
+<option>Open Loop PWM</option>
+<option>Closed Loop Speed Control</option>
+</select>
+</div>
+
+<div>
+<label>Speed Reference (RPM)</label>
+
+<input type="number"
+       id="speedReference"
+       value="1500">
+</div>
+
+<div>
+<label>Initial Duty Ratio (%)</label>
+
+<input type="number"
+       id="initialDuty"
+       value="40"
+       min="0"
+       max="100">
+</div>
+
+</div>
+
+<div class="note">
+In open-loop control, the duty ratio is directly specified.
+In closed-loop speed control, measured motor speed is compared with
+the reference speed and the controller adjusts the PWM duty ratio.
+</div>
+</div>
+
+
+<!-- CLOSED LOOP -->
+<div class="card">
+<h2>9. Closed-Loop Speed Controller</h2>
+
+<div class="grid">
+
+<div>
+<label>Speed Reference (RPM)</label>
+<input type="number" id="clRef" value="1500">
+</div>
+
+<div>
+<label>Measured Speed (RPM)</label>
+<input type="number"
+       id="clMeasured"
+       value="1400"
+       oninput="calculateController()">
+</div>
+
+<div>
+<label>Kp</label>
+<input type="number"
+       id="kp"
+       value="0.02"
+       step="0.001"
+       oninput="calculateController()">
+</div>
+
+<div>
+<label>Ki</label>
+<input type="number"
+       id="ki"
+       value="0.01"
+       step="0.001"
+       oninput="calculateController()">
+</div>
+
+</div>
+
+<div class="formula">
+Speed Error = ωref − ωactual
+</div>
+
+<div class="success" id="controllerOutput">
+Controller output will appear here.
+</div>
+
+<div class="note">
+For the actual Simulink model, implement a PI controller with suitable
+output saturation and anti-windup. The calculated value here is only
+for educational observation.
+</div>
+</div>
+
+
+<!-- PROCEDURE -->
+<div class="card">
+<h2>10. Procedure</h2>
+
+<ol>
+<li>Open MATLAB and Simulink.</li>
+<li>Create a new BLDC motor drive model.</li>
+<li>Connect a DC voltage source to a three-phase inverter.</li>
+<li>Connect the three-phase inverter to the BLDC motor.</li>
+<li>Connect a mechanical load to the motor shaft.</li>
+<li>Use Hall sensors to obtain rotor position information.</li>
+<li>Connect Hall signals to the six-step commutation logic.</li>
+<li>Generate PWM pulses for controlling the inverter switches.</li>
+<li>Set the PWM frequency and initial duty ratio.</li>
+<li>Run the simulation.</li>
+<li>Observe Hall signals, gate pulses, phase currents, speed and torque.</li>
+<li>Increase the PWM duty ratio and repeat the simulation.</li>
+<li>Apply different load torques and observe the speed response.</li>
+<li>Implement closed-loop speed control using a PI controller.</li>
+<li>Compare reference speed and actual motor speed.</li>
+<li>Record the observations in the tables.</li>
+</ol>
+</div>
+
+
+<!-- DUTY TABLE -->
+<div class="card">
+<h2>11. PWM Duty Ratio vs Speed Observation</h2>
+
+<table>
+<thead>
+<tr>
+<th>Trial</th>
+<th>Duty (%)</th>
+<th>Vavg (V)</th>
+<th>Speed Reference (RPM)</th>
+<th>Measured Speed (RPM)</th>
+<th>Phase Current (A)</th>
+<th>Torque (N·m)</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td>1</td>
+<td><input type="number" value="30"></td>
+<td><input type="number"></td>
+<td><input type="number" value="1000"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+</tr>
+
+<tr>
+<td>2</td>
+<td><input type="number" value="40"></td>
+<td><input type="number"></td>
+<td><input type="number" value="1200"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+</tr>
+
+<tr>
+<td>3</td>
+<td><input type="number" value="50"></td>
+<td><input type="number"></td>
+<td><input type="number" value="1400"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+</tr>
+
+<tr>
+<td>4</td>
+<td><input type="number" value="60"></td>
+<td><input type="number"></td>
+<td><input type="number" value="1600"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+</tr>
+
+<tr>
+<td>5</td>
+<td><input type="number" value="70"></td>
+<td><input type="number"></td>
+<td><input type="number" value="1800"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+</tr>
+
+</tbody>
+</table>
+</div>
+
+
+<!-- LOAD TEST -->
+<div class="card">
+<h2>12. Load Torque vs Speed Observation</h2>
+
+<table>
+<thead>
+<tr>
+<th>Trial</th>
+<th>Load Torque (N·m)</th>
+<th>Duty (%)</th>
+<th>Measured Speed (RPM)</th>
+<th>DC Current (A)</th>
+<th>Electromagnetic Torque (N·m)</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td>1</td>
+<td><input type="number" value="0.2"></td>
+<td><input type="number" value="60"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+</tr>
+
+<tr>
+<td>2</td>
+<td><input type="number" value="0.4"></td>
+<td><input type="number" value="60"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+</tr>
+
+<tr>
+<td>3</td>
+<td><input type="number" value="0.6"></td>
+<td><input type="number" value="60"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+</tr>
+
+<tr>
+<td>4</td>
+<td><input type="number" value="0.8"></td>
+<td><input type="number" value="60"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+<td><input type="number"></td>
+</tr>
+
+</tbody>
+</table>
+</div>
+
+
+<!-- HALL TABLE -->
+<div class="card">
+<h2>13. Hall Sensor / Commutation Observation</h2>
+
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Hall A</th>
+<th>Hall B</th>
+<th>Hall C</th>
+<th>Conducting Phases</th>
+<th>Switching State Observed</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>A+ / B−</td>
+<td><input></td>
+</tr>
+
+<tr>
+<td>2</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>A+ / C−</td>
+<td><input></td>
+</tr>
+
+<tr>
+<td>3</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>B+ / C−</td>
+<td><input></td>
+</tr>
+
+<tr>
+<td>4</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>B+ / A−</td>
+<td><input></td>
+</tr>
+
+<tr>
+<td>5</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>C+ / A−</td>
+<td><input></td>
+</tr>
+
+<tr>
+<td>6</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>C+ / B−</td>
+<td><input></td>
+</tr>
+
+</tbody>
+</table>
+</div>
+
+
+<!-- MAIN OBSERVATION -->
+<div class="card">
+<h2>14. Main Observation Table</h2>
+
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Measured Value</th>
+<th>Unit</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td>DC Bus Voltage</td>
+<td><input type="number" id="obsVdc"></td>
+<td>V</td>
+</tr>
+
+<tr>
+<td>DC Bus Current</td>
+<td><input type="number" id="obsIdc"></td>
+<td>A</td>
+</tr>
+
+<tr>
+<td>Motor Speed</td>
+<td><input type="number" id="obsSpeed"></td>
+<td>RPM</td>
+</tr>
+
+<tr>
+<td>Phase Current</td>
+<td><input type="number" id="obsCurrent"></td>
+<td>A</td>
+</tr>
+
+<tr>
+<td>Electromagnetic Torque</td>
+<td><input type="number" id="obsTorque"></td>
+<td>N·m</td>
+</tr>
+
+<tr>
+<td>Mechanical Output Power</td>
+<td><input type="number" id="obsPower"></td>
+<td>W</td>
+</tr>
+
+<tr>
+<td>Efficiency</td>
+<td><input type="number" id="obsEfficiency"></td>
+<td>%</td>
+</tr>
+
+</tbody>
+</table>
+</div>
+
+
+<!-- PERFORMANCE CALCULATOR -->
+<div class="card">
+<h2>15. Automatic Performance Calculation</h2>
+
+<div class="grid">
+
+<div>
+<label>DC Bus Voltage (V)</label>
+<input type="number"
+       id="calcVdc"
+       value="48"
+       oninput="calculatePerformance()">
+</div>
+
+<div>
+<label>DC Bus Current (A)</label>
+<input type="number"
+       id="calcIdc"
+       value="5"
+       oninput="calculatePerformance()">
+</div>
+
+<div>
+<label>Speed (RPM)</label>
+<input type="number"
+       id="calcSpeed"
+       value="1500"
+       oninput="calculatePerformance()">
+</div>
+
+<div>
+<label>Torque (N·m)</label>
+<input type="number"
+       id="calcTorque"
+       value="1"
+       oninput="calculatePerformance()">
+</div>
+
+</div>
+
+<div class="success" id="performance">
+Calculated performance will appear here.
+</div>
+</div>
+
+
+<!-- WAVEFORMS -->
+<div class="card">
+<h2>16. Simulink Waveform Upload</h2>
+
+<p>Upload screenshots of:</p>
+
+<ul>
+<li>Hall sensor signals</li>
+<li>Six-step inverter gate pulses</li>
+<li>Three-phase current</li>
+<li>Back EMF</li>
+<li>Motor speed</li>
+<li>Electromagnetic torque</li>
+<li>DC-link current</li>
+<li>Speed reference and actual speed</li>
+<li>PWM duty-ratio response</li>
+</ul>
+
+<div class="upload-box">
+<label>Hall / Gate / Phase Current Waveforms</label>
+
+<input type="file"
+       accept="image/*"
+       onchange="previewImage(this,'wavePreview1')">
+
+<img id="wavePreview1"
+     class="preview"
+     style="display:none">
+</div>
+
+<div class="upload-box">
+<label>Speed / Torque Response</label>
+
+<input type="file"
+       accept="image/*"
+       onchange="previewImage(this,'wavePreview2')">
+
+<img id="wavePreview2"
+     class="preview"
+     style="display:none">
+</div>
+
+<div class="upload-box">
+<label>Closed-Loop Speed Response</label>
+
+<input type="file"
+       accept="image/*"
+       onchange="previewImage(this,'wavePreview3')">
+
+<img id="wavePreview3"
+     class="preview"
+     style="display:none">
+</div>
+
+</div>
+
+
+<!-- ANALYSIS -->
+<div class="card">
+<h2>17. Analysis of Results</h2>
+
+<label>Effect of PWM Duty Ratio on Speed</label>
+<textarea id="analysisDuty"
+placeholder="Explain the relationship between PWM duty ratio and BLDC motor speed."></textarea>
+
+<label>Effect of Load Torque</label>
+<textarea id="analysisLoad"
+placeholder="Explain how increasing load torque affects speed and current."></textarea>
+
+<label>Hall Sensor and Commutation</label>
+<textarea id="analysisHall"
+placeholder="Explain the role of Hall sensors in electronic commutation."></textarea>
+
+<label>Closed-Loop Speed Control</label>
+<textarea id="analysisClosed"
+placeholder="Compare reference speed and actual speed and discuss the PI controller response."></textarea>
+
+<label>Transient Response</label>
+<textarea id="analysisTransient"
+placeholder="Discuss rise time, settling time, overshoot and speed recovery after load change."></textarea>
+
+</div>
+
+
+<!-- RESULT -->
+<div class="card">
+<h2>18. Result</h2>
+
+<textarea id="result"
+style="min-height:120px"
+placeholder="Enter the final result of the experiment."></textarea>
+
+<div class="success">
+
+<b>Suggested Result:</b><br>
+
+The BLDC motor drive was successfully simulated using electronic
+six-step commutation and PWM control. The effect of PWM duty ratio
+and load torque on motor speed, current and electromagnetic torque
+was studied. Hall sensor signals were used for electronic
+commutation, and closed-loop speed control was studied using a
+speed feedback controller.
+
+</div>
+</div>
+
+
+<!-- POST LAB -->
+<div class="card">
+<h2>19. Post-Lab Questions</h2>
+
+<ol>
+
+<li>What is a BLDC motor?</li>
+
+<li>Why are brushes and a mechanical commutator not required in a BLDC motor?</li>
+
+<li>What is the function of Hall sensors?</li>
+
+<li>What is six-step commutation?</li>
+
+<li>How does PWM control the speed of a BLDC motor?</li>
+
+<li>What happens to the motor speed when the load torque increases?</li>
+
+<li>Why is a three-phase inverter used in a BLDC drive?</li>
+
+<li>What is the purpose of closed-loop speed control?</li>
+
+<li>What is the function of the PI controller in a speed-control loop?</li>
+
+<li>Why are dead time and proper gate interlocking required in the inverter?</li>
+
+</ol>
+
+<div class="grid">
+
+<div>
+<label>Q1 Answer</label>
+<textarea></textarea>
+</div>
+
+<div>
+<label>Q2 Answer</label>
+<textarea></textarea>
+</div>
+
+<div>
+<label>Q3 Answer</label>
+<textarea></textarea>
+</div>
+
+<div>
+<label>Q4 Answer</label>
+<textarea></textarea>
+</div>
+
+<div>
+<label>Q5 Answer</label>
+<textarea></textarea>
+</div>
+
+<div>
+<label>Q6 Answer</label>
+<textarea></textarea>
+</div>
+
+<div>
+<label>Q7 Answer</label>
+<textarea></textarea>
+</div>
+
+<div>
+<label>Q8 Answer</label>
+<textarea></textarea>
+</div>
+
+<div>
+<label>Q9 Answer</label>
+<textarea></textarea>
+</div>
+
+<div>
+<label>Q10 Answer</label>
+<textarea></textarea>
+</div>
+
+</div>
+</div>
+
+
+<!-- FACULTY -->
+<div class="card">
+<h2>20. Faculty Evaluation</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>Assessment Component</th>
+<th>Maximum Marks</th>
+<th>Marks Awarded</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td>BLDC Simulink Model</td>
+<td>2</td>
+<td><input type="number" min="0" max="2" class="mark"></td>
+</tr>
+
+<tr>
+<td>Hall Sensor / Commutation</td>
+<td>2</td>
+<td><input type="number" min="0" max="2" class="mark"></td>
+</tr>
+
+<tr>
+<td>PWM Speed Control</td>
+<td>2</td>
+<td><input type="number" min="0" max="2" class="mark"></td>
+</tr>
+
+<tr>
+<td>Observation & Calculation</td>
+<td>1</td>
+<td><input type="number" min="0" max="1" class="mark"></td>
+</tr>
+
+<tr>
+<td>Waveform Analysis</td>
+<td>1</td>
+<td><input type="number" min="0" max="1" class="mark"></td>
+</tr>
+
+<tr>
+<td>Viva / Result</td>
+<td>2</td>
+<td><input type="number" min="0" max="2" class="mark"></td>
+</tr>
+
+</tbody>
+
+</table>
+
+<button onclick="calculateMarks()">Calculate Marks</button>
+
+<div class="score" id="totalMarks">
+Total: 0 / 10
+</div>
+
+</div>
+
+
+<!-- SAVE / JSON / EVALUATION -->
+<div class="card no-print">
+
+<h2>21. Save / Load / Evaluate / Print</h2>
+
+<button onclick="saveData()">
+Save Experiment
+</button>
+
+<button onclick="loadData()" class="secondary">
+Load Saved Data
+</button>
+
+<button onclick="saveJSON()">
+Save JSON
+</button>
+
+<button onclick="document.getElementById('jsonFileInput').click()"
+        class="secondary">
+Load JSON
+</button>
+
+<input type="file"
+       id="jsonFileInput"
+       accept=".json,application/json"
+       style="display:none"
+       onchange="loadJSON(event)">
+
+<button onclick="evaluateExperiment()">
+Evaluate Experiment
+</button>
+
+<button onclick="window.print()" class="secondary">
+Print / Save PDF
+</button>
+
+<button onclick="clearData()" class="danger">
+Clear Data
+</button>
+
+<p id="saveStatus" class="small"></p>
+
+<div id="evaluationResult"
+     class="success"
+     style="display:none;">
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* DATE */
+document.getElementById("expDate").value =
+new Date().toISOString().split("T")[0];
+
+
+/* IMAGE PREVIEW */
+function previewImage(input,id){
+
+    const file=input.files[0];
+
+    const img=document.getElementById(id);
+
+    if(file){
+
+        const reader=new FileReader();
+
+        reader.onload=function(e){
+
+            img.src=e.target.result;
+
+            img.style.display="block";
+
+        };
+
+        reader.readAsDataURL(file);
+    }
+}
+
+
+/* THEORY */
+function calculate(){
+
+    const Vdc =
+        parseFloat(document.getElementById("vdc").value)||0;
+
+    const duty =
+        parseFloat(document.getElementById("duty").value)||0;
+
+    const freq =
+        parseFloat(document.getElementById("freq").value)||0;
+
+    const ref =
+        parseFloat(document.getElementById("refSpeed").value)||0;
+
+    const D=duty/100;
+
+    const Vavg=Vdc*D;
+
+    const period=freq>0 ? 1/freq : 0;
+
+    document.getElementById("theoryOutput").innerHTML=
+
+        "<b>Calculated PWM Parameters</b><br><br>"+
+
+        "Duty Ratio = "+D.toFixed(3)+"<br>"+
+
+        "PWM Period = "+period.toExponential(3)+" s<br>"+
+
+        "Average Applied Voltage ≈ "+Vavg.toFixed(2)+" V<br>"+
+
+        "Reference Speed = "+ref.toFixed(0)+" RPM";
+}
+
+
+/* PI CONTROLLER */
+function calculateController(){
+
+    const ref =
+        parseFloat(document.getElementById("clRef").value)||0;
+
+    const actual =
+        parseFloat(document.getElementById("clMeasured").value)||0;
+
+    const kp =
+        parseFloat(document.getElementById("kp").value)||0;
+
+    const ki =
+        parseFloat(document.getElementById("ki").value)||0;
+
+    const error=ref-actual;
+
+    const proportional=kp*error;
+
+    const integral=ki*error;
+
+    const output=proportional+integral;
+
+    document.getElementById("controllerOutput").innerHTML=
+
+        "<b>Speed Controller Calculation</b><br><br>"+
+
+        "Speed Error = "+error.toFixed(2)+" RPM<br>"+
+
+        "Proportional Term = "+proportional.toFixed(4)+"<br>"+
+
+        "Integral Contribution = "+integral.toFixed(4)+"<br>"+
+
+        "Controller Output = "+output.toFixed(4);
+}
+
+
+/* PERFORMANCE */
+function calculatePerformance(){
+
+    const V =
+        parseFloat(document.getElementById("calcVdc").value)||0;
+
+    const I =
+        parseFloat(document.getElementById("calcIdc").value)||0;
+
+    const speed =
+        parseFloat(document.getElementById("calcSpeed").value)||0;
+
+    const torque =
+        parseFloat(document.getElementById("calcTorque").value)||0;
+
+    const omega =
+        2*Math.PI*speed/60;
+
+    const Pin =
+        Math.abs(V*I);
+
+    const Pout =
+        Math.abs(torque*omega);
+
+    const eta =
+        Pin>0 ? Pout/Pin*100 : 0;
+
+    document.getElementById("performance").innerHTML=
+
+        "<b>BLDC Drive Performance</b><br><br>"+
+
+        "Angular Speed = "+omega.toFixed(3)+" rad/s<br>"+
+
+        "DC Input Power = "+Pin.toFixed(2)+" W<br>"+
+
+        "Mechanical Output Power = "+Pout.toFixed(2)+" W<br>"+
+
+        "Estimated Efficiency = "+eta.toFixed(2)+" %";
+}
+
+
+/* MARKS */
+function calculateMarks(){
+
+    let total=0;
+
+    document.querySelectorAll(".mark").forEach(function(x){
+
+        total += parseFloat(x.value)||0;
+
+    });
+
+    document.getElementById("totalMarks").innerText=
+
+        "Total: "+total.toFixed(1)+" / 10";
+}
+
+
+/* SAVE */
+function saveData(){
+
+    const data={};
+
+    document.querySelectorAll("input,select,textarea")
+    .forEach(function(el){
+
+        if(el.type==="file") return;
+
+        if(el.id){
+
+            data[el.id]=el.value;
+
+        }
+
+    });
+
+    data.marks=[];
+
+    document.querySelectorAll(".mark")
+    .forEach(function(el){
+
+        data.marks.push(el.value);
+
+    });
+
+    localStorage.setItem(
+        "exp6_bldc_speed_control",
+        JSON.stringify(data)
+    );
+
+    document.getElementById("saveStatus").innerText=
+
+        "Experiment data saved successfully in this browser.";
+}
+
+
+/* LOAD */
+function loadData(){
+
+    const saved=
+        localStorage.getItem(
+            "exp6_bldc_speed_control"
+        );
+
+    if(!saved){
+
+        document.getElementById("saveStatus").innerText=
+
+            "No saved experiment data found.";
+
+        return;
+    }
+
+    const data=JSON.parse(saved);
+
+    Object.keys(data).forEach(function(id){
+
+        if(id==="marks") return;
+
+        const el=document.getElementById(id);
+
+        if(el){
+
+            el.value=data[id];
+
+        }
+
+    });
+
+    if(data.marks){
+
+        document.querySelectorAll(".mark")
+        .forEach(function(el,i){
+
+            if(data.marks[i]!==undefined){
+
+                el.value=data.marks[i];
+
+            }
+
+        });
+
+    }
+
+    calculate();
+    calculateController();
+    calculatePerformance();
+    calculateMarks();
+
+    document.getElementById("saveStatus").innerText=
+
+        "Saved experiment data loaded.";
+}
+
+
+/* CLEAR */
+function clearData(){
+
+    if(confirm(
+        "Clear all saved Experiment 6 data?"
+    )){
+
+        localStorage.removeItem(
+            "exp6_bldc_speed_control"
+        );
+
+        location.reload();
+
+    }
+}
+
+
+/* INITIAL CALCULATIONS */
+/* =========================================================
+   EXPERIMENT 6 - JSON SAVE / LOAD / EVALUATION
+   ========================================================= */
+
+let lastEvaluation = null;
+
+
+/* ---------------------------------------------------------
+   HELPER FUNCTIONS
+   --------------------------------------------------------- */
+
+function getValue(id){
+
+    const el=document.getElementById(id);
+
+    return el ? el.value : "";
+
+}
+
+
+function setValue(id,value){
+
+    const el=document.getElementById(id);
+
+    if(el && value!==undefined && value!==null){
+
+        el.value=value;
+
+    }
+
+}
+
+
+function isFilled(value){
+
+    return value!==undefined &&
+           value!==null &&
+           String(value).trim()!=="";
+
+}
+
+
+function isNumeric(value){
+
+    return isFilled(value) &&
+           !isNaN(parseFloat(value));
+
+}
+
+
+function getImageData(id){
+
+    const img=document.getElementById(id);
+
+    if(!img) return "";
+
+    if(img.src &&
+       img.src.startsWith("data:image")){
+
+        return img.src;
+
+    }
+
+    return "";
+
+}
+
+
+function restoreImage(id,data){
+
+    const img=document.getElementById(id);
+
+    if(!img) return;
+
+    if(data &&
+       String(data).startsWith("data:image")){
+
+        img.src=data;
+
+        img.style.display="block";
+
+    }
+
+}
+
+
+/* ---------------------------------------------------------
+   FIND POST-LAB TEXTAREAS
+   --------------------------------------------------------- */
+
+function getPostLabTextareas(){
+
+    const cards=
+        Array.from(document.querySelectorAll(".card"));
+
+    const card=cards.find(function(c){
+
+        const h2=c.querySelector("h2");
+
+        return h2 &&
+               h2.textContent.includes("19. Post-Lab Questions");
+
+    });
+
+    if(!card) return [];
+
+    return Array.from(card.querySelectorAll("textarea"));
+
+}
+
+
+/* ---------------------------------------------------------
+   DUTY RATIO TABLE
+   --------------------------------------------------------- */
+
+function getDutyTableData(){
+
+    const rows=
+        document.querySelectorAll(
+            ".card:nth-of-type(10) table tbody tr"
+        );
+
+    /*
+       Instead of depending on card numbering,
+       identify the table using its heading.
+    */
+
+    let targetRows=[];
+
+    const cards=
+        Array.from(document.querySelectorAll(".card"));
+
+    const card=cards.find(function(c){
+
+        const h2=c.querySelector("h2");
+
+        return h2 &&
+               h2.textContent.includes(
+                   "11. PWM Duty Ratio vs Speed"
+               );
+
+    });
+
+    if(card){
+
+        targetRows=
+            Array.from(
+                card.querySelectorAll("table tbody tr")
+            );
+
+    }
+
+    return targetRows.map(function(row){
+
+        const inputs=
+            row.querySelectorAll("input");
+
+        return {
+
+            trial:
+                row.cells[0] ?
+                row.cells[0].innerText.trim() : "",
+
+            duty:
+                inputs[0] ? inputs[0].value : "",
+
+            vavg:
+                inputs[1] ? inputs[1].value : "",
+
+            speedReference:
+                inputs[2] ? inputs[2].value : "",
+
+            measuredSpeed:
+                inputs[3] ? inputs[3].value : "",
+
+            phaseCurrent:
+                inputs[4] ? inputs[4].value : "",
+
+            torque:
+                inputs[5] ? inputs[5].value : ""
+
+        };
+
+    });
+
+}
+
+
+function loadDutyTableData(data){
+
+    if(!Array.isArray(data)) return;
+
+    const cards=
+        Array.from(document.querySelectorAll(".card"));
+
+    const card=cards.find(function(c){
+
+        const h2=c.querySelector("h2");
+
+        return h2 &&
+               h2.textContent.includes(
+                   "11. PWM Duty Ratio vs Speed"
+               );
+
+    });
+
+    if(!card) return;
+
+    const rows=
+        Array.from(
+            card.querySelectorAll("table tbody tr")
+        );
+
+    data.forEach(function(item,index){
+
+        if(!rows[index]) return;
+
+        const inputs=
+            rows[index].querySelectorAll("input");
+
+        if(inputs[0]) inputs[0].value=item.duty || "";
+        if(inputs[1]) inputs[1].value=item.vavg || "";
+        if(inputs[2]) inputs[2].value=item.speedReference || "";
+        if(inputs[3]) inputs[3].value=item.measuredSpeed || "";
+        if(inputs[4]) inputs[4].value=item.phaseCurrent || "";
+        if(inputs[5]) inputs[5].value=item.torque || "";
+
+    });
+
+}
+
+
+/* ---------------------------------------------------------
+   LOAD TORQUE TABLE
+   --------------------------------------------------------- */
+
+function getLoadTableData(){
+
+    const cards=
+        Array.from(document.querySelectorAll(".card"));
+
+    const card=cards.find(function(c){
+
+        const h2=c.querySelector("h2");
+
+        return h2 &&
+               h2.textContent.includes(
+                   "12. Load Torque vs Speed Observation"
+               );
+
+    });
+
+    if(!card) return [];
+
+    const rows=
+        Array.from(
+            card.querySelectorAll("table tbody tr")
+        );
+
+    return rows.map(function(row){
+
+        const inputs=
+            row.querySelectorAll("input");
+
+        return {
+
+            trial:
+                row.cells[0] ?
+                row.cells[0].innerText.trim() : "",
+
+            loadTorque:
+                inputs[0] ? inputs[0].value : "",
+
+            duty:
+                inputs[1] ? inputs[1].value : "",
+
+            measuredSpeed:
+                inputs[2] ? inputs[2].value : "",
+
+            dcCurrent:
+                inputs[3] ? inputs[3].value : "",
+
+            electromagneticTorque:
+                inputs[4] ? inputs[4].value : ""
+
+        };
+
+    });
+
+}
+
+
+function loadLoadTableData(data){
+
+    if(!Array.isArray(data)) return;
+
+    const cards=
+        Array.from(document.querySelectorAll(".card"));
+
+    const card=cards.find(function(c){
+
+        const h2=c.querySelector("h2");
+
+        return h2 &&
+               h2.textContent.includes(
+                   "12. Load Torque vs Speed Observation"
+               );
+
+    });
+
+    if(!card) return;
+
+    const rows=
+        Array.from(
+            card.querySelectorAll("table tbody tr")
+        );
+
+    data.forEach(function(item,index){
+
+        if(!rows[index]) return;
+
+        const inputs=
+            rows[index].querySelectorAll("input");
+
+        if(inputs[0]) inputs[0].value=item.loadTorque || "";
+        if(inputs[1]) inputs[1].value=item.duty || "";
+        if(inputs[2]) inputs[2].value=item.measuredSpeed || "";
+        if(inputs[3]) inputs[3].value=item.dcCurrent || "";
+        if(inputs[4]) inputs[4].value=item.electromagneticTorque || "";
+
+    });
+
+}
+
+
+/* ---------------------------------------------------------
+   HALL SENSOR TABLE
+   --------------------------------------------------------- */
+
+function getHallTableData(){
+
+    const cards=
+        Array.from(document.querySelectorAll(".card"));
+
+    const card=cards.find(function(c){
+
+        const h2=c.querySelector("h2");
+
+        return h2 &&
+               h2.textContent.includes(
+                   "13. Hall Sensor / Commutation"
+               );
+
+    });
+
+    if(!card) return [];
+
+    const rows=
+        Array.from(
+            card.querySelectorAll("table tbody tr")
+        );
+
+    return rows.map(function(row){
+
+        const input=row.querySelector("input");
+
+        return {
+
+            step:
+                row.cells[0] ?
+                row.cells[0].innerText.trim() : "",
+
+            hallA:
+                row.cells[1] ?
+                row.cells[1].innerText.trim() : "",
+
+            hallB:
+                row.cells[2] ?
+                row.cells[2].innerText.trim() : "",
+
+            hallC:
+                row.cells[3] ?
+                row.cells[3].innerText.trim() : "",
+
+            conductingPhases:
+                row.cells[4] ?
+                row.cells[4].innerText.trim() : "",
+
+            switchingState:
+                input ? input.value : ""
+
+        };
+
+    });
+
+}
+
+
+function loadHallTableData(data){
+
+    if(!Array.isArray(data)) return;
+
+    const cards=
+        Array.from(document.querySelectorAll(".card"));
+
+    const card=cards.find(function(c){
+
+        const h2=c.querySelector("h2");
+
+        return h2 &&
+               h2.textContent.includes(
+                   "13. Hall Sensor / Commutation"
+               );
+
+    });
+
+    if(!card) return;
+
+    const rows=
+        Array.from(
+            card.querySelectorAll("table tbody tr")
+        );
+
+    data.forEach(function(item,index){
+
+        if(!rows[index]) return;
+
+        const input=
+            rows[index].querySelector("input");
+
+        if(input){
+
+            input.value=
+                item.switchingState || "";
+
+        }
+
+    });
+
+}
+
+
+/* ---------------------------------------------------------
+   POST-LAB DATA
+   --------------------------------------------------------- */
+
+function getPostLabData(){
+
+    return getPostLabTextareas().map(function(el){
+
+        return el.value;
+
+    });
+
+}
+
+
+function loadPostLabData(data){
+
+    if(!Array.isArray(data)) return;
+
+    const textareas=getPostLabTextareas();
+
+    data.forEach(function(value,index){
+
+        if(textareas[index]){
+
+            textareas[index].value=value || "";
+
+        }
+
+    });
+
+}
+
+
+/* ---------------------------------------------------------
+   FACULTY MARKS
+   --------------------------------------------------------- */
+
+function getFacultyMarks(){
+
+    return Array.from(
+        document.querySelectorAll(".mark")
+    ).map(function(el){
+
+        return el.value;
+
+    });
+
+}
+
+
+function loadFacultyMarks(data){
+
+    if(!Array.isArray(data)) return;
+
+    document.querySelectorAll(".mark")
+    .forEach(function(el,index){
+
+        if(data[index]!==undefined){
+
+            el.value=data[index];
+
+        }
+
+    });
+
+}
+
+
+/* =========================================================
+   SAVE JSON
+   ========================================================= */
+
+function saveJSON(){
+
+    try{
+
+        const data={
+
+            experiment:{
+                number:"6",
+                title:
+                "Speed Control of BLDC Motor Drive",
+                version:"1.0"
+            },
+
+            savedAt:new Date().toISOString(),
+
+            studentDetails:{
+
+                studentName:
+                    getValue("studentName"),
+
+                registerNumber:
+                    getValue("regNo"),
+
+                classSection:
+                    getValue("classSection"),
+
+                date:
+                    getValue("expDate")
+
+            },
+
+            motorParameters:{
+
+                vdc:
+                    getValue("vdc"),
+
+                pwmFrequency:
+                    getValue("freq"),
+
+                duty:
+                    getValue("duty"),
+
+                referenceSpeed:
+                    getValue("refSpeed"),
+
+                resistance:
+                    getValue("resistance"),
+
+                inductance:
+                    getValue("inductance"),
+
+                ke:
+                    getValue("ke"),
+
+                kt:
+                    getValue("kt"),
+
+                loadTorque:
+                    getValue("loadTorque")
+
+            },
+
+            speedControl:{
+
+                controlMode:
+                    getValue("controlMode"),
+
+                speedReference:
+                    getValue("speedReference"),
+
+                initialDuty:
+                    getValue("initialDuty")
+
+            },
+
+            closedLoopController:{
+
+                referenceSpeed:
+                    getValue("clRef"),
+
+                measuredSpeed:
+                    getValue("clMeasured"),
+
+                kp:
+                    getValue("kp"),
+
+                ki:
+                    getValue("ki")
+
+            },
+
+            dutyRatioObservation:
+                getDutyTableData(),
+
+            loadTorqueObservation:
+                getLoadTableData(),
+
+            hallCommutationObservation:
+                getHallTableData(),
+
+            mainObservation:{
+
+                dcBusVoltage:
+                    getValue("obsVdc"),
+
+                dcBusCurrent:
+                    getValue("obsIdc"),
+
+                motorSpeed:
+                    getValue("obsSpeed"),
+
+                phaseCurrent:
+                    getValue("obsCurrent"),
+
+                electromagneticTorque:
+                    getValue("obsTorque"),
+
+                mechanicalPower:
+                    getValue("obsPower"),
+
+                efficiency:
+                    getValue("obsEfficiency")
+
+            },
+
+            performanceCalculation:{
+
+                dcBusVoltage:
+                    getValue("calcVdc"),
+
+                dcBusCurrent:
+                    getValue("calcIdc"),
+
+                speed:
+                    getValue("calcSpeed"),
+
+                torque:
+                    getValue("calcTorque")
+
+            },
+
+            analysis:{
+
+                dutyRatio:
+                    getValue("analysisDuty"),
+
+                loadTorque:
+                    getValue("analysisLoad"),
+
+                hallSensor:
+                    getValue("analysisHall"),
+
+                closedLoop:
+                    getValue("analysisClosed"),
+
+                transient:
+                    getValue("analysisTransient")
+
+            },
+
+            result:
+                getValue("result"),
+
+            postLabAnswers:
+                getPostLabData(),
+
+            facultyMarks:
+                getFacultyMarks(),
+
+            facultyTotal:
+                document.getElementById(
+                    "totalMarks"
+                ).innerText,
+
+            images:{
+
+                simulinkModel:
+                    getImageData("modelPreview"),
+
+                hallGateCurrent:
+                    getImageData("wavePreview1"),
+
+                speedTorque:
+                    getImageData("wavePreview2"),
+
+                closedLoopSpeed:
+                    getImageData("wavePreview3")
+
+            },
+
+            automaticEvaluation:
+                lastEvaluation
+
+        };
+
+
+        /* Save a browser backup also */
+
+        try{
+
+            localStorage.setItem(
+                "exp6_bldc_speed_control_json",
+                JSON.stringify(data)
+            );
+
+        }catch(storageError){
+
+            console.warn(
+                "Browser backup could not be stored:",
+                storageError
+            );
+
+        }
+
+
+        /* Create JSON file */
+
+        const json=
+            JSON.stringify(data,null,2);
+
+        const blob=
+            new Blob(
+                [json],
+                {type:"application/json"}
+            );
+
+        const url=
+            URL.createObjectURL(blob);
+
+        const link=
+            document.createElement("a");
+
+        const reg=
+            getValue("regNo")
+            .trim()
+            .replace(/[^\w-]+/g,"_");
+
+        const fileName=
+            "Experiment6_BLDC_Speed_Control_"+
+            (reg || "Student")+
+            ".json";
+
+        link.href=url;
+
+        link.download=fileName;
+
+        document.body.appendChild(link);
+
+        link.click();
+
+        document.body.removeChild(link);
+
+        URL.revokeObjectURL(url);
+
+
+        document.getElementById(
+            "saveStatus"
+        ).innerText=
+            "JSON file saved successfully as: "+
+            fileName;
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        document.getElementById(
+            "saveStatus"
+        ).innerText=
+            "Error while saving JSON: "+
+            error.message;
+
+    }
+
+}
+
+
+/* =========================================================
+   LOAD JSON
+   ========================================================= */
+
+function loadJSON(event){
+
+    const file=
+        event.target.files[0];
+
+    if(!file) return;
+
+    const reader=new FileReader();
+
+
+    reader.onload=function(e){
+
+        try{
+
+            const data=
+                JSON.parse(e.target.result);
+
+
+            /* Validate file */
+
+            if(
+                !data.experiment ||
+                String(data.experiment.number)!=="6"
+            ){
+
+                alert(
+                    "This JSON file is not for Experiment 6."
+                );
+
+                return;
+
+            }
+
+
+            /* Student details */
+
+            setValue(
+                "studentName",
+                data.studentDetails?.studentName
+            );
+
+            setValue(
+                "regNo",
+                data.studentDetails?.registerNumber
+            );
+
+            setValue(
+                "classSection",
+                data.studentDetails?.classSection
+            );
+
+            setValue(
+                "expDate",
+                data.studentDetails?.date
+            );
+
+
+            /* Motor parameters */
+
+            const p=
+                data.motorParameters || {};
+
+            setValue("vdc",p.vdc);
+            setValue("freq",p.pwmFrequency);
+            setValue("duty",p.duty);
+            setValue("refSpeed",p.referenceSpeed);
+            setValue("resistance",p.resistance);
+            setValue("inductance",p.inductance);
+            setValue("ke",p.ke);
+            setValue("kt",p.kt);
+            setValue("loadTorque",p.loadTorque);
+
+
+            /* Speed control */
+
+            const sc=
+                data.speedControl || {};
+
+            setValue(
+                "controlMode",
+                sc.controlMode
+            );
+
+            setValue(
+                "speedReference",
+                sc.speedReference
+            );
+
+            setValue(
+                "initialDuty",
+                sc.initialDuty
+            );
+
+
+            /* Closed-loop controller */
+
+            const cl=
+                data.closedLoopController || {};
+
+            setValue("clRef",cl.referenceSpeed);
+            setValue("clMeasured",cl.measuredSpeed);
+            setValue("kp",cl.kp);
+            setValue("ki",cl.ki);
+
+
+            /* Tables */
+
+            loadDutyTableData(
+                data.dutyRatioObservation
+            );
+
+            loadLoadTableData(
+                data.loadTorqueObservation
+            );
+
+            loadHallTableData(
+                data.hallCommutationObservation
+            );
+
+
+            /* Main observation */
+
+            const obs=
+                data.mainObservation || {};
+
+            setValue("obsVdc",obs.dcBusVoltage);
+            setValue("obsIdc",obs.dcBusCurrent);
+            setValue("obsSpeed",obs.motorSpeed);
+            setValue("obsCurrent",obs.phaseCurrent);
+            setValue("obsTorque",obs.electromagneticTorque);
+            setValue("obsPower",obs.mechanicalPower);
+            setValue("obsEfficiency",obs.efficiency);
+
+
+            /* Performance calculation */
+
+            const pc=
+                data.performanceCalculation || {};
+
+            setValue("calcVdc",pc.dcBusVoltage);
+            setValue("calcIdc",pc.dcBusCurrent);
+            setValue("calcSpeed",pc.speed);
+            setValue("calcTorque",pc.torque);
+
+
+            /* Analysis */
+
+            const a=
+                data.analysis || {};
+
+            setValue(
+                "analysisDuty",
+                a.dutyRatio
+            );
+
+            setValue(
+                "analysisLoad",
+                a.loadTorque
+            );
+
+            setValue(
+                "analysisHall",
+                a.hallSensor
+            );
+
+            setValue(
+                "analysisClosed",
+                a.closedLoop
+            );
+
+            setValue(
+                "analysisTransient",
+                a.transient
+            );
+
+
+            /* Result */
+
+            setValue(
+                "result",
+                data.result
+            );
+
+
+            /* Post-lab */
+
+            loadPostLabData(
+                data.postLabAnswers
+            );
+
+
+            /* Faculty marks */
+
+            loadFacultyMarks(
+                data.facultyMarks
+            );
+
+
+            /* Images */
+
+            const images=
+                data.images || {};
+
+            restoreImage(
+                "modelPreview",
+                images.simulinkModel
+            );
+
+            restoreImage(
+                "wavePreview1",
+                images.hallGateCurrent
+            );
+
+            restoreImage(
+                "wavePreview2",
+                images.speedTorque
+            );
+
+            restoreImage(
+                "wavePreview3",
+                images.closedLoopSpeed
+            );
+
+
+            /* Evaluation */
+
+            if(data.automaticEvaluation){
+
+                lastEvaluation=
+                    data.automaticEvaluation;
+
+                const ev=
+                    document.getElementById(
+                        "evaluationResult"
+                    );
+
+                if(ev){
+
+                    ev.style.display="block";
+
+                    ev.innerHTML=
+                        data.automaticEvaluation.report ||
+                        "";
+
+                }
+
+            }
+
+
+            /* Recalculate */
+
+            calculate();
+
+            calculateController();
+
+            calculatePerformance();
+
+            calculateMarks();
+
+
+            /* Browser backup */
+
+            try{
+
+                localStorage.setItem(
+                    "exp6_bldc_speed_control_json",
+                    JSON.stringify(data)
+                );
+
+            }catch(err){
+
+                console.warn(
+                    "Could not create browser backup."
+                );
+
+            }
+
+
+            document.getElementById(
+                "saveStatus"
+            ).innerText=
+                "JSON file loaded successfully. All available data and images have been restored.";
+
+
+        }
+
+        catch(error){
+
+            console.error(error);
+
+            alert(
+                "Unable to load JSON file.\n\n"+
+                error.message
+            );
+
+        }
+
+        finally{
+
+            /*
+              Allows the same JSON file to be selected again.
+            */
+
+            event.target.value="";
+
+        }
+
+    };
+
+
+    reader.readAsText(file);
+
+}
+
+
+/* =========================================================
+   AUTOMATIC EVALUATION
+   ========================================================= */
+
+function evaluateExperiment(){
+
+    let score=0;
+
+    let report=[];
+
+
+    /* -----------------------------------------------------
+       1. STUDENT DETAILS - 1 MARK
+       ----------------------------------------------------- */
+
+    const studentComplete=
+        isFilled(getValue("studentName")) &&
+        isFilled(getValue("regNo")) &&
+        isFilled(getValue("classSection")) &&
+        isFilled(getValue("expDate"));
+
+    if(studentComplete){
+
+        score+=1;
+
+        report.push(
+            "✓ Student details completed – 1/1"
+        );
+
+    }else{
+
+        report.push(
+            "✗ Student details incomplete – 0/1"
+        );
+
+    }
+
+
+    /* -----------------------------------------------------
+       2. SIMULINK MODEL - 2 MARKS
+       ----------------------------------------------------- */
+
+    const modelImage=
+        getImageData("modelPreview");
+
+    if(modelImage){
+
+        score+=2;
+
+        report.push(
+            "✓ Simulink model screenshot uploaded – 2/2"
+        );
+
+    }else{
+
+        report.push(
+            "✗ Simulink model screenshot not uploaded – 0/2"
+        );
+
+    }
+
+
+    /* -----------------------------------------------------
+       3. PWM DUTY TABLE - 1 MARK
+       ----------------------------------------------------- */
+
+    const dutyData=
+        getDutyTableData();
+
+    let dutyComplete=0;
+
+    dutyData.forEach(function(row){
+
+        if(
+            isNumeric(row.duty) &&
+            isNumeric(row.vavg) &&
+            isNumeric(row.speedReference) &&
+            isNumeric(row.measuredSpeed) &&
+            isNumeric(row.phaseCurrent) &&
+            isNumeric(row.torque)
+        ){
+
+            dutyComplete++;
+
+        }
+
+    });
+
+
+    let dutyScore=0;
+
+    if(dutyComplete>=5){
+
+        dutyScore=1;
+
+    }else if(dutyComplete>=3){
+
+        dutyScore=0.5;
+
+    }
+
+    score+=dutyScore;
+
+    report.push(
+        (dutyComplete>0 ? "✓ " : "✗ ")+
+        "PWM observation table: "+
+        dutyComplete+"/"+
+        dutyData.length+
+        " rows complete – "+
+        dutyScore.toFixed(1)+"/1"
+    );
+
+
+    /* -----------------------------------------------------
+       4. LOAD TEST TABLE - 1 MARK
+       ----------------------------------------------------- */
+
+    const loadData=
+        getLoadTableData();
+
+    let loadComplete=0;
+
+    loadData.forEach(function(row){
+
+        if(
+            isNumeric(row.loadTorque) &&
+            isNumeric(row.duty) &&
+            isNumeric(row.measuredSpeed) &&
+            isNumeric(row.dcCurrent) &&
+            isNumeric(row.electromagneticTorque)
+        ){
+
+            loadComplete++;
+
+        }
+
+    });
+
+
+    let loadScore=0;
+
+    if(loadComplete>=4){
+
+        loadScore=1;
+
+    }else if(loadComplete>=2){
+
+        loadScore=0.5;
+
+    }
+
+    score+=loadScore;
+
+    report.push(
+        (loadComplete>0 ? "✓ " : "✗ ")+
+        "Load torque observation: "+
+        loadComplete+"/"+
+        loadData.length+
+        " rows complete – "+
+        loadScore.toFixed(1)+"/1"
+    );
+
+
+    /* -----------------------------------------------------
+       5. MAIN OBSERVATION - 1 MARK
+       ----------------------------------------------------- */
+
+    const observationValues=[
+
+        getValue("obsVdc"),
+        getValue("obsIdc"),
+        getValue("obsSpeed"),
+        getValue("obsCurrent"),
+        getValue("obsTorque"),
+        getValue("obsPower"),
+        getValue("obsEfficiency")
+
+    ];
+
+    const observationComplete=
+        observationValues.filter(
+            isNumeric
+        ).length;
+
+
+    let observationScore=0;
+
+    if(observationComplete>=7){
+
+        observationScore=1;
+
+    }else if(observationComplete>=4){
+
+        observationScore=0.5;
+
+    }
+
+    score+=observationScore;
+
+    report.push(
+        "Main observation: "+
+        observationComplete+"/7 parameters completed – "+
+        observationScore.toFixed(1)+"/1"
+    );
+
+
+    /* -----------------------------------------------------
+       6. PERFORMANCE CALCULATION - 1 MARK
+       ----------------------------------------------------- */
+
+    const performanceValues=[
+
+        getValue("calcVdc"),
+        getValue("calcIdc"),
+        getValue("calcSpeed"),
+        getValue("calcTorque")
+
+    ];
+
+    const performanceComplete=
+        performanceValues.filter(
+            isNumeric
+        ).length;
+
+
+    let performanceScore=0;
+
+    if(performanceComplete>=4){
+
+        performanceScore=1;
+
+    }else if(performanceComplete>=2){
+
+        performanceScore=0.5;
+
+    }
+
+    score+=performanceScore;
+
+    report.push(
+        "Performance calculation: "+
+        performanceComplete+"/4 inputs completed – "+
+        performanceScore.toFixed(1)+"/1"
+    );
+
+
+    /* -----------------------------------------------------
+       7. WAVEFORMS - 1 MARK
+       ----------------------------------------------------- */
+
+    const waveformCount=[
+
+        getImageData("wavePreview1"),
+        getImageData("wavePreview2"),
+        getImageData("wavePreview3")
+
+    ].filter(Boolean).length;
+
+
+    let waveformScore=0;
+
+    if(waveformCount===3){
+
+        waveformScore=1;
+
+    }else if(waveformCount===2){
+
+        waveformScore=0.75;
+
+    }else if(waveformCount===1){
+
+        waveformScore=0.5;
+
+    }
+
+    score+=waveformScore;
+
+    report.push(
+        "Waveform screenshots: "+
+        waveformCount+"/3 uploaded – "+
+        waveformScore.toFixed(2)+"/1"
+    );
+
+
+    /* -----------------------------------------------------
+       8. ANALYSIS - 1 MARK
+       ----------------------------------------------------- */
+
+    const analysisValues=[
+
+        getValue("analysisDuty"),
+        getValue("analysisLoad"),
+        getValue("analysisHall"),
+        getValue("analysisClosed"),
+        getValue("analysisTransient")
+
+    ];
+
+    const analysisComplete=
+        analysisValues.filter(function(v){
+
+            return String(v).trim().length>=30;
+
+        }).length;
+
+
+    let analysisScore=0;
+
+    if(analysisComplete>=5){
+
+        analysisScore=1;
+
+    }else if(analysisComplete>=3){
+
+        analysisScore=0.5;
+
+    }
+
+    score+=analysisScore;
+
+    report.push(
+        "Analysis responses: "+
+        analysisComplete+"/5 sufficiently filled – "+
+        analysisScore.toFixed(1)+"/1"
+    );
+
+
+    /* -----------------------------------------------------
+       9. RESULT + POST LAB - 1 MARK
+       ----------------------------------------------------- */
+
+    const resultComplete=
+        String(getValue("result")).trim().length>=30;
+
+
+    const postLab=
+        getPostLabData();
+
+    const postLabComplete=
+        postLab.filter(function(v){
+
+            return String(v).trim().length>=20;
+
+        }).length;
+
+
+    let resultScore=0;
+
+    if(
+        resultComplete &&
+        postLabComplete>=5
+    ){
+
+        resultScore=1;
+
+    }else if(resultComplete){
+
+        resultScore=0.5;
+
+    }
+
+    score+=resultScore;
+
+    report.push(
+        "Result + Post-Lab: Result "+
+        (resultComplete ? "completed" : "incomplete")+
+        ", Post-Lab "+
+        postLabComplete+"/10 answered – "+
+        resultScore.toFixed(1)+"/1"
+    );
+
+
+    /* -----------------------------------------------------
+       FINAL SCORE
+       ----------------------------------------------------- */
+
+    score=Math.min(10,score);
+
+    score=
+        Math.round(score*100)/100;
+
+
+    const percentage=
+        score*10;
+
+
+    const time=
+        new Date().toLocaleString();
+
+
+    lastEvaluation={
+
+        score:score,
+
+        maximum:10,
+
+        percentage:percentage,
+
+        evaluatedAt:time,
+
+        report:
+            report.join("<br>")
+
+    };
+
+
+    const evaluationResult=
+        document.getElementById(
+            "evaluationResult"
+        );
+
+
+    evaluationResult.style.display="block";
+
+
+    evaluationResult.innerHTML=
+
+        "<h3>Automatic Experiment Evaluation</h3>"+
+
+        "<div class='score'>"+
+        "Completion Score: "+
+        score.toFixed(2)+
+        " / 10"+
+        "</div>"+
+
+        "<p>"+
+        "Completion Percentage: "+
+        percentage.toFixed(0)+
+        "%"+
+        "</p>"+
+
+        "<hr>"+
+
+        report.join("<br>")+
+
+        "<br><br>"+
+
+        "<span class='small'>"+
+        "Evaluation checks experiment completion and data entry. "+
+        "It does not determine whether numerical values or written "+
+        "answers are technically correct. Faculty evaluation remains "+
+        "the final academic assessment."+
+        "</span>";
+
+
+    document.getElementById(
+        "saveStatus"
+    ).innerText=
+        "Experiment evaluated. Score: "+
+        score.toFixed(2)+
+        " / 10";
+
+}
+
+
+/* =========================================================
+   INITIAL CALCULATIONS
+   ========================================================= */
+
+calculate();
+
+calculateController();
+
+calculatePerformance();
+
+calculateMarks();
+
+</script>
+
+</body>
+</html>
+

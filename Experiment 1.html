@@ -1,0 +1,1847 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Virtual Power Electronics Lab - Experiment 1</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#07111f;
+    color:#e8f0f8;
+}
+
+header{
+    background:linear-gradient(135deg,#0b2038,#123b5d);
+    padding:24px;
+    border-bottom:2px solid #1f6f9f;
+}
+
+header h1{
+    margin:0 0 8px;
+    font-size:28px;
+}
+
+header p{
+    margin:4px 0;
+    color:#b9d7ea;
+}
+
+.container{
+    max-width:1500px;
+    margin:auto;
+    padding:20px;
+}
+
+.card{
+    background:#0d1b2a;
+    border:1px solid #24445e;
+    border-radius:12px;
+    padding:20px;
+    margin-bottom:20px;
+    box-shadow:0 8px 25px rgba(0,0,0,.25);
+}
+
+.card h2{
+    color:#55c2ff;
+    margin-top:0;
+    border-bottom:1px solid #24445e;
+    padding-bottom:10px;
+}
+
+.card h3{
+    color:#8bd8ff;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:15px;
+}
+
+label{
+    display:block;
+    margin-bottom:6px;
+    color:#bcd4e5;
+    font-weight:bold;
+}
+
+input,select,textarea{
+    width:100%;
+    padding:10px;
+    border-radius:7px;
+    border:1px solid #3b607a;
+    background:#081522;
+    color:#fff;
+    font-size:14px;
+}
+
+textarea{
+    min-height:100px;
+    resize:vertical;
+}
+
+button{
+    padding:11px 18px;
+    border:0;
+    border-radius:7px;
+    cursor:pointer;
+    font-weight:bold;
+    margin:5px;
+}
+
+.primary{
+    background:#1597d4;
+    color:white;
+}
+
+.success{
+    background:#22a06b;
+    color:white;
+}
+
+.warning{
+    background:#d58a18;
+    color:white;
+}
+
+.danger{
+    background:#c94b4b;
+    color:white;
+}
+
+.secondary{
+    background:#34495e;
+    color:white;
+}
+
+button:hover{
+    opacity:.85;
+}
+
+.tabs{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-bottom:15px;
+}
+
+.tab{
+    background:#172c40;
+    color:#bcd4e5;
+}
+
+.tab.active{
+    background:#1597d4;
+    color:white;
+}
+
+.tabcontent{
+    display:none;
+}
+
+.tabcontent.active{
+    display:block;
+}
+
+.diagram-box{
+    min-height:300px;
+    border:2px dashed #3d6884;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:20px;
+    background:#091725;
+    position:relative;
+}
+
+.diagram-box img{
+    max-width:100%;
+    max-height:600px;
+    border-radius:8px;
+}
+
+.placeholder{
+    color:#7fa6bd;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:12px;
+}
+
+th,td{
+    border:1px solid #31516a;
+    padding:9px;
+    text-align:center;
+}
+
+th{
+    background:#15334b;
+    color:#8bd8ff;
+}
+
+td input{
+    min-width:80px;
+    text-align:center;
+}
+
+.result-box{
+    background:#081722;
+    border:1px solid #2b5873;
+    padding:15px;
+    border-radius:8px;
+    margin-top:15px;
+}
+
+.formula{
+    background:#07131f;
+    border-left:4px solid #35a9df;
+    padding:12px;
+    margin:10px 0;
+    font-family:"Courier New",monospace;
+    color:#d9f2ff;
+}
+
+.step{
+    padding:10px;
+    margin:6px 0;
+    background:#102538;
+    border-radius:7px;
+}
+
+.question{
+    background:#0a1724;
+    padding:15px;
+    border:1px solid #28475e;
+    border-radius:8px;
+    margin-bottom:15px;
+}
+
+.score{
+    font-size:25px;
+    color:#67e8a3;
+    font-weight:bold;
+}
+
+.badge{
+    display:inline-block;
+    padding:5px 10px;
+    background:#173e57;
+    color:#8bd8ff;
+    border-radius:15px;
+    font-size:12px;
+}
+
+footer{
+    text-align:center;
+    padding:25px;
+    color:#7898ad;
+}
+
+@media print{
+    body{
+        background:white;
+        color:black;
+    }
+
+    .no-print,
+    button,
+    .tabs{
+        display:none !important;
+    }
+
+    .card{
+        border:1px solid #999;
+        box-shadow:none;
+        color:black;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="container">
+        <span class="badge">POWER ELECTRONICS & DRIVES VIRTUAL LAB</span>
+        <h1>Experiment 1: MOSFET & IGBT Characterization</h1>
+        <p>V–I Characteristics • Switching Times • Switching Losses</p>
+    </div>
+</header>
+
+<div class="container">
+
+<!-- STUDENT DETAILS -->
+<div class="card">
+<h2>1. Student Details</h2>
+
+<div class="grid">
+
+<div>
+<label>Student Name</label>
+<input id="studentName" type="text">
+</div>
+
+<div>
+<label>Register Number</label>
+<input id="registerNo" type="text">
+</div>
+
+<div>
+<label>Class / Section</label>
+<input id="classSection" type="text">
+</div>
+
+<div>
+<label>Date</label>
+<input id="expDate" type="date">
+</div>
+
+<div>
+<label>Batch</label>
+<input id="batch" type="text">
+</div>
+
+<div>
+<label>Faculty</label>
+<input id="faculty" type="text">
+</div>
+
+</div>
+</div>
+
+
+<!-- AIM -->
+<div class="card">
+<h2>2. Aim</h2>
+
+<p>
+To study the V–I characteristics, switching times and switching losses
+of a power MOSFET and an IGBT experimentally.
+</p>
+
+</div>
+
+
+<!-- OBJECTIVES -->
+<div class="card">
+<h2>3. Learning Objectives</h2>
+
+<ul>
+<li>Understand the operation of MOSFET and IGBT as power switches.</li>
+<li>Determine the V–I characteristics.</li>
+<li>Measure turn-on and turn-off switching times.</li>
+<li>Determine switching energy and switching losses.</li>
+<li>Compare the switching behaviour of MOSFET and IGBT.</li>
+</ul>
+
+</div>
+
+
+<!-- APPARATUS -->
+<div class="card">
+<h2>4. Apparatus Required</h2>
+
+<table>
+<tr>
+<th>S.No.</th>
+<th>Apparatus</th>
+<th>Specification</th>
+</tr>
+
+<tr><td>1</td><td>Power MOSFET</td><td>Suitable voltage/current rating</td></tr>
+<tr><td>2</td><td>Power IGBT</td><td>Suitable voltage/current rating</td></tr>
+<tr><td>3</td><td>DC Power Supply</td><td>0–50 V or suitable</td></tr>
+<tr><td>4</td><td>Gate Driver</td><td>Suitable for device</td></tr>
+<tr><td>5</td><td>Resistive Load</td><td>Suitable power rating</td></tr>
+<tr><td>6</td><td>Pulse Generator</td><td>Variable frequency</td></tr>
+<tr><td>7</td><td>Digital Oscilloscope</td><td>Suitable bandwidth</td></tr>
+<tr><td>8</td><td>Current Probe</td><td>Suitable range</td></tr>
+<tr><td>9</td><td>Differential Voltage Probe</td><td>Suitable range</td></tr>
+</table>
+</div>
+
+
+<!-- THEORY -->
+<div class="card">
+<h2>5. Theory</h2>
+
+<h3>MOSFET</h3>
+
+<p>
+A power MOSFET is a voltage-controlled semiconductor device.
+Its conduction is controlled by the gate-to-source voltage.
+</p>
+
+<div class="formula">
+VGS → Gate control voltage<br>
+VDS → Drain-source voltage<br>
+ID → Drain current
+</div>
+
+<h3>IGBT</h3>
+
+<p>
+An IGBT is a voltage-controlled power semiconductor device
+combining MOS gate control with high current and voltage capability.
+</p>
+
+<div class="formula">
+VGE → Gate-emitter voltage<br>
+VCE → Collector-emitter voltage<br>
+IC → Collector current
+</div>
+
+<h3>Switching Time</h3>
+
+<div class="formula">
+tON = td(ON) + tr
+
+tOFF = td(OFF) + tf
+</div>
+
+<h3>Switching Loss</h3>
+
+<div class="formula">
+p(t) = v(t) × i(t)
+
+Esw = ∫ v(t)i(t)dt
+
+Psw = fs × (EON + EOFF)
+</div>
+
+</div>
+
+
+<!-- CIRCUIT DIAGRAM UPLOAD -->
+<div class="card">
+<h2>6. Circuit / Simulink Diagram Submission</h2>
+
+<p>
+Students must paste or upload the circuit diagram / Simulink model
+used for the experiment.
+</p>
+
+<div class="grid">
+
+<div>
+<h3>MOSFET Circuit / Simulink Diagram</h3>
+
+<input type="file"
+       id="mosfetImage"
+       accept="image/*"
+       onchange="previewImage(this,'mosfetPreview')">
+
+<div class="diagram-box" id="mosfetPreview">
+<span class="placeholder">
+Paste/upload your MOSFET circuit or Simulink screenshot here
+</span>
+</div>
+</div>
+
+<div>
+<h3>IGBT Circuit / Simulink Diagram</h3>
+
+<input type="file"
+       id="igbtImage"
+       accept="image/*"
+       onchange="previewImage(this,'igbtPreview')">
+
+<div class="diagram-box" id="igbtPreview">
+<span class="placeholder">
+Paste/upload your IGBT circuit or Simulink screenshot here
+</span>
+</div>
+</div>
+
+</div>
+</div>
+
+
+<!-- PROCEDURE -->
+<div class="card">
+<h2>7. Procedure</h2>
+
+<div class="step">1. Connect the MOSFET test circuit as per the circuit diagram.</div>
+<div class="step">2. Connect the resistive load to the power circuit.</div>
+<div class="step">3. Connect the gate driver to the MOSFET.</div>
+<div class="step">4. Apply the required DC supply.</div>
+<div class="step">5. Apply the gate pulse.</div>
+<div class="step">6. Measure VGS, VDS and ID using the oscilloscope.</div>
+<div class="step">7. Vary the gate voltage and record the corresponding drain current.</div>
+<div class="step">8. Determine turn-on and turn-off switching times.</div>
+<div class="step">9. Determine switching energy and switching losses.</div>
+<div class="step">10. Repeat the procedure for the IGBT.</div>
+<div class="step">11. Compare the MOSFET and IGBT characteristics.</div>
+
+</div>
+
+
+<!-- V-I CHARACTERISTICS -->
+<div class="card">
+
+<h2>8. V–I Characteristics Observation</h2>
+
+<div class="tabs no-print">
+
+<button class="tab active"
+onclick="openTab('mosfetVI',this)">
+MOSFET
+</button>
+
+<button class="tab"
+onclick="openTab('igbtVI',this)">
+IGBT
+</button>
+
+</div>
+
+
+<div id="mosfetVI" class="tabcontent active">
+
+<h3>MOSFET V–I Characteristics</h3>
+
+<table id="mosfetTable">
+
+<tr>
+<th>VGS (V)</th>
+<th>VDS (V)</th>
+<th>ID (A)</th>
+<th>Power (W)</th>
+</tr>
+
+<script>
+for(let i=0;i<6;i++){
+document.write(`
+<tr>
+<td><input type="number" step="any"></td>
+<td><input type="number" step="any"></td>
+<td><input type="number" step="any" oninput="calculatePower(this,'mosfetTable')"></td>
+<td class="power">0</td>
+</tr>
+`);
+}
+</script>
+
+</table>
+
+</div>
+
+
+<div id="igbtVI" class="tabcontent">
+
+<h3>IGBT V–I Characteristics</h3>
+
+<table id="igbtTable">
+
+<tr>
+<th>VGE (V)</th>
+<th>VCE (V)</th>
+<th>IC (A)</th>
+<th>Power (W)</th>
+</tr>
+
+<script>
+for(let i=0;i<6;i++){
+document.write(`
+<tr>
+<td><input type="number" step="any"></td>
+<td><input type="number" step="any"></td>
+<td><input type="number" step="any" oninput="calculatePower(this,'igbtTable')"></td>
+<td class="power">0</td>
+</tr>
+`);
+}
+</script>
+
+</table>
+
+</div>
+
+</div>
+
+
+<!-- SWITCHING -->
+<div class="card">
+
+<h2>9. Switching Time Measurement</h2>
+
+<div class="grid">
+
+<div>
+<h3>MOSFET</h3>
+
+<label>Turn-on Delay td(on) (ns)</label>
+<input id="m_td_on" type="number" step="any">
+
+<label>Rise Time tr (ns)</label>
+<input id="m_tr" type="number" step="any">
+
+<label>Turn-off Delay td(off) (ns)</label>
+<input id="m_td_off" type="number" step="any">
+
+<label>Fall Time tf (ns)</label>
+<input id="m_tf" type="number" step="any">
+
+<button class="primary" onclick="calculateMOSFET()">Calculate MOSFET</button>
+
+<div class="result-box">
+Turn-on Time:
+<strong id="m_ton">0 ns</strong><br><br>
+Turn-off Time:
+<strong id="m_toff">0 ns</strong>
+</div>
+
+</div>
+
+
+<div>
+<h3>IGBT</h3>
+
+<label>Turn-on Delay td(on) (ns)</label>
+<input id="i_td_on" type="number" step="any">
+
+<label>Rise Time tr (ns)</label>
+<input id="i_tr" type="number" step="any">
+
+<label>Turn-off Delay td(off) (ns)</label>
+<input id="i_td_off" type="number" step="any">
+
+<label>Fall Time tf (ns)</label>
+<input id="i_tf" type="number" step="any">
+
+<button class="primary" onclick="calculateIGBT()">Calculate IGBT</button>
+
+<div class="result-box">
+Turn-on Time:
+<strong id="i_ton">0 ns</strong><br><br>
+Turn-off Time:
+<strong id="i_toff">0 ns</strong>
+</div>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- SWITCHING LOSS -->
+<div class="card">
+
+<h2>10. Switching Loss Measurement</h2>
+
+<div class="grid">
+
+<div>
+
+<h3>MOSFET</h3>
+
+<label>Turn-on Energy EON (µJ)</label>
+<input id="m_eon" type="number" step="any">
+
+<label>Turn-off Energy EOFF (µJ)</label>
+<input id="m_eoff" type="number" step="any">
+
+<label>Switching Frequency fs (Hz)</label>
+<input id="m_fs" type="number" step="any">
+
+<button class="primary" onclick="calculateLoss('m')">
+Calculate
+</button>
+
+<div class="result-box">
+Switching Loss:
+<strong id="m_loss">0 W</strong>
+</div>
+
+</div>
+
+
+<div>
+
+<h3>IGBT</h3>
+
+<label>Turn-on Energy EON (µJ)</label>
+<input id="i_eon" type="number" step="any">
+
+<label>Turn-off Energy EOFF (µJ)</label>
+<input id="i_eoff" type="number" step="any">
+
+<label>Switching Frequency fs (Hz)</label>
+<input id="i_fs" type="number" step="any">
+
+<button class="primary" onclick="calculateLoss('i')">
+Calculate
+</button>
+
+<div class="result-box">
+Switching Loss:
+<strong id="i_loss">0 W</strong>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- COMPARISON -->
+<div class="card">
+
+<h2>11. MOSFET vs IGBT Comparison</h2>
+
+<table>
+
+<tr>
+<th>Parameter</th>
+<th>MOSFET</th>
+<th>IGBT</th>
+</tr>
+
+<tr>
+<td>Turn-on Time</td>
+<td><input id="cmp_m_ton" type="text"></td>
+<td><input id="cmp_i_ton" type="text"></td>
+</tr>
+
+<tr>
+<td>Turn-off Time</td>
+<td><input id="cmp_m_toff" type="text"></td>
+<td><input id="cmp_i_toff" type="text"></td>
+</tr>
+
+<tr>
+<td>Switching Loss</td>
+<td><input id="cmp_m_loss" type="text"></td>
+<td><input id="cmp_i_loss" type="text"></td>
+</tr>
+
+<tr>
+<td>Observed V–I Behaviour</td>
+<td><textarea></textarea></td>
+<td><textarea></textarea></td>
+</tr>
+
+</table>
+
+</div>
+
+
+<!-- GRAPH AREA -->
+<div class="card">
+
+<h2>12. Experimental Graphs</h2>
+
+<p>
+Students can paste their experimentally obtained graph or
+Simulink Scope screenshot here.
+</p>
+
+<input type="file"
+       accept="image/*"
+       onchange="previewImage(this,'graphPreview')">
+
+<div class="diagram-box" id="graphPreview">
+<span class="placeholder">
+Upload V–I characteristic / switching waveform / loss graph
+</span>
+</div>
+
+</div>
+
+
+<!-- RESULT -->
+<div class="card">
+
+<h2>13. Result</h2>
+
+<textarea id="resultText">
+The V–I characteristics, switching times and switching losses
+of the MOSFET and IGBT were studied experimentally.
+The measured parameters were recorded and compared.
+</textarea>
+
+</div>
+
+
+<!-- POST LAB -->
+<div class="card">
+
+<h2>14. Post-Lab Questions</h2>
+
+<div class="question">
+<b>Q1.</b> Why is a MOSFET generally suitable for high-frequency switching?
+<br><br>
+<textarea id="q1"></textarea>
+</div>
+
+<div class="question">
+<b>Q2.</b> What is the significance of turn-on and turn-off switching energy?
+<br><br>
+<textarea id="q2"></textarea>
+</div>
+
+<div class="question">
+<b>Q3.</b> What is the major difference between MOSFET and IGBT switching behaviour?
+<br><br>
+<textarea id="q3"></textarea>
+</div>
+
+<div class="question">
+<b>Q4.</b> What factors increase switching losses?
+<br><br>
+<textarea id="q4"></textarea>
+</div>
+
+</div>
+
+
+<!-- EVALUATION -->
+<div class="card no-print">
+
+<h2>15. Virtual Laboratory Evaluation</h2>
+
+<p>
+Enter your observations and submit the experiment for evaluation.
+</p>
+
+<button class="success" onclick="evaluateExperiment()">
+Evaluate Experiment
+</button>
+
+<button class="primary" onclick="saveExperiment()">
+Save Record
+</button>
+
+<button class="primary" onclick="saveJSON()">
+Save JSON
+</button>
+
+<button class="secondary" onclick="document.getElementById('jsonFileInput').click()">
+Load JSON
+</button>
+
+<input
+    type="file"
+    id="jsonFileInput"
+    accept=".json,application/json"
+    style="display:none"
+    onchange="loadJSON(event)"
+>
+
+<button class="warning" onclick="window.print()">
+Print / Save PDF
+</button>
+
+<button class="secondary" onclick="clearRecord()">
+Clear
+</button>
+
+<div class="result-box">
+
+<div id="evaluationMessage">
+Evaluation not yet submitted.
+</div>
+
+<div class="score" id="score"></div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<footer>
+Virtual Power Electronics & Drives Laboratory<br>
+Experiment 1 – MOSFET and IGBT Characterization
+</footer>
+
+
+<script>
+
+function previewImage(input,targetId){
+
+    const target=document.getElementById(targetId);
+
+    if(input.files && input.files[0]){
+
+        const reader=new FileReader();
+
+        reader.onload=function(e){
+
+            target.innerHTML=
+            `<img src="${e.target.result}" alt="Uploaded experiment image">`;
+
+        };
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+
+function openTab(id,button){
+
+    document.querySelectorAll('.tabcontent')
+    .forEach(x=>x.classList.remove('active'));
+
+    document.querySelectorAll('.tab')
+    .forEach(x=>x.classList.remove('active'));
+
+    document.getElementById(id).classList.add('active');
+
+    button.classList.add('active');
+}
+
+
+function calculatePower(input,tableId){
+
+    const row=input.closest('tr');
+
+    const cells=row.querySelectorAll('input');
+
+    const v=parseFloat(cells[1].value)||0;
+
+    const i=parseFloat(cells[2].value)||0;
+
+    row.querySelector('.power').textContent=
+    (v*i).toFixed(3);
+}
+
+
+function calculateMOSFET(){
+
+    const tdOn=parseFloat(document.getElementById('m_td_on').value)||0;
+    const tr=parseFloat(document.getElementById('m_tr').value)||0;
+
+    const tdOff=parseFloat(document.getElementById('m_td_off').value)||0;
+    const tf=parseFloat(document.getElementById('m_tf').value)||0;
+
+    const ton=tdOn+tr;
+    const toff=tdOff+tf;
+
+    document.getElementById('m_ton').textContent=
+    ton.toFixed(2)+" ns";
+
+    document.getElementById('m_toff').textContent=
+    toff.toFixed(2)+" ns";
+
+    document.getElementById('cmp_m_ton').value=
+    ton.toFixed(2)+" ns";
+
+    document.getElementById('cmp_m_toff').value=
+    toff.toFixed(2)+" ns";
+}
+
+
+function calculateIGBT(){
+
+    const tdOn=parseFloat(document.getElementById('i_td_on').value)||0;
+    const tr=parseFloat(document.getElementById('i_tr').value)||0;
+
+    const tdOff=parseFloat(document.getElementById('i_td_off').value)||0;
+    const tf=parseFloat(document.getElementById('i_tf').value)||0;
+
+    const ton=tdOn+tr;
+    const toff=tdOff+tf;
+
+    document.getElementById('i_ton').textContent=
+    ton.toFixed(2)+" ns";
+
+    document.getElementById('i_toff').textContent=
+    toff.toFixed(2)+" ns";
+
+    document.getElementById('cmp_i_ton').value=
+    ton.toFixed(2)+" ns";
+
+    document.getElementById('cmp_i_toff').value=
+    toff.toFixed(2)+" ns";
+}
+
+
+function calculateLoss(prefix){
+
+    const eon=parseFloat(
+        document.getElementById(prefix+'_eon').value
+    )||0;
+
+    const eoff=parseFloat(
+        document.getElementById(prefix+'_eoff').value
+    )||0;
+
+    const fs=parseFloat(
+        document.getElementById(prefix+'_fs').value
+    )||0;
+
+    // Energy is entered in microjoules
+    const energyJ=(eon+eoff)*1e-6;
+
+    const loss=energyJ*fs;
+
+    document.getElementById(prefix+'_loss').textContent=
+    loss.toFixed(5)+" W";
+
+    document.getElementById(
+        'cmp_'+prefix+'_loss'
+    ).value=loss.toFixed(5)+" W";
+}
+
+
+function evaluateExperiment(){
+
+    let score=0;
+
+    let max=10;
+
+    const requiredInputs=[
+
+        'studentName',
+        'registerNo',
+        'm_td_on',
+        'm_tr',
+        'm_td_off',
+        'm_tf',
+        'i_td_on',
+        'i_tr',
+        'i_td_off',
+        'i_tf'
+
+    ];
+
+    let completed=0;
+
+    requiredInputs.forEach(id=>{
+
+        const el=document.getElementById(id);
+
+        if(el && el.value.trim()!==""){
+            completed++;
+        }
+
+    });
+
+
+    // Observation completion
+    if(completed>=8) score+=4;
+    else if(completed>=5) score+=2;
+
+
+    // Calculation completion
+    if(
+        document.getElementById('m_loss').textContent!=="0 W" &&
+        document.getElementById('i_loss').textContent!=="0 W"
+    ){
+        score+=2;
+    }
+
+
+    // Post-lab answers
+    let answers=0;
+
+    ['q1','q2','q3','q4'].forEach(id=>{
+
+        if(document.getElementById(id).value.trim().length>20){
+            answers++;
+        }
+
+    });
+
+    score += Math.min(answers,4);
+
+
+    document.getElementById('score').textContent=
+    score+" / "+max;
+
+    let message="";
+
+    if(score>=9){
+
+        message=
+        "Excellent. Observation, calculations and post-lab work are substantially complete.";
+
+    }
+    else if(score>=7){
+
+        message=
+        "Good work. Check the remaining observations and calculations.";
+
+    }
+    else if(score>=5){
+
+        message=
+        "Partially complete. Enter all experimental measurements and answer the post-lab questions.";
+
+    }
+    else{
+
+        message=
+        "Incomplete record. Complete the observations, calculations and post-lab questions.";
+
+    }
+
+    document.getElementById('evaluationMessage').textContent=message;
+
+}
+
+
+function saveExperiment(){
+
+    const data={};
+
+    document.querySelectorAll('input,textarea').forEach(el=>{
+
+        if(el.type!=="file"){
+            data[el.id]=el.value;
+        }
+
+    });
+
+    localStorage.setItem(
+        "virtualLabExperiment1",
+        JSON.stringify(data)
+    );
+
+    alert("Experiment record saved in this browser.");
+}
+
+
+function loadExperiment(){
+
+    const saved=
+    localStorage.getItem("virtualLabExperiment1");
+
+    if(!saved) return;
+
+    const data=JSON.parse(saved);
+
+    Object.keys(data).forEach(id=>{
+
+        const el=document.getElementById(id);
+
+        if(el){
+            el.value=data[id];
+        }
+
+    });
+
+}
+
+
+function clearRecord(){
+
+    if(confirm("Clear the current experiment record?")){
+
+        document.querySelectorAll(
+            'input:not([type=file]),textarea'
+        ).forEach(el=>{
+
+            el.value="";
+
+        });
+
+        document.getElementById('score').textContent="";
+
+        document.getElementById(
+            'evaluationMessage'
+        ).textContent=
+        "Evaluation not yet submitted.";
+
+        localStorage.removeItem(
+            "virtualLabExperiment1"
+        );
+
+    }
+}
+
+/* =========================================================
+   SAVE COMPLETE EXPERIMENT AS JSON
+   ========================================================= */
+
+function saveJSON(){
+
+    const data = {
+        experiment: "Experiment 1 - MOSFET and IGBT Characterization",
+        version: "1.0",
+        savedAt: new Date().toISOString(),
+
+        studentDetails: {
+            studentName: document.getElementById("studentName").value,
+            registerNo: document.getElementById("registerNo").value,
+            classSection: document.getElementById("classSection").value,
+            expDate: document.getElementById("expDate").value,
+            batch: document.getElementById("batch").value,
+            faculty: document.getElementById("faculty").value
+        },
+
+        mosfetVI: getTableData("mosfetTable"),
+
+        igbtVI: getTableData("igbtTable"),
+
+        switchingTime: {
+            mosfet: {
+                tdOn: document.getElementById("m_td_on").value,
+                tr: document.getElementById("m_tr").value,
+                tdOff: document.getElementById("m_td_off").value,
+                tf: document.getElementById("m_tf").value,
+                ton: document.getElementById("m_ton").textContent,
+                toff: document.getElementById("m_toff").textContent
+            },
+
+            igbt: {
+                tdOn: document.getElementById("i_td_on").value,
+                tr: document.getElementById("i_tr").value,
+                tdOff: document.getElementById("i_td_off").value,
+                tf: document.getElementById("i_tf").value,
+                ton: document.getElementById("i_ton").textContent,
+                toff: document.getElementById("i_toff").textContent
+            }
+        },
+
+        switchingLoss: {
+            mosfet: {
+                eon: document.getElementById("m_eon").value,
+                eoff: document.getElementById("m_eoff").value,
+                fs: document.getElementById("m_fs").value,
+                loss: document.getElementById("m_loss").textContent
+            },
+
+            igbt: {
+                eon: document.getElementById("i_eon").value,
+                eoff: document.getElementById("i_eoff").value,
+                fs: document.getElementById("i_fs").value,
+                loss: document.getElementById("i_loss").textContent
+            }
+        },
+
+        comparison: {
+            mosfetTon: document.getElementById("cmp_m_ton").value,
+            igbtTon: document.getElementById("cmp_i_ton").value,
+
+            mosfetToff: document.getElementById("cmp_m_toff").value,
+            igbtToff: document.getElementById("cmp_i_toff").value,
+
+            mosfetLoss: document.getElementById("cmp_m_loss").value,
+            igbtLoss: document.getElementById("cmp_i_loss").value
+        },
+
+        result: document.getElementById("resultText").value,
+
+        postLab: {
+            q1: document.getElementById("q1").value,
+            q2: document.getElementById("q2").value,
+            q3: document.getElementById("q3").value,
+            q4: document.getElementById("q4").value
+        },
+
+        evaluation: {
+            score: document.getElementById("score").textContent,
+            message: document.getElementById("evaluationMessage").textContent
+        }
+    };
+
+
+    /* ---------------------------------------------------------
+       SAVE LOCAL STORAGE ALSO
+       --------------------------------------------------------- */
+
+    localStorage.setItem(
+        "virtualLabExperiment1",
+        JSON.stringify(data)
+    );
+
+
+    /* ---------------------------------------------------------
+       CONVERT DATA TO JSON FILE
+       --------------------------------------------------------- */
+
+    const jsonString =
+        JSON.stringify(data, null, 4);
+
+    const blob =
+        new Blob(
+            [jsonString],
+            { type: "application/json" }
+        );
+
+
+    const url =
+        URL.createObjectURL(blob);
+
+
+    /* ---------------------------------------------------------
+       FILE NAME
+       --------------------------------------------------------- */
+
+    let regNo =
+        document.getElementById("registerNo").value.trim();
+
+    if(regNo === ""){
+        regNo = "Student";
+    }
+
+    /* Remove characters that are not suitable for filenames */
+
+    regNo =
+        regNo.replace(/[^a-zA-Z0-9_-]/g, "_");
+
+
+    const fileName =
+        "Experiment1_" + regNo + ".json";
+
+
+    /* ---------------------------------------------------------
+       DOWNLOAD JSON
+       --------------------------------------------------------- */
+
+    const link =
+        document.createElement("a");
+
+    link.href = url;
+
+    link.download = fileName;
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+
+
+    alert(
+        "Experiment 1 has been saved as:\n\n" +
+        fileName
+    );
+}
+
+
+/* =========================================================
+   GET TABLE DATA
+   ========================================================= */
+
+function getTableData(tableId){
+
+    const table =
+        document.getElementById(tableId);
+
+    const rows =
+        table.querySelectorAll("tr");
+
+    const data = [];
+
+    rows.forEach((row, index) => {
+
+        /* Skip header row */
+
+        if(index === 0){
+            return;
+        }
+
+        const inputs =
+            row.querySelectorAll("input");
+
+        if(inputs.length === 0){
+            return;
+        }
+
+        const powerCell =
+            row.querySelector(".power");
+
+        data.push({
+
+            input1:
+                inputs[0] ? inputs[0].value : "",
+
+            input2:
+                inputs[1] ? inputs[1].value : "",
+
+            input3:
+                inputs[2] ? inputs[2].value : "",
+
+            power:
+                powerCell ?
+                powerCell.textContent : "0"
+        });
+
+    });
+
+    return data;
+}
+
+
+/* =========================================================
+   LOAD JSON FILE
+   ========================================================= */
+
+function loadJSON(event){
+
+    const file =
+        event.target.files[0];
+
+    if(!file){
+        return;
+    }
+
+
+    if(!file.name.toLowerCase().endsWith(".json")){
+
+        alert("Please select a valid JSON file.");
+
+        event.target.value = "";
+
+        return;
+    }
+
+
+    const reader =
+        new FileReader();
+
+
+    reader.onload =
+    function(e){
+
+        try{
+
+            const data =
+                JSON.parse(e.target.result);
+
+
+            /* -------------------------------------------------
+               CHECK EXPERIMENT
+               ------------------------------------------------- */
+
+            if(
+                !data.experiment ||
+                !data.experiment.includes(
+                    "Experiment 1"
+                )
+            ){
+
+                alert(
+                    "This JSON file does not belong to Experiment 1."
+                );
+
+                return;
+            }
+
+
+            /* -------------------------------------------------
+               STUDENT DETAILS
+               ------------------------------------------------- */
+
+            if(data.studentDetails){
+
+                setValue(
+                    "studentName",
+                    data.studentDetails.studentName
+                );
+
+                setValue(
+                    "registerNo",
+                    data.studentDetails.registerNo
+                );
+
+                setValue(
+                    "classSection",
+                    data.studentDetails.classSection
+                );
+
+                setValue(
+                    "expDate",
+                    data.studentDetails.expDate
+                );
+
+                setValue(
+                    "batch",
+                    data.studentDetails.batch
+                );
+
+                setValue(
+                    "faculty",
+                    data.studentDetails.faculty
+                );
+            }
+
+
+            /* -------------------------------------------------
+               MOSFET V-I TABLE
+               ------------------------------------------------- */
+
+            if(data.mosfetVI){
+
+                loadTableData(
+                    "mosfetTable",
+                    data.mosfetVI
+                );
+            }
+
+
+            /* -------------------------------------------------
+               IGBT V-I TABLE
+               ------------------------------------------------- */
+
+            if(data.igbtVI){
+
+                loadTableData(
+                    "igbtTable",
+                    data.igbtVI
+                );
+            }
+
+
+            /* -------------------------------------------------
+               SWITCHING TIME
+               ------------------------------------------------- */
+
+            if(data.switchingTime){
+
+                if(data.switchingTime.mosfet){
+
+                    setValue(
+                        "m_td_on",
+                        data.switchingTime.mosfet.tdOn
+                    );
+
+                    setValue(
+                        "m_tr",
+                        data.switchingTime.mosfet.tr
+                    );
+
+                    setValue(
+                        "m_td_off",
+                        data.switchingTime.mosfet.tdOff
+                    );
+
+                    setValue(
+                        "m_tf",
+                        data.switchingTime.mosfet.tf
+                    );
+
+                    calculateMOSFET();
+                }
+
+
+                if(data.switchingTime.igbt){
+
+                    setValue(
+                        "i_td_on",
+                        data.switchingTime.igbt.tdOn
+                    );
+
+                    setValue(
+                        "i_tr",
+                        data.switchingTime.igbt.tr
+                    );
+
+                    setValue(
+                        "i_td_off",
+                        data.switchingTime.igbt.tdOff
+                    );
+
+                    setValue(
+                        "i_tf",
+                        data.switchingTime.igbt.tf
+                    );
+
+                    calculateIGBT();
+                }
+            }
+
+
+            /* -------------------------------------------------
+               SWITCHING LOSS
+               ------------------------------------------------- */
+
+            if(data.switchingLoss){
+
+                if(data.switchingLoss.mosfet){
+
+                    setValue(
+                        "m_eon",
+                        data.switchingLoss.mosfet.eon
+                    );
+
+                    setValue(
+                        "m_eoff",
+                        data.switchingLoss.mosfet.eoff
+                    );
+
+                    setValue(
+                        "m_fs",
+                        data.switchingLoss.mosfet.fs
+                    );
+
+                    calculateLoss("m");
+                }
+
+
+                if(data.switchingLoss.igbt){
+
+                    setValue(
+                        "i_eon",
+                        data.switchingLoss.igbt.eon
+                    );
+
+                    setValue(
+                        "i_eoff",
+                        data.switchingLoss.igbt.eoff
+                    );
+
+                    setValue(
+                        "i_fs",
+                        data.switchingLoss.igbt.fs
+                    );
+
+                    calculateLoss("i");
+                }
+            }
+
+
+            /* -------------------------------------------------
+               COMPARISON
+               ------------------------------------------------- */
+
+            if(data.comparison){
+
+                setValue(
+                    "cmp_m_ton",
+                    data.comparison.mosfetTon
+                );
+
+                setValue(
+                    "cmp_i_ton",
+                    data.comparison.igbtTon
+                );
+
+                setValue(
+                    "cmp_m_toff",
+                    data.comparison.mosfetToff
+                );
+
+                setValue(
+                    "cmp_i_toff",
+                    data.comparison.igbtToff
+                );
+
+                setValue(
+                    "cmp_m_loss",
+                    data.comparison.mosfetLoss
+                );
+
+                setValue(
+                    "cmp_i_loss",
+                    data.comparison.igbtLoss
+                );
+            }
+
+
+            /* -------------------------------------------------
+               RESULT
+               ------------------------------------------------- */
+
+            if(data.result !== undefined){
+
+                setValue(
+                    "resultText",
+                    data.result
+                );
+            }
+
+
+            /* -------------------------------------------------
+               POST LAB
+               ------------------------------------------------- */
+
+            if(data.postLab){
+
+                setValue(
+                    "q1",
+                    data.postLab.q1
+                );
+
+                setValue(
+                    "q2",
+                    data.postLab.q2
+                );
+
+                setValue(
+                    "q3",
+                    data.postLab.q3
+                );
+
+                setValue(
+                    "q4",
+                    data.postLab.q4
+                );
+            }
+
+
+            /* -------------------------------------------------
+               EVALUATION
+               ------------------------------------------------- */
+
+            if(data.evaluation){
+
+                document.getElementById(
+                    "score"
+                ).textContent =
+                    data.evaluation.score || "";
+
+                document.getElementById(
+                    "evaluationMessage"
+                ).textContent =
+                    data.evaluation.message ||
+                    "Evaluation not yet submitted.";
+            }
+
+
+            /* -------------------------------------------------
+               SAVE LOADED DATA TO LOCAL STORAGE
+               ------------------------------------------------- */
+
+            localStorage.setItem(
+                "virtualLabExperiment1",
+                JSON.stringify(data)
+            );
+
+
+            alert(
+                "Experiment 1 JSON file loaded successfully."
+            );
+
+        }
+
+        catch(error){
+
+            console.error(error);
+
+            alert(
+                "Error loading JSON file.\n\n" +
+                "Please select a valid Experiment 1 JSON file."
+            );
+        }
+
+        finally{
+
+            /* Allow the same file to be selected again */
+
+            event.target.value = "";
+        }
+
+    };
+
+
+    reader.readAsText(file);
+}
+
+
+/* =========================================================
+   SET INPUT VALUE SAFELY
+   ========================================================= */
+
+function setValue(id,value){
+
+    const el =
+        document.getElementById(id);
+
+    if(el){
+
+        el.value =
+            value !== undefined &&
+            value !== null
+            ? value
+            : "";
+    }
+}
+
+
+/* =========================================================
+   LOAD TABLE DATA
+   ========================================================= */
+
+function loadTableData(tableId,data){
+
+    const table =
+        document.getElementById(tableId);
+
+    if(!table || !Array.isArray(data)){
+        return;
+    }
+
+    const rows =
+        table.querySelectorAll("tr");
+
+
+    data.forEach((item,index)=>{
+
+        const row =
+            rows[index + 1];
+
+        if(!row){
+            return;
+        }
+
+        const inputs =
+            row.querySelectorAll("input");
+
+        if(inputs[0]){
+            inputs[0].value =
+                item.input1 || "";
+        }
+
+        if(inputs[1]){
+            inputs[1].value =
+                item.input2 || "";
+        }
+
+        if(inputs[2]){
+            inputs[2].value =
+                item.input3 || "";
+        }
+
+        const power =
+            row.querySelector(".power");
+
+        if(power){
+
+            power.textContent =
+                item.power || "0";
+        }
+
+    });
+}
+
+window.onload=function(){
+
+    loadExperiment();
+
+    const date=
+    document.getElementById("expDate");
+
+    if(!date.value){
+
+        date.value=
+        new Date().toISOString().split("T")[0];
+
+    }
+
+};
+
+</script>
+
+</body>
+</html>
+

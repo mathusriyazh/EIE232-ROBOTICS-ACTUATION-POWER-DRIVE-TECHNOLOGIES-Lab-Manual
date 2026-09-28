@@ -1,0 +1,3525 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Virtual Power Electronics Lab - Experiment 2</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#07111f;
+    color:#e8f0f8;
+}
+
+header{
+    background:linear-gradient(135deg,#09233d,#124c70);
+    padding:25px;
+    border-bottom:2px solid #1f83b8;
+}
+
+header h1{
+    margin:0 0 8px;
+    font-size:28px;
+}
+
+header p{
+    margin:5px 0;
+    color:#b8d8e9;
+}
+
+.container{
+    max-width:1500px;
+    margin:auto;
+    padding:20px;
+}
+
+.card{
+    background:#0d1b2a;
+    border:1px solid #24445e;
+    border-radius:12px;
+    padding:20px;
+    margin-bottom:20px;
+    box-shadow:0 8px 25px rgba(0,0,0,.25);
+}
+
+.card h2{
+    color:#55c2ff;
+    margin-top:0;
+    border-bottom:1px solid #24445e;
+    padding-bottom:10px;
+}
+
+.card h3{
+    color:#8bd8ff;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:15px;
+}
+
+label{
+    display:block;
+    margin-bottom:6px;
+    color:#bdd5e5;
+    font-weight:bold;
+}
+
+input,select,textarea{
+    width:100%;
+    padding:10px;
+    border-radius:7px;
+    border:1px solid #3b607a;
+    background:#081522;
+    color:#fff;
+    font-size:14px;
+}
+
+textarea{
+    min-height:100px;
+    resize:vertical;
+}
+
+button{
+    padding:11px 18px;
+    border:0;
+    border-radius:7px;
+    cursor:pointer;
+    font-weight:bold;
+    margin:5px;
+}
+
+.primary{
+    background:#1597d4;
+    color:#fff;
+}
+
+.success{
+    background:#22a06b;
+    color:#fff;
+}
+
+.warning{
+    background:#d58a18;
+    color:#fff;
+}
+
+.danger{
+    background:#c94b4b;
+    color:#fff;
+}
+
+.secondary{
+    background:#34495e;
+    color:#fff;
+}
+
+button:hover{
+    opacity:.85;
+}
+
+.diagram-box{
+    min-height:300px;
+    border:2px dashed #3d6884;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:20px;
+    background:#091725;
+}
+
+.diagram-box img{
+    max-width:100%;
+    max-height:600px;
+    border-radius:8px;
+}
+
+.placeholder{
+    color:#7fa6bd;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:12px;
+}
+
+th,td{
+    border:1px solid #31516a;
+    padding:9px;
+    text-align:center;
+}
+
+th{
+    background:#15334b;
+    color:#8bd8ff;
+}
+
+td input{
+    min-width:80px;
+    text-align:center;
+}
+
+.formula{
+    background:#07131f;
+    border-left:4px solid #35a9df;
+    padding:12px;
+    margin:10px 0;
+    font-family:"Courier New",monospace;
+    color:#d9f2ff;
+}
+
+.step{
+    padding:10px;
+    margin:6px 0;
+    background:#102538;
+    border-radius:7px;
+}
+
+.result-box{
+    background:#081722;
+    border:1px solid #2b5873;
+    padding:15px;
+    border-radius:8px;
+    margin-top:15px;
+}
+
+.question{
+    background:#0a1724;
+    padding:15px;
+    border:1px solid #28475e;
+    border-radius:8px;
+    margin-bottom:15px;
+}
+
+.score{
+    font-size:25px;
+    color:#67e8a3;
+    font-weight:bold;
+}
+
+.badge{
+    display:inline-block;
+    padding:5px 10px;
+    background:#173e57;
+    color:#8bd8ff;
+    border-radius:15px;
+    font-size:12px;
+}
+
+.highlight{
+    background:#102f45;
+    border:1px solid #23739e;
+    padding:15px;
+    border-radius:8px;
+}
+
+footer{
+    text-align:center;
+    padding:25px;
+    color:#7898ad;
+}
+
+@media print{
+
+    body{
+        background:white;
+        color:black;
+    }
+
+    .no-print,
+    button{
+        display:none !important;
+    }
+
+    .card{
+        border:1px solid #999;
+        box-shadow:none;
+        color:black;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div class="container">
+
+<span class="badge">
+POWER ELECTRONICS & DRIVES VIRTUAL LAB
+</span>
+
+<h1>
+Experiment 2: Buck Converter with Variable Load Profile
+</h1>
+
+<p>
+MATLAB/Simulink Simulation • Variable Load • Output Voltage • Current • Power • Efficiency
+</p>
+
+</div>
+
+</header>
+
+
+<div class="container">
+
+
+<!-- STUDENT DETAILS -->
+
+<div class="card">
+
+<h2>1. Student Details</h2>
+
+<div class="grid">
+
+<div>
+<label>Student Name</label>
+<input id="studentName">
+</div>
+
+<div>
+<label>Register Number</label>
+<input id="registerNo">
+</div>
+
+<div>
+<label>Class / Section</label>
+<input id="classSection">
+</div>
+
+<div>
+<label>Date</label>
+<input id="expDate" type="date">
+</div>
+
+<div>
+<label>Batch</label>
+<input id="batch">
+</div>
+
+<div>
+<label>Faculty</label>
+<input id="faculty">
+</div>
+
+</div>
+
+</div>
+
+
+<!-- AIM -->
+
+<div class="card">
+
+<h2>2. Aim</h2>
+
+<p>
+To simulate a DC-DC buck converter in MATLAB/Simulink and study
+its output voltage, inductor current, output current and power
+for a variable load profile.
+</p>
+
+</div>
+
+
+<!-- OBJECTIVES -->
+
+<div class="card">
+
+<h2>3. Learning Objectives</h2>
+
+<ul>
+
+<li>Understand the operation of a buck converter.</li>
+
+<li>Understand PWM-based voltage control.</li>
+
+<li>Verify the relationship between duty ratio and output voltage.</li>
+
+<li>Study converter behaviour under variable load.</li>
+
+<li>Observe transient and steady-state responses.</li>
+
+<li>Calculate output power and efficiency.</li>
+
+</ul>
+
+</div>
+
+
+<!-- SOFTWARE -->
+
+<div class="card">
+
+<h2>4. Software Required</h2>
+
+<ul>
+
+<li>MATLAB</li>
+<li>Simulink</li>
+<li>Simscape Electrical</li>
+
+</ul>
+
+</div>
+
+
+<!-- SIMULINK BLOCKS -->
+
+<div class="card">
+
+<h2>5. Required Simulink Blocks</h2>
+
+<div class="grid">
+
+<div class="highlight">DC Voltage Source</div>
+<div class="highlight">MOSFET / IGBT</div>
+<div class="highlight">Diode</div>
+<div class="highlight">Inductor</div>
+<div class="highlight">Capacitor</div>
+<div class="highlight">Variable Load</div>
+<div class="highlight">PWM Generator</div>
+<div class="highlight">Voltage Measurement</div>
+<div class="highlight">Current Measurement</div>
+<div class="highlight">Scope</div>
+<div class="highlight">Electrical Reference</div>
+<div class="highlight">Solver Configuration</div>
+
+</div>
+
+</div>
+
+
+<!-- THEORY -->
+
+<div class="card">
+
+<h2>6. Theory</h2>
+
+<p>
+A buck converter is a DC-DC converter that produces an output
+voltage lower than the input voltage under ideal buck operation.
+</p>
+
+<h3>Ideal Buck Converter</h3>
+
+<div class="formula">
+
+Vo = D × Vin
+
+</div>
+
+<p>
+where:
+</p>
+
+<ul>
+
+<li>Vo = average output voltage</li>
+<li>Vin = input voltage</li>
+<li>D = duty ratio</li>
+
+</ul>
+
+
+<h3>Duty Ratio</h3>
+
+<div class="formula">
+
+D = Ton / Ts
+
+</div>
+
+
+<h3>Output Current</h3>
+
+<div class="formula">
+
+Io = Vo / R
+
+</div>
+
+
+<h3>Output Power</h3>
+
+<div class="formula">
+
+Po = Vo × Io
+
+</div>
+
+
+<h3>Input Power</h3>
+
+<div class="formula">
+
+Pin = Vin × Iin
+
+</div>
+
+
+<h3>Efficiency</h3>
+
+<div class="formula">
+
+η = (Po / Pin) × 100
+
+</div>
+
+</div>
+
+
+<!-- SIMULINK DIAGRAM -->
+
+<div class="card">
+
+<h2>7. Simulink Model Submission</h2>
+
+<p>
+Construct the buck converter in MATLAB/Simulink and upload a
+screenshot of the complete model.
+</p>
+
+<input
+type="file"
+id="simulinkImage"
+accept="image/*"
+onchange="previewImage(this,'simulinkPreview')">
+
+<div class="diagram-box" id="simulinkPreview">
+
+<span class="placeholder">
+
+Upload your Simulink buck converter model screenshot
+
+</span>
+
+</div>
+
+</div>
+
+
+<!-- PROCEDURE -->
+
+<div class="card">
+
+<h2>8. Procedure</h2>
+
+<div class="step">
+1. Open MATLAB and Simulink.
+</div>
+
+<div class="step">
+2. Create a new Simulink model.
+</div>
+
+<div class="step">
+3. Place the DC voltage source.
+</div>
+
+<div class="step">
+4. Construct the buck converter using MOSFET, diode,
+inductor and capacitor.
+</div>
+
+<div class="step">
+5. Connect the variable load at the converter output.
+</div>
+
+<div class="step">
+6. Connect the PWM generator to the MOSFET gate.
+</div>
+
+<div class="step">
+7. Set the input voltage to the specified value.
+</div>
+
+<div class="step">
+8. Set the switching frequency.
+</div>
+
+<div class="step">
+9. Set the required duty ratio.
+</div>
+
+<div class="step">
+10. Define the variable load profile.
+</div>
+
+<div class="step">
+11. Measure output voltage, output current and inductor current.
+</div>
+
+<div class="step">
+12. Run the simulation.
+</div>
+
+<div class="step">
+13. Observe the transient response when the load changes.
+</div>
+
+<div class="step">
+14. Record the steady-state values.
+</div>
+
+<div class="step">
+15. Compare theoretical and simulated output voltage.
+</div>
+
+</div>
+
+
+<!-- DESIGN PARAMETERS -->
+
+<div class="card">
+
+<h2>9. Converter Parameters</h2>
+
+<div class="grid">
+
+<div>
+
+<label>Input Voltage Vin (V)</label>
+
+<input
+id="vin"
+type="number"
+value="48"
+step="any">
+
+</div>
+
+<div>
+
+<label>Switching Frequency fs (Hz)</label>
+
+<input
+id="fs"
+type="number"
+value="20000"
+step="any">
+
+</div>
+
+<div>
+
+<label>Duty Ratio D</label>
+
+<input
+id="duty"
+type="number"
+value="0.5"
+step="0.01"
+min="0"
+max="1">
+
+</div>
+
+<div>
+
+<label>Inductance L (mH)</label>
+
+<input
+id="inductance"
+type="number"
+value="1"
+step="any">
+
+</div>
+
+<div>
+
+<label>Capacitance C (µF)</label>
+
+<input
+id="capacitance"
+type="number"
+value="470"
+step="any">
+
+</div>
+
+</div>
+
+
+<button class="primary" onclick="calculateTheory()">
+
+Calculate Theoretical Output
+
+</button>
+
+
+<div class="result-box">
+
+Theoretical Output Voltage:
+
+<strong id="theoryVo">0 V</strong>
+
+<br><br>
+
+Theoretical Output Current for Load 1:
+
+<strong id="theoryIo">0 A</strong>
+
+<br><br>
+
+Theoretical Output Power:
+
+<strong id="theoryPo">0 W</strong>
+
+</div>
+
+</div>
+
+
+<!-- VARIABLE LOAD PROFILE -->
+
+<div class="card">
+
+<h2>10. Variable Load Profile</h2>
+
+<p>
+Enter the load profile used in the Simulink model.
+</p>
+
+<table id="loadTable">
+
+<tr>
+
+<th>Interval</th>
+<th>Start Time (s)</th>
+<th>End Time (s)</th>
+<th>Load Resistance (Ω)</th>
+<th>Expected Output Voltage (V)</th>
+<th>Expected Current (A)</th>
+<th>Expected Power (W)</th>
+
+</tr>
+
+
+<tr>
+
+<td>1</td>
+
+<td>
+<input class="startTime" type="number" value="0" step="any">
+</td>
+
+<td>
+<input class="endTime" type="number" value="0.1" step="any">
+</td>
+
+<td>
+<input class="loadR" type="number" value="20" step="any"
+oninput="calculateLoadRow(this)">
+</td>
+
+<td class="expectedV">0</td>
+
+<td class="expectedI">0</td>
+
+<td class="expectedP">0</td>
+
+</tr>
+
+
+<tr>
+
+<td>2</td>
+
+<td>
+<input class="startTime" type="number" value="0.1" step="any">
+</td>
+
+<td>
+<input class="endTime" type="number" value="0.2" step="any">
+</td>
+
+<td>
+<input class="loadR" type="number" value="10" step="any"
+oninput="calculateLoadRow(this)">
+</td>
+
+<td class="expectedV">0</td>
+
+<td class="expectedI">0</td>
+
+<td class="expectedP">0</td>
+
+</tr>
+
+
+<tr>
+
+<td>3</td>
+
+<td>
+<input class="startTime" type="number" value="0.2" step="any">
+</td>
+
+<td>
+<input class="endTime" type="number" value="0.3" step="any">
+</td>
+
+<td>
+<input class="loadR" type="number" value="30" step="any"
+oninput="calculateLoadRow(this)">
+</td>
+
+<td class="expectedV">0</td>
+
+<td class="expectedI">0</td>
+
+<td class="expectedP">0</td>
+
+</tr>
+
+</table>
+
+
+<button class="primary" onclick="calculateAllLoads()">
+
+Calculate Load Profile
+
+</button>
+
+</div>
+
+
+<!-- STUDENT OBSERVATION -->
+
+<div class="card">
+
+<h2>11. Student Observation Table</h2>
+
+<p>
+Enter the values obtained from the Simulink Scope.
+</p>
+
+<table>
+
+<tr>
+
+<th>Time Interval</th>
+<th>Load (Ω)</th>
+<th>Measured Vo (V)</th>
+<th>Measured Io (A)</th>
+<th>Inductor Current (A)</th>
+<th>Output Power (W)</th>
+<th>Deviation (%)</th>
+
+</tr>
+
+
+<tr>
+
+<td>0 – 0.1 s</td>
+
+<td>
+<input id="obsR1" type="number" step="any" value="20">
+</td>
+
+<td>
+<input id="obsV1" type="number" step="any">
+</td>
+
+<td>
+<input id="obsI1" type="number" step="any">
+</td>
+
+<td>
+<input id="obsIL1" type="number" step="any">
+</td>
+
+<td id="obsP1">0</td>
+
+<td id="dev1">0</td>
+
+</tr>
+
+
+<tr>
+
+<td>0.1 – 0.2 s</td>
+
+<td>
+<input id="obsR2" type="number" step="any" value="10">
+</td>
+
+<td>
+<input id="obsV2" type="number" step="any">
+</td>
+
+<td>
+<input id="obsI2" type="number" step="any">
+</td>
+
+<td>
+<input id="obsIL2" type="number" step="any">
+</td>
+
+<td id="obsP2">0</td>
+
+<td id="dev2">0</td>
+
+</tr>
+
+
+<tr>
+
+<td>0.2 – 0.3 s</td>
+
+<td>
+<input id="obsR3" type="number" step="any" value="30">
+</td>
+
+<td>
+<input id="obsV3" type="number" step="any">
+</td>
+
+<td>
+<input id="obsI3" type="number" step="any">
+</td>
+
+<td>
+<input id="obsIL3" type="number" step="any">
+</td>
+
+<td id="obsP3">0</td>
+
+<td id="dev3">0</td>
+
+</tr>
+
+</table>
+
+
+<button class="success" onclick="calculateObservations()">
+
+Calculate Observations
+
+</button>
+
+
+<div class="result-box">
+
+Average Measured Output Voltage:
+
+<strong id="avgVo">0 V</strong>
+
+<br><br>
+
+Average Output Power:
+
+<strong id="avgPo">0 W</strong>
+
+<br><br>
+
+Average Deviation:
+
+<strong id="avgDev">0 %</strong>
+
+</div>
+
+</div>
+
+
+<!-- WAVEFORM UPLOAD -->
+
+<div class="card">
+
+<h2>12. Simulink Scope Waveform</h2>
+
+<p>
+Upload the Scope screenshot showing:
+
+</p>
+
+<ul>
+
+<li>Gate pulse</li>
+<li>Output voltage</li>
+<li>Output current</li>
+<li>Inductor current</li>
+<li>Load-change transient</li>
+
+</ul>
+
+
+<input
+type="file"
+id="scopeImage"
+accept="image/*"
+onchange="previewImage(this,'scopePreview')">
+
+
+<div class="diagram-box" id="scopePreview">
+
+<span class="placeholder">
+
+Upload Simulink Scope screenshot
+
+</span>
+
+</div>
+
+</div>
+
+
+<!-- GRAPH -->
+
+<div class="card">
+
+<h2>13. Experimental Graph</h2>
+
+<p>
+Upload the graph generated from the simulation.
+</p>
+
+<input
+type="file"
+accept="image/*"
+onchange="previewImage(this,'graphPreview')">
+
+<div class="diagram-box" id="graphPreview">
+
+<span class="placeholder">
+
+Upload Output Voltage / Current / Load Response Graph
+
+</span>
+
+</div>
+
+</div>
+
+
+<!-- PERFORMANCE -->
+
+<div class="card">
+
+<h2>14. Performance Analysis</h2>
+
+<div class="grid">
+
+<div>
+
+<label>Measured Input Voltage (V)</label>
+<input id="measuredVin" type="number" step="any">
+
+</div>
+
+<div>
+
+<label>Measured Input Current (A)</label>
+<input id="measuredIin" type="number" step="any">
+
+</div>
+
+</div>
+
+
+<button class="primary" onclick="calculateEfficiency()">
+
+Calculate Efficiency
+
+</button>
+
+
+<div class="result-box">
+
+Input Power:
+
+<strong id="inputPower">0 W</strong>
+
+<br><br>
+
+Output Power:
+
+<strong id="outputPower">0 W</strong>
+
+<br><br>
+
+Efficiency:
+
+<strong id="efficiency">0 %</strong>
+
+</div>
+
+</div>
+
+
+<!-- TRANSIENT RESPONSE -->
+
+<div class="card">
+
+<h2>15. Transient Response Analysis</h2>
+
+<div class="grid">
+
+<div>
+
+<label>Initial Output Voltage (V)</label>
+
+<input id="initialVo" type="number" step="any">
+
+</div>
+
+<div>
+
+<label>Final Output Voltage (V)</label>
+
+<input id="finalVo" type="number" step="any">
+
+</div>
+
+<div>
+
+<label>Maximum Output Voltage (V)</label>
+
+<input id="maxVo" type="number" step="any">
+
+</div>
+
+<div>
+
+<label>Settling Time (s)</label>
+
+<input id="settlingTime" type="number" step="any">
+
+</div>
+
+</div>
+
+
+<button class="primary" onclick="calculateOvershoot()">
+
+Calculate Overshoot
+
+</button>
+
+
+<div class="result-box">
+
+Overshoot:
+
+<strong id="overshoot">0 %</strong>
+
+</div>
+
+</div>
+
+
+<!-- RESULT -->
+
+<div class="card">
+
+<h2>16. Result</h2>
+
+<textarea id="resultText">
+
+The buck converter was successfully simulated in MATLAB/Simulink
+with a variable load profile. The output voltage, output current,
+inductor current, output power and transient response were observed.
+The theoretical and simulated values were compared.
+
+</textarea>
+
+</div>
+
+
+<!-- POST LAB -->
+
+<div class="card">
+
+<h2>17. Post-Lab Questions</h2>
+
+
+<div class="question">
+
+<b>Q1.</b>
+
+What is the principle of operation of a buck converter?
+
+<br><br>
+
+<textarea id="q1"></textarea>
+
+</div>
+
+
+<div class="question">
+
+<b>Q2.</b>
+
+For an ideal buck converter, what is the relationship between
+duty ratio and output voltage?
+
+<br><br>
+
+<textarea id="q2"></textarea>
+
+</div>
+
+
+<div class="question">
+
+<b>Q3.</b>
+
+What happens to the output current when the load resistance
+is decreased?
+
+<br><br>
+
+<textarea id="q3"></textarea>
+
+</div>
+
+
+<div class="question">
+
+<b>Q4.</b>
+
+Why does the output voltage exhibit a transient when the load changes?
+
+<br><br>
+
+<textarea id="q4"></textarea>
+
+</div>
+
+
+<div class="question">
+
+<b>Q5.</b>
+
+What is the purpose of the output capacitor in a buck converter?
+
+<br><br>
+
+<textarea id="q5"></textarea>
+
+</div>
+
+</div>
+
+
+<!-- EVALUATION -->
+
+<div class="card no-print">
+
+<h2>18. Virtual Laboratory Evaluation</h2>
+
+<p>
+Complete the observation table, calculations, waveform submission
+and post-lab questions before submitting.
+</p>
+
+
+<button class="success" onclick="evaluateExperiment()">
+Evaluate Experiment
+</button>
+
+<button class="primary" onclick="saveExperiment()">
+Save Record
+</button>
+
+<button class="primary" onclick="saveJSON()">
+Save JSON
+</button>
+
+<button class="secondary" onclick="document.getElementById('jsonFileInput').click()">
+Load JSON
+</button>
+
+<input
+    type="file"
+    id="jsonFileInput"
+    accept=".json,application/json"
+    style="display:none"
+    onchange="loadJSON(event)"
+>
+
+<button class="warning" onclick="window.print()">
+Print / Save PDF
+</button>
+
+<button class="secondary" onclick="clearRecord()">
+Clear
+</button>
+
+<div class="result-box">
+
+<div id="evaluationMessage">
+
+Evaluation not yet submitted.
+
+</div>
+
+<br>
+
+<div class="score" id="score"></div>
+
+</div>
+
+</div>
+
+
+</div>
+
+
+<footer>
+
+Virtual Power Electronics & Drives Laboratory<br>
+
+Experiment 2 – Buck Converter with Variable Load Profile
+
+</footer>
+
+
+<script>
+
+
+/* ==============================
+IMAGE PREVIEW
+============================== */
+
+function previewImage(input,targetId){
+
+    const target=document.getElementById(targetId);
+
+    if(input.files && input.files[0]){
+
+        const reader=new FileReader();
+
+        reader.onload=function(e){
+
+            target.innerHTML=
+            `<img src="${e.target.result}" alt="Experiment image">`;
+
+        };
+
+        reader.readAsDataURL(input.files[0]);
+
+    }
+
+}
+
+
+/* ==============================
+THEORETICAL CALCULATION
+============================== */
+
+function calculateTheory(){
+
+    const vin=
+    parseFloat(document.getElementById("vin").value)||0;
+
+    const duty=
+    parseFloat(document.getElementById("duty").value)||0;
+
+    const R=
+    parseFloat(document.querySelector(".loadR").value)||0;
+
+    const vo=vin*duty;
+
+    const io=R>0 ? vo/R : 0;
+
+    const po=vo*io;
+
+    document.getElementById("theoryVo").textContent=
+    vo.toFixed(3)+" V";
+
+    document.getElementById("theoryIo").textContent=
+    io.toFixed(3)+" A";
+
+    document.getElementById("theoryPo").textContent=
+    po.toFixed(3)+" W";
+
+    calculateAllLoads();
+
+}
+
+
+/* ==============================
+VARIABLE LOAD CALCULATION
+============================== */
+
+function calculateLoadRow(input){
+
+    const row=input.closest("tr");
+
+    const vin=
+    parseFloat(document.getElementById("vin").value)||0;
+
+    const duty=
+    parseFloat(document.getElementById("duty").value)||0;
+
+    const R=
+    parseFloat(row.querySelector(".loadR").value)||0;
+
+    const vo=vin*duty;
+
+    const io=R>0 ? vo/R : 0;
+
+    const po=vo*io;
+
+    row.querySelector(".expectedV").textContent=
+    vo.toFixed(3);
+
+    row.querySelector(".expectedI").textContent=
+    io.toFixed(3);
+
+    row.querySelector(".expectedP").textContent=
+    po.toFixed(3);
+
+}
+
+
+function calculateAllLoads(){
+
+    document.querySelectorAll("#loadTable .loadR")
+    .forEach(input=>calculateLoadRow(input));
+
+}
+
+
+/* ==============================
+OBSERVATION CALCULATION
+============================== */
+
+function calculateObservations(){
+
+    const voTheory=
+    parseFloat(
+        document.getElementById("vin").value
+    )*
+    parseFloat(
+        document.getElementById("duty").value
+    );
+
+    let totalV=0;
+    let totalP=0;
+    let totalDev=0;
+    let count=0;
+
+    for(let n=1;n<=3;n++){
+
+        const R=
+        parseFloat(
+            document.getElementById("obsR"+n).value
+        )||0;
+
+        const V=
+        parseFloat(
+            document.getElementById("obsV"+n).value
+        )||0;
+
+        const I=
+        parseFloat(
+            document.getElementById("obsI"+n).value
+        )||0;
+
+        const P=V*I;
+
+        document.getElementById("obsP"+n)
+        .textContent=P.toFixed(3);
+
+        let dev=0;
+
+        if(voTheory!==0){
+
+            dev=
+            Math.abs(voTheory-V)/
+            Math.abs(voTheory)*100;
+
+        }
+
+        document.getElementById("dev"+n)
+        .textContent=dev.toFixed(2);
+
+        if(V>0){
+
+            totalV+=V;
+            totalP+=P;
+            totalDev+=dev;
+
+            count++;
+
+        }
+
+    }
+
+    if(count>0){
+
+        document.getElementById("avgVo")
+        .textContent=
+        (totalV/count).toFixed(3)+" V";
+
+        document.getElementById("avgPo")
+        .textContent=
+        (totalP/count).toFixed(3)+" W";
+
+        document.getElementById("avgDev")
+        .textContent=
+        (totalDev/count).toFixed(2)+" %";
+
+    }
+
+}
+
+
+/* ==============================
+EFFICIENCY
+============================== */
+
+function calculateEfficiency(){
+
+    const vin=
+    parseFloat(
+        document.getElementById("measuredVin").value
+    )||0;
+
+    const iin=
+    parseFloat(
+        document.getElementById("measuredIin").value
+    )||0;
+
+    const inputPower=vin*iin;
+
+    const outputPower=
+    parseFloat(
+        document.getElementById("avgPo").textContent
+    )||0;
+
+    const eta=
+    inputPower>0 ?
+    outputPower/inputPower*100 : 0;
+
+    document.getElementById("inputPower")
+    .textContent=inputPower.toFixed(3)+" W";
+
+    document.getElementById("outputPower")
+    .textContent=outputPower.toFixed(3)+" W";
+
+    document.getElementById("efficiency")
+    .textContent=eta.toFixed(2)+" %";
+
+}
+
+
+/* ==============================
+OVERSHOOT
+============================== */
+
+function calculateOvershoot(){
+
+    const finalV=
+    parseFloat(
+        document.getElementById("finalVo").value
+    )||0;
+
+    const maxV=
+    parseFloat(
+        document.getElementById("maxVo").value
+    )||0;
+
+    let overshoot=0;
+
+    if(finalV!==0){
+
+        overshoot=
+        ((maxV-finalV)/finalV)*100;
+
+    }
+
+    document.getElementById("overshoot")
+    .textContent=
+    overshoot.toFixed(2)+" %";
+
+}
+
+
+/* ==============================
+EVALUATION
+============================== */
+
+function evaluateExperiment(){
+
+    let score=0;
+
+    const maxScore=10;
+
+
+    /* Student details – 1 mark */
+
+    const student=
+    document.getElementById("studentName").value.trim();
+
+    const register=
+    document.getElementById("registerNo").value.trim();
+
+    if(student && register){
+
+        score+=1;
+
+    }
+
+
+    /* Simulink model – 2 marks */
+
+    const simImage=
+    document.getElementById("simulinkImage").files.length;
+
+    if(simImage){
+
+        score+=2;
+
+    }
+
+
+    /* Observation – 3 marks */
+
+    let observations=0;
+
+    for(let n=1;n<=3;n++){
+
+        const V=
+        document.getElementById("obsV"+n).value;
+
+        const I=
+        document.getElementById("obsI"+n).value;
+
+        if(V && I){
+
+            observations++;
+
+        }
+
+    }
+
+    if(observations===3){
+
+        score+=3;
+
+    }
+
+    else if(observations>=1){
+
+        score+=1;
+
+    }
+
+
+    /* Waveform – 1 mark */
+
+    if(
+        document.getElementById("scopeImage")
+        .files.length
+    ){
+
+        score+=1;
+
+    }
+
+
+    /* Questions – 3 questions worth 1 mark total */
+
+    let answered=0;
+
+    ["q1","q2","q3","q4","q5"].forEach(id=>{
+
+        if(
+            document.getElementById(id)
+            .value.trim().length>20
+        ){
+
+            answered++;
+
+        }
+
+    });
+
+    if(answered>=4){
+
+        score+=2;
+
+    }
+
+    else if(answered>=2){
+
+        score+=1;
+
+    }
+
+
+    /* Limit score */
+
+    score=Math.min(score,maxScore);
+
+
+    document.getElementById("score")
+    .textContent=
+    score+" / "+maxScore;
+
+
+    let message="";
+
+
+    if(score>=9){
+
+        message=
+        "Excellent work. The virtual laboratory record is substantially complete.";
+
+    }
+
+    else if(score>=7){
+
+        message=
+        "Good work. Complete the remaining observations or post-lab activities.";
+
+    }
+
+    else if(score>=5){
+
+        message=
+        "Partially complete. Upload the Simulink model, waveform and complete observations.";
+
+    }
+
+    else{
+
+        message=
+        "Incomplete experiment. Complete the required laboratory activities.";
+
+    }
+
+
+    document.getElementById("evaluationMessage")
+    .textContent=message;
+
+}
+
+
+/* ==============================
+SAVE
+============================== */
+
+function saveExperiment(){
+
+    const data={};
+
+    document.querySelectorAll("input,textarea")
+    .forEach(el=>{
+
+        if(el.type!=="file"){
+
+            data[el.id]=el.value;
+
+        }
+
+    });
+
+    localStorage.setItem(
+        "virtualLabExperiment2",
+        JSON.stringify(data)
+    );
+
+    alert(
+        "Experiment 2 record saved in this browser."
+    );
+
+}
+
+
+/* ==============================
+LOAD
+============================== */
+
+function loadExperiment(){
+
+    const saved=
+    localStorage.getItem(
+        "virtualLabExperiment2"
+    );
+
+    if(!saved){
+
+        return;
+
+    }
+
+    const data=JSON.parse(saved);
+
+    Object.keys(data).forEach(id=>{
+
+        const el=document.getElementById(id);
+
+        if(el){
+
+            el.value=data[id];
+
+        }
+
+    });
+
+}
+
+
+/* ==============================
+CLEAR
+============================== */
+
+function clearRecord(){
+
+    if(
+        confirm(
+            "Clear the current Experiment 2 record?"
+        )
+    ){
+
+        document.querySelectorAll(
+            'input:not([type="file"]),textarea'
+        ).forEach(el=>{
+
+            el.value="";
+
+        });
+
+        document.getElementById("score")
+        .textContent="";
+
+        document.getElementById(
+            "evaluationMessage"
+        ).textContent=
+        "Evaluation not yet submitted.";
+
+        localStorage.removeItem(
+            "virtualLabExperiment2"
+        );
+
+    }
+
+}
+
+/* =========================================================
+   SAVE COMPLETE EXPERIMENT AS JSON
+   ========================================================= */
+
+function saveJSON(){
+
+    const data = {
+        experiment: "Experiment 1 - MOSFET and IGBT Characterization",
+        version: "1.0",
+        savedAt: new Date().toISOString(),
+
+        studentDetails: {
+            studentName: document.getElementById("studentName").value,
+            registerNo: document.getElementById("registerNo").value,
+            classSection: document.getElementById("classSection").value,
+            expDate: document.getElementById("expDate").value,
+            batch: document.getElementById("batch").value,
+            faculty: document.getElementById("faculty").value
+        },
+
+        mosfetVI: getTableData("mosfetTable"),
+
+        igbtVI: getTableData("igbtTable"),
+
+        switchingTime: {
+            mosfet: {
+                tdOn: document.getElementById("m_td_on").value,
+                tr: document.getElementById("m_tr").value,
+                tdOff: document.getElementById("m_td_off").value,
+                tf: document.getElementById("m_tf").value,
+                ton: document.getElementById("m_ton").textContent,
+                toff: document.getElementById("m_toff").textContent
+            },
+
+            igbt: {
+                tdOn: document.getElementById("i_td_on").value,
+                tr: document.getElementById("i_tr").value,
+                tdOff: document.getElementById("i_td_off").value,
+                tf: document.getElementById("i_tf").value,
+                ton: document.getElementById("i_ton").textContent,
+                toff: document.getElementById("i_toff").textContent
+            }
+        },
+
+        switchingLoss: {
+            mosfet: {
+                eon: document.getElementById("m_eon").value,
+                eoff: document.getElementById("m_eoff").value,
+                fs: document.getElementById("m_fs").value,
+                loss: document.getElementById("m_loss").textContent
+            },
+
+            igbt: {
+                eon: document.getElementById("i_eon").value,
+                eoff: document.getElementById("i_eoff").value,
+                fs: document.getElementById("i_fs").value,
+                loss: document.getElementById("i_loss").textContent
+            }
+        },
+
+        comparison: {
+            mosfetTon: document.getElementById("cmp_m_ton").value,
+            igbtTon: document.getElementById("cmp_i_ton").value,
+
+            mosfetToff: document.getElementById("cmp_m_toff").value,
+            igbtToff: document.getElementById("cmp_i_toff").value,
+
+            mosfetLoss: document.getElementById("cmp_m_loss").value,
+            igbtLoss: document.getElementById("cmp_i_loss").value
+        },
+
+        result: document.getElementById("resultText").value,
+
+        postLab: {
+            q1: document.getElementById("q1").value,
+            q2: document.getElementById("q2").value,
+            q3: document.getElementById("q3").value,
+            q4: document.getElementById("q4").value
+        },
+
+        evaluation: {
+            score: document.getElementById("score").textContent,
+            message: document.getElementById("evaluationMessage").textContent
+        }
+    };
+
+
+    /* ---------------------------------------------------------
+       SAVE LOCAL STORAGE ALSO
+       --------------------------------------------------------- */
+
+    localStorage.setItem(
+        "virtualLabExperiment1",
+        JSON.stringify(data)
+    );
+
+
+    /* ---------------------------------------------------------
+       CONVERT DATA TO JSON FILE
+       --------------------------------------------------------- */
+
+    const jsonString =
+        JSON.stringify(data, null, 4);
+
+    const blob =
+        new Blob(
+            [jsonString],
+            { type: "application/json" }
+        );
+
+
+    const url =
+        URL.createObjectURL(blob);
+
+
+    /* ---------------------------------------------------------
+       FILE NAME
+       --------------------------------------------------------- */
+
+    let regNo =
+        document.getElementById("registerNo").value.trim();
+
+    if(regNo === ""){
+        regNo = "Student";
+    }
+
+    /* Remove characters that are not suitable for filenames */
+
+    regNo =
+        regNo.replace(/[^a-zA-Z0-9_-]/g, "_");
+
+
+    const fileName =
+        "Experiment1_" + regNo + ".json";
+
+
+    /* ---------------------------------------------------------
+       DOWNLOAD JSON
+       --------------------------------------------------------- */
+
+    const link =
+        document.createElement("a");
+
+    link.href = url;
+
+    link.download = fileName;
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+
+
+    alert(
+        "Experiment 1 has been saved as:\n\n" +
+        fileName
+    );
+}
+
+
+/* =========================================================
+   GET TABLE DATA
+   ========================================================= */
+
+function getTableData(tableId){
+
+    const table =
+        document.getElementById(tableId);
+
+    const rows =
+        table.querySelectorAll("tr");
+
+    const data = [];
+
+    rows.forEach((row, index) => {
+
+        /* Skip header row */
+
+        if(index === 0){
+            return;
+        }
+
+        const inputs =
+            row.querySelectorAll("input");
+
+        if(inputs.length === 0){
+            return;
+        }
+
+        const powerCell =
+            row.querySelector(".power");
+
+        data.push({
+
+            input1:
+                inputs[0] ? inputs[0].value : "",
+
+            input2:
+                inputs[1] ? inputs[1].value : "",
+
+            input3:
+                inputs[2] ? inputs[2].value : "",
+
+            power:
+                powerCell ?
+                powerCell.textContent : "0"
+        });
+
+    });
+
+    return data;
+}
+
+
+/* =========================================================
+   LOAD JSON FILE
+   ========================================================= */
+
+function loadJSON(event){
+
+    const file =
+        event.target.files[0];
+
+    if(!file){
+        return;
+    }
+
+
+    if(!file.name.toLowerCase().endsWith(".json")){
+
+        alert("Please select a valid JSON file.");
+
+        event.target.value = "";
+
+        return;
+    }
+
+
+    const reader =
+        new FileReader();
+
+
+    reader.onload =
+    function(e){
+
+        try{
+
+            const data =
+                JSON.parse(e.target.result);
+
+
+            /* -------------------------------------------------
+               CHECK EXPERIMENT
+               ------------------------------------------------- */
+
+            if(
+                !data.experiment ||
+                !data.experiment.includes(
+                    "Experiment 1"
+                )
+            ){
+
+                alert(
+                    "This JSON file does not belong to Experiment 1."
+                );
+
+                return;
+            }
+
+
+            /* -------------------------------------------------
+               STUDENT DETAILS
+               ------------------------------------------------- */
+
+            if(data.studentDetails){
+
+                setValue(
+                    "studentName",
+                    data.studentDetails.studentName
+                );
+
+                setValue(
+                    "registerNo",
+                    data.studentDetails.registerNo
+                );
+
+                setValue(
+                    "classSection",
+                    data.studentDetails.classSection
+                );
+
+                setValue(
+                    "expDate",
+                    data.studentDetails.expDate
+                );
+
+                setValue(
+                    "batch",
+                    data.studentDetails.batch
+                );
+
+                setValue(
+                    "faculty",
+                    data.studentDetails.faculty
+                );
+            }
+
+
+            /* -------------------------------------------------
+               MOSFET V-I TABLE
+               ------------------------------------------------- */
+
+            if(data.mosfetVI){
+
+                loadTableData(
+                    "mosfetTable",
+                    data.mosfetVI
+                );
+            }
+
+
+            /* -------------------------------------------------
+               IGBT V-I TABLE
+               ------------------------------------------------- */
+
+            if(data.igbtVI){
+
+                loadTableData(
+                    "igbtTable",
+                    data.igbtVI
+                );
+            }
+
+
+            /* -------------------------------------------------
+               SWITCHING TIME
+               ------------------------------------------------- */
+
+            if(data.switchingTime){
+
+                if(data.switchingTime.mosfet){
+
+                    setValue(
+                        "m_td_on",
+                        data.switchingTime.mosfet.tdOn
+                    );
+
+                    setValue(
+                        "m_tr",
+                        data.switchingTime.mosfet.tr
+                    );
+
+                    setValue(
+                        "m_td_off",
+                        data.switchingTime.mosfet.tdOff
+                    );
+
+                    setValue(
+                        "m_tf",
+                        data.switchingTime.mosfet.tf
+                    );
+
+                    calculateMOSFET();
+                }
+
+
+                if(data.switchingTime.igbt){
+
+                    setValue(
+                        "i_td_on",
+                        data.switchingTime.igbt.tdOn
+                    );
+
+                    setValue(
+                        "i_tr",
+                        data.switchingTime.igbt.tr
+                    );
+
+                    setValue(
+                        "i_td_off",
+                        data.switchingTime.igbt.tdOff
+                    );
+
+                    setValue(
+                        "i_tf",
+                        data.switchingTime.igbt.tf
+                    );
+
+                    calculateIGBT();
+                }
+            }
+
+
+            /* -------------------------------------------------
+               SWITCHING LOSS
+               ------------------------------------------------- */
+
+            if(data.switchingLoss){
+
+                if(data.switchingLoss.mosfet){
+
+                    setValue(
+                        "m_eon",
+                        data.switchingLoss.mosfet.eon
+                    );
+
+                    setValue(
+                        "m_eoff",
+                        data.switchingLoss.mosfet.eoff
+                    );
+
+                    setValue(
+                        "m_fs",
+                        data.switchingLoss.mosfet.fs
+                    );
+
+                    calculateLoss("m");
+                }
+
+
+                if(data.switchingLoss.igbt){
+
+                    setValue(
+                        "i_eon",
+                        data.switchingLoss.igbt.eon
+                    );
+
+                    setValue(
+                        "i_eoff",
+                        data.switchingLoss.igbt.eoff
+                    );
+
+                    setValue(
+                        "i_fs",
+                        data.switchingLoss.igbt.fs
+                    );
+
+                    calculateLoss("i");
+                }
+            }
+
+
+            /* -------------------------------------------------
+               COMPARISON
+               ------------------------------------------------- */
+
+            if(data.comparison){
+
+                setValue(
+                    "cmp_m_ton",
+                    data.comparison.mosfetTon
+                );
+
+                setValue(
+                    "cmp_i_ton",
+                    data.comparison.igbtTon
+                );
+
+                setValue(
+                    "cmp_m_toff",
+                    data.comparison.mosfetToff
+                );
+
+                setValue(
+                    "cmp_i_toff",
+                    data.comparison.igbtToff
+                );
+
+                setValue(
+                    "cmp_m_loss",
+                    data.comparison.mosfetLoss
+                );
+
+                setValue(
+                    "cmp_i_loss",
+                    data.comparison.igbtLoss
+                );
+            }
+
+
+            /* -------------------------------------------------
+               RESULT
+               ------------------------------------------------- */
+
+            if(data.result !== undefined){
+
+                setValue(
+                    "resultText",
+                    data.result
+                );
+            }
+
+
+            /* -------------------------------------------------
+               POST LAB
+               ------------------------------------------------- */
+
+            if(data.postLab){
+
+                setValue(
+                    "q1",
+                    data.postLab.q1
+                );
+
+                setValue(
+                    "q2",
+                    data.postLab.q2
+                );
+
+                setValue(
+                    "q3",
+                    data.postLab.q3
+                );
+
+                setValue(
+                    "q4",
+                    data.postLab.q4
+                );
+            }
+
+
+            /* -------------------------------------------------
+               EVALUATION
+               ------------------------------------------------- */
+
+            if(data.evaluation){
+
+                document.getElementById(
+                    "score"
+                ).textContent =
+                    data.evaluation.score || "";
+
+                document.getElementById(
+                    "evaluationMessage"
+                ).textContent =
+                    data.evaluation.message ||
+                    "Evaluation not yet submitted.";
+            }
+
+
+            /* -------------------------------------------------
+               SAVE LOADED DATA TO LOCAL STORAGE
+               ------------------------------------------------- */
+
+            localStorage.setItem(
+                "virtualLabExperiment1",
+                JSON.stringify(data)
+            );
+
+
+            alert(
+                "Experiment 1 JSON file loaded successfully."
+            );
+
+        }
+
+        catch(error){
+
+            console.error(error);
+
+            alert(
+                "Error loading JSON file.\n\n" +
+                "Please select a valid Experiment 1 JSON file."
+            );
+        }
+
+        finally{
+
+            /* Allow the same file to be selected again */
+
+            event.target.value = "";
+        }
+
+    };
+
+
+    reader.readAsText(file);
+}
+
+
+/* =========================================================
+   SET INPUT VALUE SAFELY
+   ========================================================= */
+
+function setValue(id,value){
+
+    const el =
+        document.getElementById(id);
+
+    if(el){
+
+        el.value =
+            value !== undefined &&
+            value !== null
+            ? value
+            : "";
+    }
+}
+
+
+/* =========================================================
+   LOAD TABLE DATA
+   ========================================================= */
+
+function loadTableData(tableId,data){
+
+    const table =
+        document.getElementById(tableId);
+
+    if(!table || !Array.isArray(data)){
+        return;
+    }
+
+    const rows =
+        table.querySelectorAll("tr");
+
+
+    data.forEach((item,index)=>{
+
+        const row =
+            rows[index + 1];
+
+        if(!row){
+            return;
+        }
+
+        const inputs =
+            row.querySelectorAll("input");
+
+        if(inputs[0]){
+            inputs[0].value =
+                item.input1 || "";
+        }
+
+        if(inputs[1]){
+            inputs[1].value =
+                item.input2 || "";
+        }
+
+        if(inputs[2]){
+            inputs[2].value =
+                item.input3 || "";
+        }
+
+        const power =
+            row.querySelector(".power");
+
+        if(power){
+
+            power.textContent =
+                item.power || "0";
+        }
+
+    });
+}
+
+/* =========================================================
+   EXPERIMENT 2
+   SAVE COMPLETE RECORD AS JSON
+   ========================================================= */
+
+function saveJSON(){
+
+    const data = {
+
+        experiment:
+            "Experiment 2 - Buck Converter with Variable Load Profile",
+
+        experimentNumber:
+            "2",
+
+        version:
+            "1.0",
+
+        savedAt:
+            new Date().toISOString(),
+
+
+        /* ==========================================
+           STUDENT DETAILS
+        ========================================== */
+
+        studentDetails: {
+
+            studentName:
+                document.getElementById("studentName").value,
+
+            registerNo:
+                document.getElementById("registerNo").value,
+
+            classSection:
+                document.getElementById("classSection").value,
+
+            expDate:
+                document.getElementById("expDate").value,
+
+            batch:
+                document.getElementById("batch").value,
+
+            faculty:
+                document.getElementById("faculty").value
+
+        },
+
+
+        /* ==========================================
+           CONVERTER PARAMETERS
+        ========================================== */
+
+        converterParameters: {
+
+            vin:
+                document.getElementById("vin").value,
+
+            switchingFrequency:
+                document.getElementById("fs").value,
+
+            dutyRatio:
+                document.getElementById("duty").value,
+
+            inductance:
+                document.getElementById("inductance").value,
+
+            capacitance:
+                document.getElementById("capacitance").value
+
+        },
+
+
+        /* ==========================================
+           THEORETICAL CALCULATION
+        ========================================== */
+
+        theoreticalCalculation: {
+
+            outputVoltage:
+                document.getElementById("theoryVo").textContent,
+
+            outputCurrent:
+                document.getElementById("theoryIo").textContent,
+
+            outputPower:
+                document.getElementById("theoryPo").textContent
+
+        },
+
+
+        /* ==========================================
+           VARIABLE LOAD PROFILE
+        ========================================== */
+
+        variableLoadProfile:
+            getLoadTableData(),
+
+
+        /* ==========================================
+           STUDENT OBSERVATION
+        ========================================== */
+
+        studentObservation: {
+
+            observation1: {
+
+                loadResistance:
+                    document.getElementById("obsR1").value,
+
+                measuredVoltage:
+                    document.getElementById("obsV1").value,
+
+                measuredCurrent:
+                    document.getElementById("obsI1").value,
+
+                inductorCurrent:
+                    document.getElementById("obsIL1").value,
+
+                outputPower:
+                    document.getElementById("obsP1").textContent,
+
+                deviation:
+                    document.getElementById("dev1").textContent
+
+            },
+
+            observation2: {
+
+                loadResistance:
+                    document.getElementById("obsR2").value,
+
+                measuredVoltage:
+                    document.getElementById("obsV2").value,
+
+                measuredCurrent:
+                    document.getElementById("obsI2").value,
+
+                inductorCurrent:
+                    document.getElementById("obsIL2").value,
+
+                outputPower:
+                    document.getElementById("obsP2").textContent,
+
+                deviation:
+                    document.getElementById("dev2").textContent
+
+            },
+
+            observation3: {
+
+                loadResistance:
+                    document.getElementById("obsR3").value,
+
+                measuredVoltage:
+                    document.getElementById("obsV3").value,
+
+                measuredCurrent:
+                    document.getElementById("obsI3").value,
+
+                inductorCurrent:
+                    document.getElementById("obsIL3").value,
+
+                outputPower:
+                    document.getElementById("obsP3").textContent,
+
+                deviation:
+                    document.getElementById("dev3").textContent
+
+            },
+
+
+            averages: {
+
+                averageVoltage:
+                    document.getElementById("avgVo").textContent,
+
+                averagePower:
+                    document.getElementById("avgPo").textContent,
+
+                averageDeviation:
+                    document.getElementById("avgDev").textContent
+
+            }
+
+        },
+
+
+        /* ==========================================
+           PERFORMANCE ANALYSIS
+        ========================================== */
+
+        performanceAnalysis: {
+
+            measuredInputVoltage:
+                document.getElementById("measuredVin").value,
+
+            measuredInputCurrent:
+                document.getElementById("measuredIin").value,
+
+            inputPower:
+                document.getElementById("inputPower").textContent,
+
+            outputPower:
+                document.getElementById("outputPower").textContent,
+
+            efficiency:
+                document.getElementById("efficiency").textContent
+
+        },
+
+
+        /* ==========================================
+           TRANSIENT RESPONSE
+        ========================================== */
+
+        transientResponse: {
+
+            initialOutputVoltage:
+                document.getElementById("initialVo").value,
+
+            finalOutputVoltage:
+                document.getElementById("finalVo").value,
+
+            maximumOutputVoltage:
+                document.getElementById("maxVo").value,
+
+            settlingTime:
+                document.getElementById("settlingTime").value,
+
+            overshoot:
+                document.getElementById("overshoot").textContent
+
+        },
+
+
+        /* ==========================================
+           RESULT
+        ========================================== */
+
+        result:
+            document.getElementById("resultText").value,
+
+
+        /* ==========================================
+           POST-LAB QUESTIONS
+        ========================================== */
+
+        postLab: {
+
+            q1:
+                document.getElementById("q1").value,
+
+            q2:
+                document.getElementById("q2").value,
+
+            q3:
+                document.getElementById("q3").value,
+
+            q4:
+                document.getElementById("q4").value,
+
+            q5:
+                document.getElementById("q5").value
+
+        },
+
+
+        /* ==========================================
+           EVALUATION
+        ========================================== */
+
+        evaluation: {
+
+            score:
+                document.getElementById("score").textContent,
+
+            message:
+                document.getElementById("evaluationMessage").textContent
+
+        }
+
+    };
+
+
+    /* ==========================================
+       SAVE TO LOCAL STORAGE
+    ========================================== */
+
+    localStorage.setItem(
+        "virtualLabExperiment2",
+        JSON.stringify(data)
+    );
+
+
+    /* ==========================================
+       CREATE JSON FILE
+    ========================================== */
+
+    const jsonString =
+        JSON.stringify(data, null, 4);
+
+
+    const blob =
+        new Blob(
+            [jsonString],
+            {
+                type:"application/json"
+            }
+        );
+
+
+    const url =
+        URL.createObjectURL(blob);
+
+
+    /* ==========================================
+       FILE NAME
+    ========================================== */
+
+    let registerNo =
+        document.getElementById("registerNo").value.trim();
+
+
+    if(registerNo === ""){
+
+        registerNo = "Student";
+
+    }
+
+
+    /* Make register number filename-safe */
+
+    registerNo =
+        registerNo.replace(
+            /[^a-zA-Z0-9_-]/g,
+            "_"
+        );
+
+
+    const fileName =
+        "Experiment2_" +
+        registerNo +
+        ".json";
+
+
+    /* ==========================================
+       DOWNLOAD
+    ========================================== */
+
+    const link =
+        document.createElement("a");
+
+
+    link.href = url;
+
+    link.download = fileName;
+
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    document.body.removeChild(link);
+
+
+    URL.revokeObjectURL(url);
+
+
+    alert(
+        "Experiment 2 record saved successfully.\n\n" +
+        "File: " +
+        fileName
+    );
+
+}
+
+
+/* =========================================================
+   GET VARIABLE LOAD TABLE DATA
+   ========================================================= */
+
+function getLoadTableData(){
+
+    const table =
+        document.getElementById("loadTable");
+
+
+    const rows =
+        table.querySelectorAll("tr");
+
+
+    const data = [];
+
+
+    /* Skip header row */
+
+    for(let i=1;i<rows.length;i++){
+
+        const row = rows[i];
+
+
+        const startTime =
+            row.querySelector(".startTime");
+
+
+        const endTime =
+            row.querySelector(".endTime");
+
+
+        const loadR =
+            row.querySelector(".loadR");
+
+
+        const expectedV =
+            row.querySelector(".expectedV");
+
+
+        const expectedI =
+            row.querySelector(".expectedI");
+
+
+        const expectedP =
+            row.querySelector(".expectedP");
+
+
+        data.push({
+
+            interval: i,
+
+            startTime:
+                startTime ?
+                startTime.value : "",
+
+            endTime:
+                endTime ?
+                endTime.value : "",
+
+            loadResistance:
+                loadR ?
+                loadR.value : "",
+
+            expectedOutputVoltage:
+                expectedV ?
+                expectedV.textContent : "0",
+
+            expectedCurrent:
+                expectedI ?
+                expectedI.textContent : "0",
+
+            expectedPower:
+                expectedP ?
+                expectedP.textContent : "0"
+
+        });
+
+    }
+
+
+    return data;
+
+}
+
+
+/* =========================================================
+   LOAD JSON FILE
+   ========================================================= */
+
+function loadJSON(event){
+
+    const file =
+        event.target.files[0];
+
+
+    if(!file){
+
+        return;
+
+    }
+
+
+    /* ==========================================
+       CHECK FILE TYPE
+    ========================================== */
+
+    if(
+        !file.name
+        .toLowerCase()
+        .endsWith(".json")
+    ){
+
+        alert(
+            "Please select a valid .json file."
+        );
+
+        event.target.value = "";
+
+        return;
+
+    }
+
+
+    const reader =
+        new FileReader();
+
+
+    reader.onload =
+    function(e){
+
+        try{
+
+            const data =
+                JSON.parse(e.target.result);
+
+
+            /* ======================================
+               CHECK EXPERIMENT
+            ====================================== */
+
+            if(
+                !data.experiment ||
+                !data.experiment.includes(
+                    "Experiment 2"
+                )
+            ){
+
+                alert(
+                    "This JSON file is not an Experiment 2 record."
+                );
+
+                return;
+
+            }
+
+
+            /* ======================================
+               STUDENT DETAILS
+            ====================================== */
+
+            if(data.studentDetails){
+
+                setJSONValue(
+                    "studentName",
+                    data.studentDetails.studentName
+                );
+
+                setJSONValue(
+                    "registerNo",
+                    data.studentDetails.registerNo
+                );
+
+                setJSONValue(
+                    "classSection",
+                    data.studentDetails.classSection
+                );
+
+                setJSONValue(
+                    "expDate",
+                    data.studentDetails.expDate
+                );
+
+                setJSONValue(
+                    "batch",
+                    data.studentDetails.batch
+                );
+
+                setJSONValue(
+                    "faculty",
+                    data.studentDetails.faculty
+                );
+
+            }
+
+
+            /* ======================================
+               CONVERTER PARAMETERS
+            ====================================== */
+
+            if(data.converterParameters){
+
+                setJSONValue(
+                    "vin",
+                    data.converterParameters.vin
+                );
+
+                setJSONValue(
+                    "fs",
+                    data.converterParameters.switchingFrequency
+                );
+
+                setJSONValue(
+                    "duty",
+                    data.converterParameters.dutyRatio
+                );
+
+                setJSONValue(
+                    "inductance",
+                    data.converterParameters.inductance
+                );
+
+                setJSONValue(
+                    "capacitance",
+                    data.converterParameters.capacitance
+                );
+
+            }
+
+
+            /* ======================================
+               LOAD PROFILE
+            ====================================== */
+
+            if(
+                Array.isArray(
+                    data.variableLoadProfile
+                )
+            ){
+
+                loadLoadTableData(
+                    data.variableLoadProfile
+                );
+
+            }
+
+
+            /* ======================================
+               OBSERVATION 1
+            ====================================== */
+
+            if(data.studentObservation){
+
+                const obs =
+                    data.studentObservation;
+
+
+                if(obs.observation1){
+
+                    setJSONValue(
+                        "obsR1",
+                        obs.observation1.loadResistance
+                    );
+
+                    setJSONValue(
+                        "obsV1",
+                        obs.observation1.measuredVoltage
+                    );
+
+                    setJSONValue(
+                        "obsI1",
+                        obs.observation1.measuredCurrent
+                    );
+
+                    setJSONValue(
+                        "obsIL1",
+                        obs.observation1.inductorCurrent
+                    );
+
+                }
+
+
+                /* ==================================
+                   OBSERVATION 2
+                ================================== */
+
+                if(obs.observation2){
+
+                    setJSONValue(
+                        "obsR2",
+                        obs.observation2.loadResistance
+                    );
+
+                    setJSONValue(
+                        "obsV2",
+                        obs.observation2.measuredVoltage
+                    );
+
+                    setJSONValue(
+                        "obsI2",
+                        obs.observation2.measuredCurrent
+                    );
+
+                    setJSONValue(
+                        "obsIL2",
+                        obs.observation2.inductorCurrent
+                    );
+
+                }
+
+
+                /* ==================================
+                   OBSERVATION 3
+                ================================== */
+
+                if(obs.observation3){
+
+                    setJSONValue(
+                        "obsR3",
+                        obs.observation3.loadResistance
+                    );
+
+                    setJSONValue(
+                        "obsV3",
+                        obs.observation3.measuredVoltage
+                    );
+
+                    setJSONValue(
+                        "obsI3",
+                        obs.observation3.measuredCurrent
+                    );
+
+                    setJSONValue(
+                        "obsIL3",
+                        obs.observation3.inductorCurrent
+                    );
+
+                }
+
+            }
+
+
+            /* ======================================
+               RECALCULATE VALUES
+            ====================================== */
+
+            calculateTheory();
+
+            calculateAllLoads();
+
+            calculateObservations();
+
+
+            /* ======================================
+               PERFORMANCE ANALYSIS
+            ====================================== */
+
+            if(data.performanceAnalysis){
+
+                setJSONValue(
+                    "measuredVin",
+                    data.performanceAnalysis
+                    .measuredInputVoltage
+                );
+
+                setJSONValue(
+                    "measuredIin",
+                    data.performanceAnalysis
+                    .measuredInputCurrent
+                );
+
+                calculateEfficiency();
+
+            }
+
+
+            /* ======================================
+               TRANSIENT RESPONSE
+            ====================================== */
+
+            if(data.transientResponse){
+
+                setJSONValue(
+                    "initialVo",
+                    data.transientResponse
+                    .initialOutputVoltage
+                );
+
+                setJSONValue(
+                    "finalVo",
+                    data.transientResponse
+                    .finalOutputVoltage
+                );
+
+                setJSONValue(
+                    "maxVo",
+                    data.transientResponse
+                    .maximumOutputVoltage
+                );
+
+                setJSONValue(
+                    "settlingTime",
+                    data.transientResponse
+                    .settlingTime
+                );
+
+                calculateOvershoot();
+
+            }
+
+
+            /* ======================================
+               RESULT
+            ====================================== */
+
+            if(data.result !== undefined){
+
+                setJSONValue(
+                    "resultText",
+                    data.result
+                );
+
+            }
+
+
+            /* ======================================
+               POST LAB QUESTIONS
+            ====================================== */
+
+            if(data.postLab){
+
+                setJSONValue(
+                    "q1",
+                    data.postLab.q1
+                );
+
+                setJSONValue(
+                    "q2",
+                    data.postLab.q2
+                );
+
+                setJSONValue(
+                    "q3",
+                    data.postLab.q3
+                );
+
+                setJSONValue(
+                    "q4",
+                    data.postLab.q4
+                );
+
+                setJSONValue(
+                    "q5",
+                    data.postLab.q5
+                );
+
+            }
+
+
+            /* ======================================
+               EVALUATION
+            ====================================== */
+
+            if(data.evaluation){
+
+                document.getElementById(
+                    "score"
+                ).textContent =
+                    data.evaluation.score || "";
+
+
+                document.getElementById(
+                    "evaluationMessage"
+                ).textContent =
+                    data.evaluation.message ||
+                    "Evaluation not yet submitted.";
+
+            }
+
+
+            /* ======================================
+               SAVE LOADED RECORD
+               TO LOCAL STORAGE
+            ====================================== */
+
+            localStorage.setItem(
+                "virtualLabExperiment2",
+                JSON.stringify(data)
+            );
+
+
+            alert(
+                "Experiment 2 JSON file loaded successfully."
+            );
+
+        }
+
+        catch(error){
+
+            console.error(error);
+
+
+            alert(
+                "Unable to load the JSON file.\n\n" +
+                "Please check that it is a valid Experiment 2 JSON file."
+            );
+
+        }
+
+        finally{
+
+            /* Allow same file to be selected again */
+
+            event.target.value = "";
+
+        }
+
+    };
+
+
+    reader.readAsText(file);
+
+}
+
+
+/* =========================================================
+   SET VALUE SAFELY
+   ========================================================= */
+
+function setJSONValue(id,value){
+
+    const element =
+        document.getElementById(id);
+
+
+    if(!element){
+
+        return;
+
+    }
+
+
+    if(
+        value === undefined ||
+        value === null
+    ){
+
+        element.value = "";
+
+    }
+
+    else{
+
+        element.value = value;
+
+    }
+
+}
+
+
+/* =========================================================
+   LOAD VARIABLE LOAD TABLE
+   ========================================================= */
+
+function loadLoadTableData(data){
+
+    const table =
+        document.getElementById("loadTable");
+
+
+    if(
+        !table ||
+        !Array.isArray(data)
+    ){
+
+        return;
+
+    }
+
+
+    const rows =
+        table.querySelectorAll("tr");
+
+
+    data.forEach(
+        function(item,index){
+
+            const row =
+                rows[index + 1];
+
+
+            if(!row){
+
+                return;
+
+            }
+
+
+            const startTime =
+                row.querySelector(".startTime");
+
+
+            const endTime =
+                row.querySelector(".endTime");
+
+
+            const loadR =
+                row.querySelector(".loadR");
+
+
+            if(startTime){
+
+                startTime.value =
+                    item.startTime || "";
+
+            }
+
+
+            if(endTime){
+
+                endTime.value =
+                    item.endTime || "";
+
+            }
+
+
+            if(loadR){
+
+                loadR.value =
+                    item.loadResistance || "";
+
+            }
+
+        }
+    );
+
+}
+
+/* ==============================
+INITIALIZATION
+============================== */
+
+window.onload=function(){
+
+    loadExperiment();
+
+    const date=
+    document.getElementById("expDate");
+
+    if(!date.value){
+
+        date.value=
+        new Date()
+        .toISOString()
+        .split("T")[0];
+
+    }
+
+    calculateAllLoads();
+
+};
+
+</script>
+
+</body>
+</html>
+

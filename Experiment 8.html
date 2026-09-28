@@ -1,0 +1,3425 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Experiment 8 - Position Control of Stepper Motor Drive</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#081018;
+    color:#e8f0f7;
+}
+header{
+    background:linear-gradient(135deg,#0c1d2b,#102d3e);
+    padding:22px;
+    text-align:center;
+    border-bottom:2px solid #19d3ae;
+}
+header h1{
+    margin:0;
+    color:#19d3ae;
+    font-size:26px;
+}
+header p{
+    margin:8px 0 0;
+    color:#a9bdc9;
+}
+.container{
+    width:95%;
+    max-width:1400px;
+    margin:20px auto;
+}
+.card{
+    background:#101c27;
+    border:1px solid #29404f;
+    border-radius:12px;
+    padding:20px;
+    margin-bottom:18px;
+    box-shadow:0 5px 20px rgba(0,0,0,.25);
+}
+h2{
+    color:#19d3ae;
+    border-left:5px solid #19d3ae;
+    padding-left:10px;
+}
+h3{color:#6ed6ff}
+label{
+    display:block;
+    margin-top:10px;
+    color:#b9cad5;
+    font-weight:bold;
+}
+input,select,textarea{
+    width:100%;
+    padding:10px;
+    margin-top:5px;
+    background:#07121b;
+    border:1px solid #385263;
+    border-radius:6px;
+    color:white;
+}
+textarea{min-height:100px;resize:vertical}
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:14px;
+}
+.formula{
+    background:#07151e;
+    border-left:4px solid #19d3ae;
+    padding:12px;
+    margin:10px 0;
+    font-family:"Courier New",monospace;
+    color:#d8f9f1;
+}
+.note{
+    background:#192534;
+    padding:12px;
+    border-left:4px solid #ffc857;
+    margin:12px 0;
+}
+.success{
+    background:#10291f;
+    border-left:4px solid #28d17c;
+    padding:12px;
+    margin:12px 0;
+}
+.danger{
+    background:#32191c;
+    border-left:4px solid #ff6262;
+    padding:12px;
+    margin:12px 0;
+}
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:12px;
+}
+th,td{
+    border:1px solid #385263;
+    padding:8px;
+    text-align:center;
+}
+th{
+    background:#173242;
+    color:#6ed6ff;
+}
+td input{
+    margin:0;
+    padding:7px;
+}
+button{
+    border:none;
+    padding:11px 17px;
+    margin:6px;
+    border-radius:7px;
+    cursor:pointer;
+    font-weight:bold;
+    background:#19d3ae;
+    color:#061016;
+}
+button:hover{filter:brightness(1.15)}
+.secondary{background:#29475a;color:white}
+.warning{background:#d69b28;color:#101010}
+.dangerBtn{background:#d94d59;color:white}
+.result{
+    background:#071b24;
+    border:1px solid #19d3ae;
+    padding:16px;
+    border-radius:8px;
+    font-size:16px;
+    line-height:1.7;
+}
+.badge{
+    display:inline-block;
+    background:#163c4d;
+    color:#6ed6ff;
+    padding:6px 10px;
+    border-radius:20px;
+    margin:4px;
+}
+.upload-box{
+    border:2px dashed #416170;
+    padding:20px;
+    text-align:center;
+    border-radius:8px;
+    margin-top:10px;
+}
+.preview{
+    max-width:100%;
+    max-height:450px;
+    margin-top:12px;
+    border-radius:8px;
+    border:1px solid #385263;
+}
+.tabs{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:15px;
+}
+.tab{
+    background:#1a2d3a;
+    color:white;
+}
+.tab.active{
+    background:#19d3ae;
+    color:#071018;
+}
+.tabcontent{display:none}
+.tabcontent.active{display:block}
+.kpi{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:10px;
+}
+.kpi div{
+    background:#0a1821;
+    padding:15px;
+    border-radius:8px;
+    text-align:center;
+}
+.kpi strong{
+    display:block;
+    color:#19d3ae;
+    font-size:22px;
+    margin-top:6px;
+}
+@media print{
+    body{background:white;color:black}
+    .card{box-shadow:none;border:1px solid #aaa}
+    button,.upload-box{display:none}
+    input,textarea,select{
+        color:black;
+        background:white;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>VIRTUAL POWER ELECTRONICS & DRIVES LABORATORY</h1>
+    <p>Experiment 8 – Position Control of Stepper Motor Drive</p>
+</header>
+
+<div class="container">
+
+<!-- STUDENT DETAILS -->
+<div class="card">
+<h2>1. Student Details</h2>
+
+<div class="grid">
+<div>
+<label>Name</label>
+<input id="studentName" placeholder="Enter student name">
+</div>
+
+<div>
+<label>Register Number</label>
+<input id="regNo" placeholder="Enter register number">
+</div>
+
+<div>
+<label>Class / Section</label>
+<input id="classSection" placeholder="Enter class / section">
+</div>
+
+<div>
+<label>Date</label>
+<input type="date" id="expDate">
+</div>
+</div>
+</div>
+
+
+<!-- AIM -->
+<div class="card">
+<h2>2. Aim</h2>
+
+<p>
+To simulate and study the <b>position control of a stepper motor drive</b>
+using pulse, direction and feedback/control techniques, and to determine
+the relationship between step pulses, step angle, motor position and
+position error.
+</p>
+</div>
+
+
+<!-- OBJECTIVES -->
+<div class="card">
+<h2>3. Learning Objectives</h2>
+
+<ul>
+<li>Understand the construction and working principle of a stepper motor.</li>
+<li>Understand full-step, half-step and microstepping operation.</li>
+<li>Calculate step angle and number of pulses required for a desired position.</li>
+<li>Study pulse frequency and motor speed relationship.</li>
+<li>Implement clockwise and anticlockwise position control.</li>
+<li>Study open-loop and feedback-based position control.</li>
+<li>Measure position error and settling time.</li>
+<li>Study the effect of load torque and pulse frequency.</li>
+</ul>
+
+<div>
+<span class="badge">Step Angle</span>
+<span class="badge">Pulse Control</span>
+<span class="badge">Direction Control</span>
+<span class="badge">Position Feedback</span>
+<span class="badge">Microstepping</span>
+<span class="badge">MATLAB / Simulink</span>
+</div>
+</div>
+
+
+<!-- APPARATUS -->
+<div class="card">
+<h2>4. Software / Simulink Blocks Required</h2>
+
+<div class="grid">
+<div>
+<h3>Software</h3>
+<ul>
+<li>MATLAB</li>
+<li>Simulink</li>
+<li>Simscape Electrical</li>
+</ul>
+</div>
+
+<div>
+<h3>Major Blocks</h3>
+<ul>
+<li>Stepper Motor</li>
+<li>Pulse Generator</li>
+<li>Direction Logic</li>
+<li>Controlled Pulse Generator</li>
+<li>H-Bridge / Inverter</li>
+<li>Position Sensor / Encoder</li>
+<li>PID / P / PI Controller</li>
+<li>Scope</li>
+<li>Display</li>
+</ul>
+</div>
+</div>
+
+<div class="note">
+<b>Recommended control structure:</b><br>
+Position Reference → Position Error → Position Controller →
+Pulse/Frequency Generator → Stepper Motor → Position Feedback.
+</div>
+</div>
+
+
+<!-- THEORY -->
+<div class="card">
+<h2>5. Theory</h2>
+
+<h3>5.1 Step Angle</h3>
+
+<p>
+The step angle is the mechanical angular displacement produced by one
+input command pulse in full-step operation.
+</p>
+
+<div class="formula">
+α = 360° / Ns
+</div>
+
+<p>
+where <b>Ns</b> is the number of steps required for one complete revolution.
+</p>
+
+<h3>5.2 Number of Steps</h3>
+
+<div class="formula">
+N = θref / α
+</div>
+
+<p>
+where θref is the required angular position.
+</p>
+
+<h3>5.3 Position Produced by Pulses</h3>
+
+<div class="formula">
+θactual = Np × α
+</div>
+
+<p>
+where Np is the number of applied step pulses.
+</p>
+
+<h3>5.4 Pulse Frequency and Speed</h3>
+
+<div class="formula">
+Nsteps/sec = fp
+</div>
+
+<div class="formula">
+Speed (rpm) = fp × 60 / Ns
+</div>
+
+<p>
+where <b>fp</b> is the step-pulse frequency in Hz.
+</p>
+
+<h3>5.5 Microstepping</h3>
+
+<div class="formula">
+αmicro = α / M
+</div>
+
+<p>
+where M is the microstepping factor.
+</p>
+
+<p>
+For example, if the motor has a 1.8° full-step angle and 16×
+microstepping is used:
+</p>
+
+<div class="formula">
+αmicro = 1.8 / 16 = 0.1125°
+</div>
+
+<h3>5.6 Position Error</h3>
+
+<div class="formula">
+eθ = θref − θactual
+</div>
+
+<h3>5.7 Percentage Position Error</h3>
+
+<div class="formula">
+Position Error (%) = |θref − θactual| / |θref| × 100
+</div>
+
+<h3>5.8 Position Control</h3>
+
+<div class="formula">
+θref → Position Controller → Pulse Generator → Stepper Motor
+→ Position Sensor → Feedback
+</div>
+
+<h3>5.9 Closed-Loop Position Control</h3>
+
+<div class="formula">
+e(t) = θref(t) − θactual(t)
+</div>
+
+<div class="formula">
+u(t) = Kp e(t) + Ki ∫e(t)dt + Kd de(t)/dt
+</div>
+
+<div class="note">
+In a practical stepper drive, the controller may command the required
+number/frequency of pulses and direction. In closed-loop stepper systems,
+an encoder can be used to detect position loss or following error.
+</div>
+</div>
+
+
+<!-- MODEL UPLOAD -->
+<div class="card">
+<h2>6. Simulink Model</h2>
+
+<p>
+Upload the screenshot of your completed Stepper Motor Position Control
+Simulink model.
+</p>
+
+<div class="upload-box">
+<input type="file" id="modelImage" accept="image/*">
+<img id="modelPreview" class="preview" style="display:none">
+</div>
+
+<div class="note">
+Recommended model structure:
+<br><br>
+<b>Position Reference → Position Error → Controller →
+Pulse Generator → Stepper Motor → Position Feedback</b>
+</div>
+</div>
+
+
+<!-- PARAMETERS -->
+<div class="card">
+<h2>7. Stepper Motor Parameters</h2>
+
+<div class="grid">
+
+<div>
+<label>Full-Step Angle (degree)</label>
+<input type="number" id="stepAngle" value="1.8" step="0.01">
+</div>
+
+<div>
+<label>Steps / Revolution</label>
+<input type="number" id="stepsRev" value="200" step="1">
+</div>
+
+<div>
+<label>Microstepping Factor</label>
+<select id="microstep">
+<option value="1">1 × Full Step</option>
+<option value="2">2 × Half Step</option>
+<option value="4">4 ×</option>
+<option value="8">8 ×</option>
+<option value="16">16 ×</option>
+</select>
+</div>
+
+<div>
+<label>Supply Voltage (V)</label>
+<input type="number" id="supply" value="24" step="0.1">
+</div>
+
+<div>
+<label>Pulse Frequency (Hz)</label>
+<input type="number" id="pulseFreq" value="500" step="1">
+</div>
+
+<div>
+<label>Load Torque (N·m)</label>
+<input type="number" id="loadTorque" value="0.2" step="0.01">
+</div>
+
+<div>
+<label>Reference Position (degree)</label>
+<input type="number" id="refPosition" value="90" step="0.1">
+</div>
+
+<div>
+<label>Measured Position (degree)</label>
+<input type="number" id="measPosition" value="89.8" step="0.1">
+</div>
+
+</div>
+
+<br>
+
+<button onclick="calculateBasic()">Calculate Stepper Parameters</button>
+
+<div class="result" id="basicResult">
+Enter parameters and click Calculate.
+</div>
+</div>
+
+
+<!-- POSITION CALCULATOR -->
+<div class="card">
+<h2>8. Position Command Calculator</h2>
+
+<div class="grid">
+
+<div>
+<label>Required Position (degree)</label>
+<input type="number" id="desiredAngle" value="90">
+</div>
+
+<div>
+<label>Step Angle (degree)</label>
+<input type="number" id="calcStepAngle" value="1.8" step="0.01">
+</div>
+
+<div>
+<label>Microstepping Factor</label>
+<select id="calcMicro">
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="4">4</option>
+<option value="8">8</option>
+<option value="16">16</option>
+</select>
+</div>
+
+<div>
+<label>Pulse Frequency (Hz)</label>
+<input type="number" id="calcFreq" value="500">
+</div>
+
+</div>
+
+<button onclick="calculatePosition()">Calculate Required Pulses</button>
+
+<div class="kpi">
+<div>
+Step Resolution
+<strong id="resAngle">-</strong>
+</div>
+
+<div>
+Required Pulses
+<strong id="reqPulses">-</strong>
+</div>
+
+<div>
+Approx. Speed
+<strong id="motorRPM">-</strong>
+</div>
+
+<div>
+Position Achieved
+<strong id="achievedAngle">-</strong>
+</div>
+</div>
+</div>
+
+
+<!-- CONTROL MODES -->
+<div class="card">
+<h2>9. Position Control Modes</h2>
+
+<div class="tabs">
+<button class="tab active" onclick="showTab('openLoop',this)">
+Open-Loop Position Control
+</button>
+
+<button class="tab" onclick="showTab('closedLoop',this)">
+Closed-Loop Position Control
+</button>
+
+<button class="tab" onclick="showTab('micro',this)">
+Microstepping
+</button>
+</div>
+
+<div id="openLoop" class="tabcontent active">
+
+<h3>Open-Loop Control</h3>
+
+<p>
+In open-loop control, the controller assumes that every commanded pulse
+produces the expected motor step.
+</p>
+
+<div class="formula">
+Number of Pulses = Required Position / Step Angle
+</div>
+
+<div class="note">
+Open-loop control is simple, but excessive load, acceleration or speed
+can cause missed steps.
+</div>
+
+</div>
+
+<div id="closedLoop" class="tabcontent">
+
+<h3>Closed-Loop Position Control</h3>
+
+<p>
+In closed-loop operation, the actual shaft position is measured using
+an encoder and compared with the reference position.
+</p>
+
+<div class="formula">
+Position Error = θref − θactual
+</div>
+
+<div class="formula">
+Controller Output = f(Position Error)
+</div>
+
+<div class="success">
+Closed-loop stepper control can detect position deviation and compensate
+for disturbances or missed steps.
+</div>
+
+</div>
+
+<div id="micro" class="tabcontent">
+
+<h3>Microstepping</h3>
+
+<p>
+Microstepping divides one full step into smaller angular increments.
+This improves position resolution and can reduce vibration and acoustic
+noise.
+</p>
+
+<div class="formula">
+Microstep Angle = Full Step Angle / Microstep Factor
+</div>
+
+</div>
+
+</div>
+
+
+<!-- PROCEDURE -->
+<div class="card">
+<h2>10. Procedure</h2>
+
+<ol>
+<li>Open MATLAB and launch Simulink.</li>
+
+<li>Create a new model for the stepper motor drive.</li>
+
+<li>Insert the stepper motor model from Simscape Electrical.</li>
+
+<li>Connect the appropriate inverter/driver to the motor.</li>
+
+<li>Generate phase excitation pulses using a pulse generator or
+controlled stepper driver.</li>
+
+<li>Provide a direction signal for clockwise or anticlockwise operation.</li>
+
+<li>Set the motor step angle and supply voltage.</li>
+
+<li>Apply the required reference position.</li>
+
+<li>Calculate the required number of pulses.</li>
+
+<li>Run the simulation and observe rotor position.</li>
+
+<li>Measure actual position using the position sensor/encoder.</li>
+
+<li>Calculate position error.</li>
+
+<li>Repeat the experiment for different reference positions.</li>
+
+<li>Repeat using different pulse frequencies.</li>
+
+<li>Apply different load torques and observe position deviation.</li>
+
+<li>Repeat the experiment using microstepping.</li>
+
+<li>Compare open-loop and closed-loop operation.</li>
+</ol>
+</div>
+
+
+<!-- POSITION OBSERVATION -->
+<div class="card">
+<h2>11. Position Control Observation</h2>
+
+<table id="positionTable">
+<thead>
+<tr>
+<th>S.No</th>
+<th>Reference Position (°)</th>
+<th>Required Pulses</th>
+<th>Measured Position (°)</th>
+<th>Position Error (°)</th>
+<th>Error (%)</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>1</td>
+<td><input value="30"></td>
+<td><input></td>
+<td><input value="29.8"></td>
+<td><input></td>
+<td><input></td>
+</tr>
+
+<tr>
+<td>2</td>
+<td><input value="60"></td>
+<td><input></td>
+<td><input value="60.2"></td>
+<td><input></td>
+<td><input></td>
+</tr>
+
+<tr>
+<td>3</td>
+<td><input value="90"></td>
+<td><input></td>
+<td><input value="89.8"></td>
+<td><input></td>
+<td><input></td>
+</tr>
+
+<tr>
+<td>4</td>
+<td><input value="180"></td>
+<td><input></td>
+<td><input value="179.6"></td>
+<td><input></td>
+<td><input></td>
+</tr>
+
+<tr>
+<td>5</td>
+<td><input value="270"></td>
+<td><input></td>
+<td><input value="269.5"></td>
+<td><input></td>
+<td><input></td>
+</tr>
+</tbody>
+</table>
+
+<button onclick="calculatePositionTable()">
+Calculate Observation Table
+</button>
+</div>
+
+
+<!-- SPEED/PULSE TEST -->
+<div class="card">
+<h2>12. Pulse Frequency / Speed Observation</h2>
+
+<table id="speedTable">
+<thead>
+<tr>
+<th>S.No</th>
+<th>Pulse Frequency (Hz)</th>
+<th>Calculated Speed (rpm)</th>
+<th>Measured Speed (rpm)</th>
+<th>Error (rpm)</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td>1</td>
+<td><input value="200"></td>
+<td><input></td>
+<td><input value="58"></td>
+<td><input></td>
+</tr>
+
+<tr>
+<td>2</td>
+<td><input value="400"></td>
+<td><input></td>
+<td><input value="118"></td>
+<td><input></td>
+</tr>
+
+<tr>
+<td>3</td>
+<td><input value="600"></td>
+<td><input></td>
+<td><input value="178"></td>
+<td><input></td>
+</tr>
+
+<tr>
+<td>4</td>
+<td><input value="800"></td>
+<td><input></td>
+<td><input value="236"></td>
+<td><input></td>
+</tr>
+
+<tr>
+<td>5</td>
+<td><input value="1000"></td>
+<td><input></td>
+<td><input value="295"></td>
+<td><input></td>
+</tr>
+
+</tbody>
+</table>
+
+<button onclick="calculateSpeedTable()">
+Calculate Speed Table
+</button>
+</div>
+
+
+<!-- LOAD TEST -->
+<div class="card">
+<h2>13. Load Torque Test</h2>
+
+<table id="loadTable">
+<thead>
+<tr>
+<th>S.No</th>
+<th>Load Torque (N·m)</th>
+<th>Reference Position (°)</th>
+<th>Measured Position (°)</th>
+<th>Position Error (°)</th>
+<th>Missed Steps</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td>1</td>
+<td><input value="0"></td>
+<td><input value="180"></td>
+<td><input value="180"></td>
+<td><input></td>
+<td><input></td>
+</tr>
+
+<tr>
+<td>2</td>
+<td><input value="0.1"></td>
+<td><input value="180"></td>
+<td><input value="179.8"></td>
+<td><input></td>
+<td><input></td>
+</tr>
+
+<tr>
+<td>3</td>
+<td><input value="0.2"></td>
+<td><input value="180"></td>
+<td><input value="179.2"></td>
+<td><input></td>
+<td><input></td>
+</tr>
+
+<tr>
+<td>4</td>
+<td><input value="0.3"></td>
+<td><input value="180"></td>
+<td><input value="177.8"></td>
+<td><input></td>
+<td><input></td>
+</tr>
+
+</tbody>
+</table>
+
+<button onclick="calculateLoadTable()">
+Calculate Load Test
+</button>
+</div>
+
+
+<!-- DYNAMIC RESPONSE -->
+<div class="card">
+<h2>14. Dynamic Position Response</h2>
+
+<table>
+<thead>
+<tr>
+<th>Reference Position (°)</th>
+<th>Rise Time (s)</th>
+<th>Peak Time (s)</th>
+<th>Settling Time (s)</th>
+<th>Overshoot (%)</th>
+<th>Steady-State Error (°)</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td>90</td>
+<td><input placeholder="From Scope"></td>
+<td><input placeholder="From Scope"></td>
+<td><input placeholder="From Scope"></td>
+<td><input placeholder="%"></td>
+<td><input placeholder="°"></td>
+</tr>
+
+<tr>
+<td>180</td>
+<td><input placeholder="From Scope"></td>
+<td><input placeholder="From Scope"></td>
+<td><input placeholder="From Scope"></td>
+<td><input placeholder="%"></td>
+<td><input placeholder="°"></td>
+</tr>
+
+<tr>
+<td>270</td>
+<td><input placeholder="From Scope"></td>
+<td><input placeholder="From Scope"></td>
+<td><input placeholder="From Scope"></td>
+<td><input placeholder="%"></td>
+<td><input placeholder="°"></td>
+</tr>
+
+</tbody>
+</table>
+
+<div class="note">
+Obtain rise time, peak time, settling time and overshoot from the
+Simulink Scope or exported simulation data.
+</div>
+</div>
+
+
+<!-- WAVEFORMS -->
+<div class="card">
+<h2>15. Simulink Waveforms</h2>
+
+<p>Upload the important simulation waveforms.</p>
+
+<h3>Position Response</h3>
+<div class="upload-box">
+<input type="file" id="positionWave" accept="image/*">
+<img id="positionPreview" class="preview" style="display:none">
+</div>
+
+<h3>Pulse / Step Signal</h3>
+<div class="upload-box">
+<input type="file" id="pulseWave" accept="image/*">
+<img id="pulsePreview" class="preview" style="display:none">
+</div>
+
+<h3>Speed Response</h3>
+<div class="upload-box">
+<input type="file" id="speedWave" accept="image/*">
+<img id="speedPreview" class="preview" style="display:none">
+</div>
+
+<h3>Load Disturbance Response</h3>
+<div class="upload-box">
+<input type="file" id="loadWave" accept="image/*">
+<img id="loadPreview" class="preview" style="display:none">
+</div>
+</div>
+
+
+<!-- CALCULATION -->
+<div class="card">
+<h2>16. Performance Calculation</h2>
+
+<div class="grid">
+
+<div>
+<label>Reference Position (°)</label>
+<input type="number" id="perfRef" value="180">
+</div>
+
+<div>
+<label>Measured Position (°)</label>
+<input type="number" id="perfActual" value="179.5">
+</div>
+
+<div>
+<label>Step Angle (°)</label>
+<input type="number" id="perfStep" value="1.8">
+</div>
+
+<div>
+<label>Number of Applied Pulses</label>
+<input type="number" id="perfPulses" value="100">
+</div>
+
+</div>
+
+<button onclick="performance()">Calculate Performance</button>
+
+<div class="result" id="performanceResult">
+Performance calculation will appear here.
+</div>
+</div>
+
+
+<!-- ANALYSIS -->
+<div class="card">
+<h2>17. Student Analysis</h2>
+
+<label>Position Control Analysis</label>
+<textarea id="analysisPosition"
+placeholder="Explain the relationship between reference position, number of pulses and actual position."></textarea>
+
+<label>Pulse Frequency Analysis</label>
+<textarea id="analysisPulse"
+placeholder="Explain how pulse frequency affects stepper motor speed."></textarea>
+
+<label>Load Effect Analysis</label>
+<textarea id="analysisLoad"
+placeholder="Explain the effect of load torque on position accuracy and missed steps."></textarea>
+
+<label>Microstepping Analysis</label>
+<textarea id="analysisMicro"
+placeholder="Compare full-step and microstepping operation."></textarea>
+
+<label>Closed-Loop Analysis</label>
+<textarea id="analysisClosed"
+placeholder="Explain the advantage of encoder feedback in closed-loop stepper control."></textarea>
+
+</div>
+
+
+<!-- RESULT -->
+<div class="card">
+<h2>18. Result</h2>
+
+<textarea id="resultText">
+The position control of the stepper motor drive was successfully simulated.
+The relationship between input pulses, step angle, pulse frequency and
+shaft position was studied. The position error for different reference
+positions was calculated and the effect of load torque and microstepping
+was investigated.
+</textarea>
+
+<div class="success">
+<b>Suggested Result:</b><br>
+The stepper motor successfully achieved the commanded positions within
+the simulated position error. The number of input pulses determined the
+angular position, while pulse frequency determined motor speed. The
+effect of load torque and microstepping on position accuracy was also
+studied.
+</div>
+</div>
+
+
+<!-- QUESTIONS -->
+<div class="card">
+<h2>19. Post-Lab Questions</h2>
+
+<ol>
+<li>What is a stepper motor?</li>
+<li>Define step angle.</li>
+<li>Calculate the number of steps required for 90° rotation for a
+1.8° stepper motor.</li>
+<li>How is motor speed controlled in a stepper motor?</li>
+<li>What is the function of the direction signal?</li>
+<li>What is microstepping?</li>
+<li>What happens if the pulse frequency is increased beyond the
+motor's capability?</li>
+<li>What are missed steps?</li>
+<li>What is the difference between open-loop and closed-loop stepper
+motor control?</li>
+<li>Why is an encoder used in closed-loop stepper motor drives?</li>
+</ol>
+
+<textarea id="answers"
+placeholder="Enter your answers / observations here..."></textarea>
+</div>
+
+
+<!-- EVALUATION -->
+<div class="card">
+<h2>20. Faculty Evaluation – 10 Marks</h2>
+
+<table>
+<tr>
+<th>Assessment Component</th>
+<th>Marks</th>
+<th>Faculty Awarded</th>
+</tr>
+
+<tr>
+<td>Simulink Model Development</td>
+<td>2</td>
+<td><input type="number" min="0" max="2" step="0.5"></td>
+</tr>
+
+<tr>
+<td>Stepper Motor Position Control</td>
+<td>2</td>
+<td><input type="number" min="0" max="2" step="0.5"></td>
+</tr>
+
+<tr>
+<td>Pulse / Direction Control</td>
+<td>1.5</td>
+<td><input type="number" min="0" max="1.5" step="0.5"></td>
+</tr>
+
+<tr>
+<td>Observation & Calculation</td>
+<td>1.5</td>
+<td><input type="number" min="0" max="1.5" step="0.5"></td>
+</tr>
+
+<tr>
+<td>Waveform Analysis</td>
+<td>1</td>
+<td><input type="number" min="0" max="1" step="0.5"></td>
+</tr>
+
+<tr>
+<td>Result / Discussion</td>
+<td>1</td>
+<td><input type="number" min="0" max="1" step="0.5"></td>
+</tr>
+
+<tr>
+<td>Viva Voce</td>
+<td>1</td>
+<td><input type="number" min="0" max="1" step="0.5"></td>
+</tr>
+
+<tr>
+<th colspan="2">Total</th>
+<th id="totalMarks">0 / 10</th>
+</tr>
+</table>
+</div>
+
+
+<!-- ACTIONS -->
+<div class="card">
+<h2>21. Save / Load / Evaluate / Print</h2>
+
+<button onclick="saveData()">
+💾 Save Experiment
+</button>
+
+<button onclick="loadData()" class="secondary">
+📂 Load Saved Data
+</button>
+
+<button onclick="saveJSON()">
+📄 Save JSON
+</button>
+
+<button onclick="document.getElementById('jsonFileInput').click()" class="secondary">
+📥 Load JSON
+</button>
+
+<input
+    type="file"
+    id="jsonFileInput"
+    accept=".json,application/json"
+    style="display:none"
+    onchange="loadJSON(event)"
+>
+
+<button onclick="evaluateExperiment()" class="warning">
+📊 Evaluate Experiment
+</button>
+
+<button onclick="window.print()" class="warning">
+🖨 Print / Save PDF
+</button>
+
+<button onclick="clearData()" class="dangerBtn">
+🗑 Clear Data
+</button>
+
+<div id="saveStatus" class="success" style="display:none">
+Experiment data saved successfully.
+</div>
+
+<div id="evaluationResult"
+     class="result"
+     style="display:none;margin-top:15px">
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   EXPERIMENT 8
+   POSITION CONTROL OF STEPPER MOTOR DRIVE
+   SAVE / LOAD / JSON / EVALUATION
+   ========================================================= */
+
+
+/* ---------- GLOBAL ---------- */
+
+const STORAGE_KEY = "stepperMotorExperiment8";
+const JSON_CACHE_KEY = "stepperMotorExperiment8_json";
+
+let lastEvaluation = null;
+
+
+/* =========================================================
+   TAB CONTROL
+   ========================================================= */
+
+function showTab(id,btn){
+
+    document.querySelectorAll(".tabcontent")
+        .forEach(x => x.classList.remove("active"));
+
+    document.querySelectorAll(".tab")
+        .forEach(x => x.classList.remove("active"));
+
+    document.getElementById(id).classList.add("active");
+
+    btn.classList.add("active");
+}
+
+
+/* =========================================================
+   IMAGE PREVIEW
+   ========================================================= */
+
+function imagePreview(inputId,previewId){
+
+    document.getElementById(inputId).addEventListener(
+        "change",
+        function(){
+
+            const file = this.files[0];
+
+            if(!file) return;
+
+            const reader = new FileReader();
+
+            reader.onload = function(e){
+
+                const img = document.getElementById(previewId);
+
+                img.src = e.target.result;
+
+                img.style.display = "block";
+            };
+
+            reader.readAsDataURL(file);
+        }
+    );
+}
+
+imagePreview("modelImage","modelPreview");
+imagePreview("positionWave","positionPreview");
+imagePreview("pulseWave","pulsePreview");
+imagePreview("speedWave","speedPreview");
+imagePreview("loadWave","loadPreview");
+
+
+/* =========================================================
+   BASIC CALCULATION
+   ========================================================= */
+
+function calculateBasic(){
+
+    let angle =
+        parseFloat(document.getElementById("stepAngle").value);
+
+    let steps =
+        parseFloat(document.getElementById("stepsRev").value);
+
+    let micro =
+        parseFloat(document.getElementById("microstep").value);
+
+    let freq =
+        parseFloat(document.getElementById("pulseFreq").value);
+
+    let ref =
+        parseFloat(document.getElementById("refPosition").value);
+
+    let actual =
+        parseFloat(document.getElementById("measPosition").value);
+
+    let resolution = angle / micro;
+
+    let calculatedSteps = 360 / resolution;
+
+    let speed = freq / calculatedSteps * 60;
+
+    let error = ref - actual;
+
+    let errorPercent = ref !== 0 ?
+        Math.abs(error / ref) * 100 : 0;
+
+    document.getElementById("basicResult").innerHTML = `
+
+    <b>Calculated Results</b><br><br>
+
+    Full-step angle = ${angle.toFixed(4)}°<br>
+
+    Microstepping factor = ${micro}<br>
+
+    Effective step resolution = ${resolution.toFixed(5)}°<br>
+
+    Steps per revolution = ${calculatedSteps.toFixed(2)}<br>
+
+    Approximate motor speed = ${speed.toFixed(2)} rpm<br>
+
+    Position error = ${error.toFixed(4)}°<br>
+
+    Position error (%) = ${errorPercent.toFixed(3)} %
+
+    `;
+}
+
+
+/* =========================================================
+   POSITION CALCULATOR
+   ========================================================= */
+
+function calculatePosition(){
+
+    let desired =
+        parseFloat(document.getElementById("desiredAngle").value);
+
+    let angle =
+        parseFloat(document.getElementById("calcStepAngle").value);
+
+    let micro =
+        parseFloat(document.getElementById("calcMicro").value);
+
+    let freq =
+        parseFloat(document.getElementById("calcFreq").value);
+
+    let resolution = angle / micro;
+
+    let pulses = Math.round(desired / resolution);
+
+    let actual = pulses * resolution;
+
+    let stepsRev = 360 / resolution;
+
+    let rpm = freq / stepsRev * 60;
+
+    document.getElementById("resAngle").innerText =
+        resolution.toFixed(5) + "°";
+
+    document.getElementById("reqPulses").innerText =
+        pulses;
+
+    document.getElementById("motorRPM").innerText =
+        rpm.toFixed(2) + " rpm";
+
+    document.getElementById("achievedAngle").innerText =
+        actual.toFixed(4) + "°";
+}
+
+
+/* =========================================================
+   POSITION TABLE
+   ========================================================= */
+
+function calculatePositionTable(){
+
+    let table =
+        document.getElementById("positionTable");
+
+    let rows =
+        table.tBodies[0].rows;
+
+    let step =
+        parseFloat(document.getElementById("stepAngle").value);
+
+    let micro =
+        parseFloat(document.getElementById("microstep").value);
+
+    let resolution = step / micro;
+
+    for(let i=0;i<rows.length;i++){
+
+        let cells = rows[i].cells;
+
+        let ref =
+            parseFloat(
+                cells[1].querySelector("input").value
+            );
+
+        let measured =
+            parseFloat(
+                cells[3].querySelector("input").value
+            );
+
+        if(!Number.isFinite(ref) ||
+           !Number.isFinite(measured)){
+
+            continue;
+        }
+
+        let pulses =
+            Math.round(ref / resolution);
+
+        let error =
+            ref - measured;
+
+        let errorPercent =
+            ref !== 0 ?
+            Math.abs(error / ref) * 100 : 0;
+
+        cells[2].querySelector("input").value =
+            pulses;
+
+        cells[4].querySelector("input").value =
+            error.toFixed(4);
+
+        cells[5].querySelector("input").value =
+            errorPercent.toFixed(3);
+    }
+}
+
+
+/* =========================================================
+   SPEED TABLE
+   ========================================================= */
+
+function calculateSpeedTable(){
+
+    let table =
+        document.getElementById("speedTable");
+
+    let rows =
+        table.tBodies[0].rows;
+
+    let step =
+        parseFloat(document.getElementById("stepAngle").value);
+
+    let micro =
+        parseFloat(document.getElementById("microstep").value);
+
+    let resolution = step / micro;
+
+    let stepsRev = 360 / resolution;
+
+    for(let i=0;i<rows.length;i++){
+
+        let cells = rows[i].cells;
+
+        let freq =
+            parseFloat(
+                cells[1].querySelector("input").value
+            );
+
+        let measured =
+            parseFloat(
+                cells[3].querySelector("input").value
+            );
+
+        if(!Number.isFinite(freq) ||
+           !Number.isFinite(measured)){
+
+            continue;
+        }
+
+        let calculated =
+            freq / stepsRev * 60;
+
+        let error =
+            calculated - measured;
+
+        cells[2].querySelector("input").value =
+            calculated.toFixed(2);
+
+        cells[4].querySelector("input").value =
+            error.toFixed(2);
+    }
+}
+
+
+/* =========================================================
+   LOAD TABLE
+   ========================================================= */
+
+function calculateLoadTable(){
+
+    let table =
+        document.getElementById("loadTable");
+
+    let rows =
+        table.tBodies[0].rows;
+
+    let step =
+        parseFloat(document.getElementById("stepAngle").value);
+
+    let micro =
+        parseFloat(document.getElementById("microstep").value);
+
+    let resolution = step / micro;
+
+    for(let i=0;i<rows.length;i++){
+
+        let cells = rows[i].cells;
+
+        let ref =
+            parseFloat(
+                cells[2].querySelector("input").value
+            );
+
+        let actual =
+            parseFloat(
+                cells[3].querySelector("input").value
+            );
+
+        if(!Number.isFinite(ref) ||
+           !Number.isFinite(actual)){
+
+            continue;
+        }
+
+        let error = ref - actual;
+
+        let missedSteps =
+            Math.round(
+                Math.abs(error) / resolution
+            );
+
+        cells[4].querySelector("input").value =
+            error.toFixed(4);
+
+        cells[5].querySelector("input").value =
+            missedSteps;
+    }
+}
+
+
+/* =========================================================
+   PERFORMANCE
+   ========================================================= */
+
+function performance(){
+
+    let ref =
+        parseFloat(
+            document.getElementById("perfRef").value
+        );
+
+    let actual =
+        parseFloat(
+            document.getElementById("perfActual").value
+        );
+
+    let step =
+        parseFloat(
+            document.getElementById("perfStep").value
+        );
+
+    let pulses =
+        parseFloat(
+            document.getElementById("perfPulses").value
+        );
+
+    if(
+        !Number.isFinite(ref) ||
+        !Number.isFinite(actual) ||
+        !Number.isFinite(step) ||
+        !Number.isFinite(pulses)
+    ){
+
+        document.getElementById("performanceResult").innerHTML =
+            "Please enter valid numerical values.";
+
+        return;
+    }
+
+    let expected = pulses * step;
+
+    let error = ref - actual;
+
+    let errorPercent =
+        ref !== 0 ?
+        Math.abs(error / ref) * 100 : 0;
+
+    let pulsePositionError =
+        expected - ref;
+
+    document.getElementById("performanceResult").innerHTML = `
+
+    <b>Performance Results</b><br><br>
+
+    Reference Position = ${ref.toFixed(3)}°<br>
+
+    Measured Position = ${actual.toFixed(3)}°<br>
+
+    Position Error = ${error.toFixed(3)}°<br>
+
+    Position Error (%) = ${errorPercent.toFixed(3)}%<br>
+
+    Position obtained from applied pulses =
+    ${expected.toFixed(3)}°<br>
+
+    Pulse-command position deviation =
+    ${pulsePositionError.toFixed(3)}°
+
+    `;
+}
+
+
+/* =========================================================
+   HELPER FUNCTIONS FOR JSON
+   ========================================================= */
+
+function getValue(id){
+
+    const el = document.getElementById(id);
+
+    return el ? el.value : "";
+}
+
+
+function setValue(id,value){
+
+    const el = document.getElementById(id);
+
+    if(el && value !== undefined && value !== null){
+
+        el.value = value;
+    }
+}
+
+
+function cleanText(value){
+
+    return String(value || "").trim();
+}
+
+
+function isNumericValue(value){
+
+    if(value === undefined ||
+       value === null ||
+       String(value).trim() === ""){
+
+        return false;
+    }
+
+    return Number.isFinite(
+        parseFloat(value)
+    );
+}
+
+
+/* =========================================================
+   IMAGE → BASE64
+   ========================================================= */
+
+function getImageData(id){
+
+    const img =
+        document.getElementById(id);
+
+    if(
+        img &&
+        img.src &&
+        img.src.startsWith("data:image")
+    ){
+
+        return img.src;
+    }
+
+    return "";
+}
+
+
+/* =========================================================
+   RESTORE BASE64 IMAGE
+   ========================================================= */
+
+function restoreImage(id,dataUrl){
+
+    const img =
+        document.getElementById(id);
+
+    if(!img) return;
+
+    if(dataUrl &&
+       dataUrl.startsWith("data:image")){
+
+        img.src = dataUrl;
+
+        img.style.display = "block";
+
+    }else{
+
+        img.removeAttribute("src");
+
+        img.style.display = "none";
+    }
+}
+
+
+/* =========================================================
+   GET TABLE DATA
+   ========================================================= */
+
+function getTableData(tableId){
+
+    const table =
+        document.getElementById(tableId);
+
+    if(!table) return [];
+
+    return [...table.tBodies[0].rows]
+        .map(row =>
+            [...row.querySelectorAll("input")]
+            .map(input => input.value)
+        );
+}
+
+
+/* =========================================================
+   RESTORE TABLE DATA
+   ========================================================= */
+
+function restoreTableData(tableId,data){
+
+    const table =
+        document.getElementById(tableId);
+
+    if(!table) return;
+
+    const rows =
+        [...table.tBodies[0].rows];
+
+    /* Clear existing table inputs */
+
+    rows.forEach(row => {
+
+        row.querySelectorAll("input")
+        .forEach(input => {
+
+            input.value = "";
+        });
+
+    });
+
+
+    if(!Array.isArray(data)) return;
+
+
+    data.forEach((rowData,rowIndex)=>{
+
+        if(!rows[rowIndex]) return;
+
+        const inputs =
+            [...rows[rowIndex].querySelectorAll("input")];
+
+        if(!Array.isArray(rowData)) return;
+
+        rowData.forEach((value,colIndex)=>{
+
+            if(inputs[colIndex]){
+
+                inputs[colIndex].value =
+                    value ?? "";
+            }
+
+        });
+
+    });
+}
+
+
+/* =========================================================
+   POST LAB ANSWER
+   ========================================================= */
+
+function getPostLabAnswers(){
+
+    const textarea =
+        document.getElementById("answers");
+
+    return textarea ? textarea.value : "";
+}
+
+
+/* =========================================================
+   COLLECT COMPLETE EXPERIMENT DATA
+   ========================================================= */
+
+function collectJSONData(){
+
+    return {
+
+        experiment:
+            "Experiment 8 - Position Control of Stepper Motor Drive",
+
+        experimentNumber:
+            "8",
+
+        version:
+            "1.0",
+
+        savedAt:
+            new Date().toISOString(),
+
+
+        /* ---------- STUDENT ---------- */
+
+        studentDetails:{
+
+            name:getValue("studentName"),
+
+            registerNumber:getValue("regNo"),
+
+            classSection:getValue("classSection"),
+
+            date:getValue("expDate")
+        },
+
+
+        /* ---------- STEPPER PARAMETERS ---------- */
+
+        stepperParameters:{
+
+            stepAngle:getValue("stepAngle"),
+
+            stepsRev:getValue("stepsRev"),
+
+            microstep:getValue("microstep"),
+
+            supply:getValue("supply"),
+
+            pulseFreq:getValue("pulseFreq"),
+
+            loadTorque:getValue("loadTorque"),
+
+            refPosition:getValue("refPosition"),
+
+            measPosition:getValue("measPosition")
+        },
+
+
+        /* ---------- POSITION CALCULATOR ---------- */
+
+        positionCalculator:{
+
+            desiredAngle:getValue("desiredAngle"),
+
+            calcStepAngle:getValue("calcStepAngle"),
+
+            calcMicro:getValue("calcMicro"),
+
+            calcFreq:getValue("calcFreq"),
+
+            resolution:
+                document.getElementById("resAngle")?.innerText || "",
+
+            requiredPulses:
+                document.getElementById("reqPulses")?.innerText || "",
+
+            motorRPM:
+                document.getElementById("motorRPM")?.innerText || "",
+
+            achievedAngle:
+                document.getElementById("achievedAngle")?.innerText || ""
+        },
+
+
+        /* ---------- OBSERVATION TABLES ---------- */
+
+        positionObservation:
+            getTableData("positionTable"),
+
+        speedObservation:
+            getTableData("speedTable"),
+
+        loadObservation:
+            getTableData("loadTable"),
+
+
+        /* ---------- DYNAMIC RESPONSE ---------- */
+
+        dynamicResponse:
+            getTableDataFromUnnamedDynamicTable(),
+
+
+        /* ---------- PERFORMANCE ---------- */
+
+        performance:{
+
+            reference:getValue("perfRef"),
+
+            measured:getValue("perfActual"),
+
+            stepAngle:getValue("perfStep"),
+
+            pulses:getValue("perfPulses"),
+
+            result:
+                document.getElementById(
+                    "performanceResult"
+                )?.innerHTML || ""
+        },
+
+
+        /* ---------- ANALYSIS ---------- */
+
+        analysis:{
+
+            position:getValue("analysisPosition"),
+
+            pulse:getValue("analysisPulse"),
+
+            load:getValue("analysisLoad"),
+
+            micro:getValue("analysisMicro"),
+
+            closedLoop:getValue("analysisClosed")
+        },
+
+
+        /* ---------- RESULT ---------- */
+
+        result:
+            getValue("resultText"),
+
+
+        /* ---------- POST LAB ---------- */
+
+        postLabAnswers:
+            getPostLabAnswers(),
+
+
+        /* ---------- FACULTY MARKS ---------- */
+
+        facultyMarks:
+            getFacultyMarks(),
+
+
+        facultyTotal:
+            document.getElementById(
+                "totalMarks"
+            )?.innerText || "0 / 10",
+
+
+        /* ---------- IMAGES ---------- */
+
+        images:{
+
+            model:
+                getImageData("modelPreview"),
+
+            positionWave:
+                getImageData("positionPreview"),
+
+            pulseWave:
+                getImageData("pulsePreview"),
+
+            speedWave:
+                getImageData("speedPreview"),
+
+            loadWave:
+                getImageData("loadPreview")
+        },
+
+
+        /* ---------- CALCULATION OUTPUTS ---------- */
+
+        calculationOutputs:{
+
+            basic:
+                document.getElementById(
+                    "basicResult"
+                )?.innerHTML || "",
+
+            position:
+                document.getElementById(
+                    "resAngle"
+                )?.innerText || "",
+
+            performance:
+                document.getElementById(
+                    "performanceResult"
+                )?.innerHTML || ""
+        },
+
+
+        /* ---------- AUTOMATIC EVALUATION ---------- */
+
+        automaticEvaluation:
+            lastEvaluation
+    };
+}
+
+
+/* =========================================================
+   DYNAMIC RESPONSE TABLE
+   ========================================================= */
+
+function getTableDataFromUnnamedDynamicTable(){
+
+    const cards =
+        [...document.querySelectorAll(".card")];
+
+    const card =
+        cards.find(c =>
+            c.querySelector("h2") &&
+            c.querySelector("h2").textContent
+                .includes("14. Dynamic Position Response")
+        );
+
+    if(!card) return [];
+
+    const table =
+        card.querySelector("table");
+
+    if(!table) return [];
+
+    return [...table.tBodies[0].rows]
+        .map(row =>
+            [...row.querySelectorAll("input")]
+            .map(input => input.value)
+        );
+}
+
+
+function restoreDynamicResponse(data){
+
+    const cards =
+        [...document.querySelectorAll(".card")];
+
+    const card =
+        cards.find(c =>
+            c.querySelector("h2") &&
+            c.querySelector("h2").textContent
+                .includes("14. Dynamic Position Response")
+        );
+
+    if(!card) return;
+
+    const table =
+        card.querySelector("table");
+
+    if(!table) return;
+
+    const rows =
+        [...table.tBodies[0].rows];
+
+    rows.forEach(row => {
+
+        row.querySelectorAll("input")
+        .forEach(input => {
+
+            input.value = "";
+        });
+
+    });
+
+    if(!Array.isArray(data)) return;
+
+    data.forEach((rowData,rowIndex)=>{
+
+        if(!rows[rowIndex]) return;
+
+        const inputs =
+            [...rows[rowIndex].querySelectorAll("input")];
+
+        rowData.forEach((value,index)=>{
+
+            if(inputs[index]){
+
+                inputs[index].value =
+                    value ?? "";
+            }
+
+        });
+
+    });
+}
+
+
+/* =========================================================
+   FACULTY MARKS
+   ========================================================= */
+
+function getFacultyMarks(){
+
+    const card =
+        [...document.querySelectorAll(".card")]
+        .find(c =>
+            c.querySelector("h2") &&
+            c.querySelector("h2").textContent
+                .includes("20. Faculty Evaluation")
+        );
+
+    if(!card) return [];
+
+    return [
+        ...card.querySelectorAll(
+            'input[type="number"]'
+        )
+    ].map(input => input.value);
+}
+
+
+function restoreFacultyMarks(data){
+
+    const card =
+        [...document.querySelectorAll(".card")]
+        .find(c =>
+            c.querySelector("h2") &&
+            c.querySelector("h2").textContent
+                .includes("20. Faculty Evaluation")
+        );
+
+    if(!card) return;
+
+    const inputs =
+        [...card.querySelectorAll(
+            'input[type="number"]'
+        )];
+
+    inputs.forEach(input => {
+
+        input.value = "";
+    });
+
+    if(!Array.isArray(data)) return;
+
+    data.forEach((value,index)=>{
+
+        if(inputs[index]){
+
+            inputs[index].value =
+                value ?? "";
+        }
+
+    });
+
+    calculateMarks();
+}
+
+
+/* =========================================================
+   FACULTY MARK CALCULATION
+   ========================================================= */
+
+function calculateMarks(){
+
+    const inputs =
+        document.querySelectorAll(
+            'input[type="number"][max]'
+        );
+
+    let total = 0;
+
+    inputs.forEach(input => {
+
+        const max =
+            parseFloat(input.max);
+
+        const value =
+            parseFloat(input.value);
+
+        if(
+            Number.isFinite(max) &&
+            Number.isFinite(value)
+        ){
+
+            total += Math.min(
+                Math.max(value,0),
+                max
+            );
+        }
+
+    });
+
+    const totalElement =
+        document.getElementById("totalMarks");
+
+    if(totalElement){
+
+        totalElement.innerText =
+            total.toFixed(1) + " / 10";
+    }
+
+    return total;
+}
+
+
+/* =========================================================
+   SAVE JSON
+   ========================================================= */
+
+function saveJSON(){
+
+    const data =
+        collectJSONData();
+
+    const json =
+        JSON.stringify(data,null,2);
+
+    /* Cache a copy in browser */
+
+    try{
+
+        localStorage.setItem(
+            JSON_CACHE_KEY,
+            json
+        );
+
+    }catch(error){
+
+        console.warn(
+            "JSON cache could not be stored:",
+            error
+        );
+    }
+
+
+    /* Download JSON file */
+
+    const blob =
+        new Blob(
+            [json],
+            {type:"application/json"}
+        );
+
+    const url =
+        URL.createObjectURL(blob);
+
+    const a =
+        document.createElement("a");
+
+    const reg =
+        cleanText(
+            getValue("regNo")
+        ) || "Student";
+
+    const safeReg =
+        reg.replace(
+            /[^\w-]+/g,
+            "_"
+        );
+
+    a.href = url;
+
+    a.download =
+        `Experiment8_Stepper_Position_Control_${safeReg}.json`;
+
+    document.body.appendChild(a);
+
+    a.click();
+
+    document.body.removeChild(a);
+
+    URL.revokeObjectURL(url);
+
+
+    showSaveStatus(
+        "JSON file saved successfully."
+    );
+}
+
+
+/* =========================================================
+   LOAD JSON
+   ========================================================= */
+
+function loadJSON(event){
+
+    const file =
+        event.target.files[0];
+
+    if(!file) return;
+
+    const reader =
+        new FileReader();
+
+    reader.onload = function(e){
+
+        try{
+
+            const data =
+                JSON.parse(e.target.result);
+
+            if(
+                data.experimentNumber !== "8"
+            ){
+
+                alert(
+                    "This JSON file does not belong to Experiment 8."
+                );
+
+                return;
+            }
+
+            restoreJSONData(data);
+
+            showSaveStatus(
+                "JSON experiment data loaded successfully."
+            );
+
+        }catch(error){
+
+            alert(
+                "Invalid JSON file.\n\n" +
+                error.message
+            );
+
+        }
+
+        event.target.value = "";
+    };
+
+    reader.readAsText(file);
+}
+
+
+/* =========================================================
+   RESTORE COMPLETE JSON DATA
+   ========================================================= */
+
+function restoreJSONData(data){
+
+    /* ---------- STUDENT ---------- */
+
+    setValue(
+        "studentName",
+        data.studentDetails?.name
+    );
+
+    setValue(
+        "regNo",
+        data.studentDetails?.registerNumber
+    );
+
+    setValue(
+        "classSection",
+        data.studentDetails?.classSection
+    );
+
+    setValue(
+        "expDate",
+        data.studentDetails?.date
+    );
+
+
+    /* ---------- STEPPER PARAMETERS ---------- */
+
+    const p =
+        data.stepperParameters || {};
+
+    setValue("stepAngle",p.stepAngle);
+
+    setValue("stepsRev",p.stepsRev);
+
+    setValue("microstep",p.microstep);
+
+    setValue("supply",p.supply);
+
+    setValue("pulseFreq",p.pulseFreq);
+
+    setValue("loadTorque",p.loadTorque);
+
+    setValue("refPosition",p.refPosition);
+
+    setValue("measPosition",p.measPosition);
+
+
+    /* ---------- POSITION CALCULATOR ---------- */
+
+    const pc =
+        data.positionCalculator || {};
+
+    setValue(
+        "desiredAngle",
+        pc.desiredAngle
+    );
+
+    setValue(
+        "calcStepAngle",
+        pc.calcStepAngle
+    );
+
+    setValue(
+        "calcMicro",
+        pc.calcMicro
+    );
+
+    setValue(
+        "calcFreq",
+        pc.calcFreq
+    );
+
+
+    /* ---------- TABLES ---------- */
+
+    restoreTableData(
+        "positionTable",
+        data.positionObservation
+    );
+
+    restoreTableData(
+        "speedTable",
+        data.speedObservation
+    );
+
+    restoreTableData(
+        "loadTable",
+        data.loadObservation
+    );
+
+
+    restoreDynamicResponse(
+        data.dynamicResponse
+    );
+
+
+    /* ---------- PERFORMANCE ---------- */
+
+    const perf =
+        data.performance || {};
+
+    setValue("perfRef",perf.reference);
+
+    setValue(
+        "perfActual",
+        perf.measured
+    );
+
+    setValue(
+        "perfStep",
+        perf.stepAngle
+    );
+
+    setValue(
+        "perfPulses",
+        perf.pulses
+    );
+
+
+    /* ---------- ANALYSIS ---------- */
+
+    const analysis =
+        data.analysis || {};
+
+    setValue(
+        "analysisPosition",
+        analysis.position
+    );
+
+    setValue(
+        "analysisPulse",
+        analysis.pulse
+    );
+
+    setValue(
+        "analysisLoad",
+        analysis.load
+    );
+
+    setValue(
+        "analysisMicro",
+        analysis.micro
+    );
+
+    setValue(
+        "analysisClosed",
+        analysis.closedLoop
+    );
+
+
+    /* ---------- RESULT ---------- */
+
+    setValue(
+        "resultText",
+        data.result
+    );
+
+
+    /* ---------- POST LAB ---------- */
+
+    setValue(
+        "answers",
+        data.postLabAnswers
+    );
+
+
+    /* ---------- FACULTY ---------- */
+
+    restoreFacultyMarks(
+        data.facultyMarks
+    );
+
+
+    /* ---------- IMAGES ---------- */
+
+    const images =
+        data.images || {};
+
+    restoreImage(
+        "modelPreview",
+        images.model
+    );
+
+    restoreImage(
+        "positionPreview",
+        images.positionWave
+    );
+
+    restoreImage(
+        "pulsePreview",
+        images.pulseWave
+    );
+
+    restoreImage(
+        "speedPreview",
+        images.speedWave
+    );
+
+    restoreImage(
+        "loadPreview",
+        images.loadWave
+    );
+
+
+    /* ---------- AUTOMATIC EVALUATION ---------- */
+
+    lastEvaluation =
+        data.automaticEvaluation || null;
+
+
+    if(lastEvaluation){
+
+        displayEvaluation(
+            lastEvaluation
+        );
+    }
+
+
+    /* ---------- RECALCULATE ---------- */
+
+    calculateBasic();
+
+    calculatePosition();
+
+    calculatePositionTable();
+
+    calculateSpeedTable();
+
+    calculateLoadTable();
+
+    performance();
+
+    calculateMarks();
+}
+
+
+/* =========================================================
+   SAVE CURRENT DATA TO LOCAL STORAGE
+   ========================================================= */
+
+function collectData(){
+
+    let data = {};
+
+    document
+        .querySelectorAll(
+            "input,textarea,select"
+        )
+        .forEach((el,index)=>{
+
+            if(el.type === "file") return;
+
+            data["field_"+index] =
+                el.value;
+        });
+
+    return data;
+}
+
+
+function saveData(){
+
+    try{
+
+        localStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify(
+                collectData()
+            )
+        );
+
+        showSaveStatus(
+            "Experiment data saved in this browser."
+        );
+
+    }catch(error){
+
+        alert(
+            "Unable to save experiment data.\n" +
+            error.message
+        );
+    }
+}
+
+
+/* =========================================================
+   LOAD LOCAL STORAGE DATA
+   ========================================================= */
+
+function loadData(){
+
+    const saved =
+        localStorage.getItem(
+            STORAGE_KEY
+        );
+
+    if(!saved){
+
+        alert(
+            "No saved experiment data found."
+        );
+
+        return;
+    }
+
+    try{
+
+        const data =
+            JSON.parse(saved);
+
+        document
+            .querySelectorAll(
+                "input,textarea,select"
+            )
+            .forEach((el,index)=>{
+
+                if(el.type === "file") return;
+
+                if(
+                    data["field_"+index]
+                    !== undefined
+                ){
+
+                    el.value =
+                        data["field_"+index];
+                }
+
+            });
+
+
+        calculateBasic();
+
+        calculatePosition();
+
+        calculatePositionTable();
+
+        calculateSpeedTable();
+
+        calculateLoadTable();
+
+        performance();
+
+        calculateMarks();
+
+
+        showSaveStatus(
+            "Saved browser data loaded successfully."
+        );
+
+    }catch(error){
+
+        alert(
+            "Could not load saved data.\n" +
+            error.message
+        );
+    }
+}
+
+
+/* =========================================================
+   EVALUATION
+   ========================================================= */
+
+function evaluateExperiment(){
+
+    let score = 0;
+
+    let missing = [];
+
+
+    /* -----------------------------------------
+       1. STUDENT DETAILS – 1 MARK
+       ----------------------------------------- */
+
+    const studentFields = [
+        "studentName",
+        "regNo",
+        "classSection",
+        "expDate"
+    ];
+
+    const studentCompleted =
+        studentFields.filter(
+            id => cleanText(getValue(id)) !== ""
+        ).length;
+
+    if(studentCompleted === 4){
+
+        score += 1;
+
+    }else if(studentCompleted >= 2){
+
+        score += 0.5;
+
+        missing.push(
+            "Complete student details"
+        );
+
+    }else{
+
+        missing.push(
+            "Student details"
+        );
+    }
+
+
+    /* -----------------------------------------
+       2. SIMULINK MODEL – 2 MARKS
+       ----------------------------------------- */
+
+    if(
+        getImageData("modelPreview")
+    ){
+
+        score += 2;
+
+    }else{
+
+        missing.push(
+            "Upload Simulink model screenshot"
+        );
+    }
+
+
+    /* -----------------------------------------
+       3. POSITION OBSERVATION – 1 MARK
+       ----------------------------------------- */
+
+    const positionRows =
+        document.querySelectorAll(
+            "#positionTable tbody tr"
+        );
+
+    let positionComplete = 0;
+
+    positionRows.forEach(row=>{
+
+        const inputs =
+            [...row.querySelectorAll("input")];
+
+        if(
+            inputs.length >= 5 &&
+            inputs.every(
+                input =>
+                    isNumericValue(input.value)
+            )
+        ){
+
+            positionComplete++;
+        }
+
+    });
+
+    score +=
+        positionComplete /
+        positionRows.length;
+
+    if(
+        positionComplete <
+        positionRows.length
+    ){
+
+        missing.push(
+            "Complete position observation table"
+        );
+    }
+
+
+    /* -----------------------------------------
+       4. SPEED OBSERVATION – 1 MARK
+       ----------------------------------------- */
+
+    const speedRows =
+        document.querySelectorAll(
+            "#speedTable tbody tr"
+        );
+
+    let speedComplete = 0;
+
+    speedRows.forEach(row=>{
+
+        const inputs =
+            [...row.querySelectorAll("input")];
+
+        if(
+            inputs.length >= 4 &&
+            inputs.every(
+                input =>
+                    isNumericValue(input.value)
+            )
+        ){
+
+            speedComplete++;
+        }
+
+    });
+
+    score +=
+        speedComplete /
+        speedRows.length;
+
+    if(
+        speedComplete <
+        speedRows.length
+    ){
+
+        missing.push(
+            "Complete pulse frequency / speed table"
+        );
+    }
+
+
+    /* -----------------------------------------
+       5. LOAD TEST – 1 MARK
+       ----------------------------------------- */
+
+    const loadRows =
+        document.querySelectorAll(
+            "#loadTable tbody tr"
+        );
+
+    let loadComplete = 0;
+
+    loadRows.forEach(row=>{
+
+        const inputs =
+            [...row.querySelectorAll("input")];
+
+        if(
+            inputs.length >= 5 &&
+            inputs.every(
+                input =>
+                    isNumericValue(input.value)
+            )
+        ){
+
+            loadComplete++;
+        }
+
+    });
+
+    score +=
+        loadComplete /
+        loadRows.length;
+
+    if(
+        loadComplete <
+        loadRows.length
+    ){
+
+        missing.push(
+            "Complete load torque test table"
+        );
+    }
+
+
+    /* -----------------------------------------
+       6. PERFORMANCE CALCULATION – 1 MARK
+       ----------------------------------------- */
+
+    const perfFields = [
+        "perfRef",
+        "perfActual",
+        "perfStep",
+        "perfPulses"
+    ];
+
+    const perfComplete =
+        perfFields.filter(
+            id =>
+                isNumericValue(
+                    getValue(id)
+                )
+        ).length;
+
+    if(perfComplete === 4){
+
+        score += 1;
+
+    }else if(perfComplete >= 2){
+
+        score += 0.5;
+
+        missing.push(
+            "Complete performance calculation inputs"
+        );
+
+    }else{
+
+        missing.push(
+            "Performance calculation"
+        );
+    }
+
+
+    /* -----------------------------------------
+       7. DYNAMIC RESPONSE – 1 MARK
+       ----------------------------------------- */
+
+    const dynamicRows =
+        getDynamicInputs();
+
+    let dynamicCount = 0;
+
+    dynamicRows.forEach(input=>{
+
+        if(
+            isNumericValue(
+                input.value
+            )
+        ){
+
+            dynamicCount++;
+        }
+
+    });
+
+    const dynamicTotal =
+        dynamicRows.length;
+
+    if(dynamicTotal > 0){
+
+        score +=
+            dynamicCount /
+            dynamicTotal;
+    }
+
+    if(
+        dynamicCount <
+        dynamicTotal
+    ){
+
+        missing.push(
+            "Enter dynamic response parameters from Scope"
+        );
+    }
+
+
+    /* -----------------------------------------
+       8. WAVEFORMS – 1 MARK
+       ----------------------------------------- */
+
+    const waveformIds = [
+        ["positionPreview","Position response"],
+        ["pulsePreview","Pulse / step signal"],
+        ["speedPreview","Speed response"],
+        ["loadPreview","Load disturbance response"]
+    ];
+
+    let waveformCount = 0;
+
+    waveformIds.forEach(item=>{
+
+        if(
+            getImageData(item[0])
+        ){
+
+            waveformCount++;
+
+        }else{
+
+            missing.push(
+                "Upload " + item[1] + " waveform"
+            );
+        }
+
+    });
+
+    score +=
+        waveformCount /
+        waveformIds.length;
+
+
+    /* -----------------------------------------
+       9. ANALYSIS + RESULT + POST LAB – 1 MARK
+       ----------------------------------------- */
+
+    const analysisIds = [
+        "analysisPosition",
+        "analysisPulse",
+        "analysisLoad",
+        "analysisMicro",
+        "analysisClosed"
+    ];
+
+    let analysisComplete = 0;
+
+    analysisIds.forEach(id=>{
+
+        if(
+            cleanText(
+                getValue(id)
+            ).length >= 30
+        ){
+
+            analysisComplete++;
+        }
+
+    });
+
+
+    /* 0.5 mark for analysis */
+
+    score +=
+        (analysisComplete /
+        analysisIds.length) * 0.5;
+
+
+    if(
+        analysisComplete <
+        analysisIds.length
+    ){
+
+        missing.push(
+            "Complete student analysis"
+        );
+    }
+
+
+    /* 0.25 mark for result */
+
+    if(
+        cleanText(
+            getValue("resultText")
+        ).length >= 30
+    ){
+
+        score += 0.25;
+
+    }else{
+
+        missing.push(
+            "Complete result"
+        );
+    }
+
+
+    /* 0.25 mark for post-lab answers */
+
+    const answers =
+        cleanText(
+            getValue("answers")
+        );
+
+    const answerCount =
+        answers
+            .split(/\n+/)
+            .filter(
+                x => cleanText(x).length >= 20
+            )
+            .length;
+
+    if(answerCount >= 5){
+
+        score += 0.25;
+
+    }else{
+
+        missing.push(
+            "Complete at least 5 post-lab answers"
+        );
+    }
+
+
+    /* -----------------------------------------
+       FINAL SCORE
+       ----------------------------------------- */
+
+    score =
+        Math.min(
+            10,
+            Math.max(
+                0,
+                Math.round(score * 10) / 10
+            )
+        );
+
+
+    lastEvaluation = {
+
+        evaluatedAt:
+            new Date().toISOString(),
+
+        score:score,
+
+        maximum:10,
+
+        studentDetails:
+            `${studentCompleted}/4`,
+
+        model:
+            getImageData("modelPreview")
+            ? "Completed"
+            : "Not uploaded",
+
+        positionTable:
+            `${positionComplete}/${positionRows.length}`,
+
+        speedTable:
+            `${speedComplete}/${speedRows.length}`,
+
+        loadTable:
+            `${loadComplete}/${loadRows.length}`,
+
+        performance:
+            `${perfComplete}/4`,
+
+        dynamicResponse:
+            `${dynamicCount}/${dynamicTotal}`,
+
+        waveforms:
+            `${waveformCount}/4`,
+
+        analysis:
+            `${analysisComplete}/5`,
+
+        postLabAnswers:
+            answerCount,
+
+        missing:
+            missing
+    };
+
+
+    displayEvaluation(
+        lastEvaluation
+    );
+
+
+    /* Save latest evaluation in JSON cache */
+
+    try{
+
+        localStorage.setItem(
+            JSON_CACHE_KEY,
+            JSON.stringify(
+                collectJSONData()
+            )
+        );
+
+    }catch(error){
+
+        console.warn(
+            "Evaluation cache error:",
+            error
+        );
+    }
+}
+
+
+/* =========================================================
+   GET DYNAMIC RESPONSE INPUTS
+   ========================================================= */
+
+function getDynamicInputs(){
+
+    const cards =
+        [...document.querySelectorAll(".card")];
+
+    const card =
+        cards.find(c =>
+            c.querySelector("h2") &&
+            c.querySelector("h2").textContent
+                .includes("14. Dynamic Position Response")
+        );
+
+    if(!card) return [];
+
+    const table =
+        card.querySelector("table");
+
+    if(!table) return [];
+
+    return [
+        ...table.querySelectorAll("tbody input")
+    ];
+}
+
+
+/* =========================================================
+   DISPLAY EVALUATION
+   ========================================================= */
+
+function displayEvaluation(evaluation){
+
+    const box =
+        document.getElementById(
+            "evaluationResult"
+        );
+
+    if(!box || !evaluation) return;
+
+
+    let missingHTML = "";
+
+    if(
+        evaluation.missing &&
+        evaluation.missing.length > 0
+    ){
+
+        missingHTML = `
+
+        <br>
+
+        <b>Items requiring completion:</b>
+
+        <ul>
+        ${evaluation.missing
+            .map(x => `<li>${x}</li>`)
+            .join("")}
+        </ul>
+
+        `;
+
+    }else{
+
+        missingHTML = `
+
+        <br>
+
+        <b>All required experiment record items are completed.</b>
+
+        `;
+    }
+
+
+    box.innerHTML = `
+
+    <h3 style="margin-top:0">
+    Automatic Evaluation
+    </h3>
+
+    <div class="kpi">
+
+        <div>
+        Completion Score
+        <strong>
+        ${evaluation.score} / ${evaluation.maximum}
+        </strong>
+        </div>
+
+        <div>
+        Student Details
+        <strong>
+        ${evaluation.studentDetails}
+        </strong>
+        </div>
+
+        <div>
+        Position Table
+        <strong>
+        ${evaluation.positionTable}
+        </strong>
+        </div>
+
+        <div>
+        Speed Table
+        <strong>
+        ${evaluation.speedTable}
+        </strong>
+        </div>
+
+        <div>
+        Load Test
+        <strong>
+        ${evaluation.loadTable}
+        </strong>
+        </div>
+
+        <div>
+        Waveforms
+        <strong>
+        ${evaluation.waveforms}
+        </strong>
+        </div>
+
+    </div>
+
+    ${missingHTML}
+
+    <p class="note">
+    <b>Evaluation note:</b>
+    This automatic evaluation checks the completeness of the
+    experiment record, uploaded model/waveforms, numerical entries,
+    analysis and post-lab responses. It does not verify the
+    scientific correctness of the student's answers.
+    </p>
+
+    `;
+
+    box.style.display = "block";
+}
+
+
+/* =========================================================
+   CLEAR DATA
+   ========================================================= */
+
+function clearData(){
+
+    if(
+        !confirm(
+            "Clear all Experiment 8 data from this browser?"
+        )
+    ){
+
+        return;
+    }
+
+    localStorage.removeItem(
+        STORAGE_KEY
+    );
+
+    localStorage.removeItem(
+        JSON_CACHE_KEY
+    );
+
+    location.reload();
+}
+
+
+/* =========================================================
+   SAVE STATUS
+   ========================================================= */
+
+function showSaveStatus(message){
+
+    const status =
+        document.getElementById(
+            "saveStatus"
+        );
+
+    if(!status) return;
+
+    status.innerText =
+        message;
+
+    status.style.display =
+        "block";
+
+    setTimeout(()=>{
+
+        status.style.display =
+            "none";
+
+    },4000);
+}
+
+
+/* =========================================================
+   DATE
+   ========================================================= */
+
+document.getElementById("expDate").value =
+    new Date()
+        .toISOString()
+        .split("T")[0];
+
+
+/* =========================================================
+   INITIAL CALCULATIONS
+   ========================================================= */
+
+calculateBasic();
+
+calculatePosition();
+
+calculatePositionTable();
+
+calculateSpeedTable();
+
+calculateLoadTable();
+
+performance();
+
+calculateMarks();
+
+</script>
+</body>
+</html>
+
